@@ -1,8 +1,6 @@
 package model.dao.impl;
 
 import exception.DaoException;
-import model.dao.columns.Columns;
-import model.dao.query.UserQuery;
 import model.dao.UserDao;
 import model.dao.connector.Connector;
 import model.entity.User;
@@ -20,7 +18,7 @@ import java.util.*;
 //TODO: mapper entity
 //TODO: think about amount of varchar (45 to much) + госты для пароля и имейла.
 //can save roles in db like strings and map them
-public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao, UserQuery, Columns {
+public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
 
     public UserDaoImpl(Connector connector) {
@@ -129,9 +127,9 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao, UserQu
     //TODO: bring all constants to UserDao
     //TODO: utf8
     @Override
-    public User parseResultSetToFindById(ResultSet rs) {
+    public Optional<User> parseResultSetToFindById(ResultSet rs) {
         try {
-            return new User.Builder()
+            return Optional.ofNullable(new User.Builder()
                     .setId(rs.getLong(USER_ID))
                     .setUserType(setUserRole(rs))
                     .setLogin(rs.getString(USER_LOGIN))
@@ -140,7 +138,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao, UserQu
                     .setHash(rs.getString(USER_HASH))
                     .setSalt(rs.getBytes(USER_SALT))
                     .setRank(setUserRank(rs))
-                    .build();
+                    .build());
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of user: " + e.getMessage());
             throw new DaoException(e);
@@ -154,7 +152,9 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao, UserQu
             ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                object = parseResultSetToFindById(rs);
+                if(parseResultSetToFindById(rs).isPresent()) {
+                    object = parseResultSetToFindById(rs).get();
+                }
             }
         } catch (SQLException e) {
             LOGGER.warn("SQLException with finding user by login: " + e.getMessage());
@@ -185,8 +185,8 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao, UserQu
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                points = rs.getInt(8);
-                maxPoints = rs.getInt(9);
+                points = rs.getInt(USER_POINTS);
+                maxPoints = rs.getInt(MAX_POINTS);
             }
             rank.put("currentPoints", points);
             rank.put("maxCurrentPoints", maxPoints);
@@ -204,7 +204,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao, UserQu
             ps.setLong(3, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.warn("SQLException with updating object: " + e.getMessage());
+            LOGGER.warn("SQLException with updating user's points: " + e.getMessage());
             throw new DaoException(e);
         }
     }

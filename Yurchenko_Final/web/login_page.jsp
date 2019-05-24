@@ -24,7 +24,7 @@
                         <a class="nav-link" href="#">Log In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="#">Tests</a>
+                        <a class="nav-link " href="tests_to_pass.jsp">Tests</a>
                     </li>
                 </ul>
 

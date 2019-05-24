@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "loginFilter")
+@WebFilter(filterName="loginFilter")
 public class LoginFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(LoginFilter.class);
     private static final String CHANGE_LANGUAGE = "CHANGE_LANGUAGE";
@@ -39,7 +39,7 @@ public class LoginFilter implements Filter {
     private boolean isDoFilter(HttpServletRequest req) {
 
         String command = req.getParameter("command");
-        return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command) || REGISTER.equals(command);
+        return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command);
     }
 
     @Override

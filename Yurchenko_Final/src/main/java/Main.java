@@ -1,42 +1,46 @@
-import model.entity.User;
-import model.entity.entityenum.UserType;
-import model.service.impl.UserService;
-import uitility.encryption.EncryptorBuilder;
+import model.dao.CourseDao;
+import model.dao.QuestionDao;
+import model.dao.connector.Connector;
+import model.dao.impl.CourseDaoImpl;
+import model.dao.impl.QuestionDaoImpl;
+import model.entity.Question;
+import model.entity.entityenum.QuestionType;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        UserService userService = new UserService();
-        //List<User> users = userService.findAll();
-        //System.out.println(users);
+        Connector connector = new Connector();
+        QuestionDao questionDao = new QuestionDaoImpl(connector);
+        Question question = new Question.Builder()
+                .withCourseId(1L)
+                .withQuestion("public class Main {\n" +
+                        "    public static void main(String args[]) {\n" +
+                        "        byte b = 0;\n" +
+                        "        while (++b > 0);\n" +
+                        "        System.out.println(b);\n" +
+                        "    }\n" +
+                        "}")
+                .withQuestionType(new QuestionType("text"))
+                .withIncorrectOption1("12")
+                .withIncorrectOption2("345")
+                .withIncorrectOption3("32")
+                .withCorrectOption1("123")
+                .build();
+        //questionDao.create(question);
+        questionDao.update("incorrect_option1", "DSA", 3L);
+        //questionDao.deleteById(2L);
+        //questionDao.changeAmountOfAnswers(3L, 23, 45);
+        List<Question> list = questionDao.findAll();
+        System.out.println(list);
+        //System.out.println(questionDao.findById(6L));
+        //questionDao.getCurrentAmountOfAnswers(3L);
 
-       /* for(int i = 0; i < 30; i++) {
-            EncryptorBuilder builder = new EncryptorBuilder("1234567");
-            User user = new User.Builder()
-                    .setName("Alex")
-                    .setLastName("Alexeev")
-                    .setLogin( i + "alex@gmail.com")
-                    .setHash(builder.getHash())
-                    .setSalt(builder.getSalt())
-                    .setUserType(UserType.STUDENT)
-                    //.setRank(345.54)
-                    .build();
+        CourseDao courseDao = new CourseDaoImpl(connector);
+        courseDao.findAll();
 
-            userService.registerUser(user);
-        }*/
-        //System.out.println(userService.findUserById(11L));
-        //userService.deleteUserById(11L);
-        System.out.println(userService.findAll());
-        //System.out.println(userService.findUsersByParameter("login", "Dsdchenkod@gmail.com"));
-//        userService.updateUserById("name", "Yasha", 12L);
-//        System.out.println(userService.findAll());
-       // userService.deleteAllUsers();
-        //System.out.println(userService.findAll());
-        //userService.setRank(14L, 356, 345);
-        //userService.changeUsersPassword(builder.getHash(), builder.getSalt(), "Dsdchenkod@gmail.com");
-        //System.out.println(userService.findAll());
 
-        //userService.setRank(14L, 154, 200);
-        //System.out.println(userService.findAll());
+
 
 
     }

@@ -1,20 +1,20 @@
 package model.entity;
 
 public class Course {
-    private Integer id;
+    private Long courseId;
     private String courseName;
     private Integer amountOfQuestions;
     private Long usersPassed;
 
     private Course(Builder builder) {
-        this.id = builder.id;
+        this.courseId = builder.id;
         this.courseName = builder.courseName;
         this.amountOfQuestions = builder.amountOfQuestions;
         this.usersPassed = builder.usersPassed;
     }
 
-    public Integer getId() {
-        return id;
+    public Long getCourseId() {
+        return courseId;
     }
 
     public String getCourseName() {
@@ -29,32 +29,28 @@ public class Course {
         return usersPassed;
     }
 
-    public void setUsersPassed(Long usersPassed) {
-        this.usersPassed = usersPassed;
-    }
-
     public static class Builder {
-        private Integer id;
+        private Long id;
         private String courseName;
         private Integer amountOfQuestions;
         private Long usersPassed;
 
-        public Builder setId(Integer id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder setCourseName(String courseName) {
+        public Builder withCourseName(String courseName) {
             this.courseName = courseName;
             return this;
         }
 
-        public Builder setAmountOfQuestions(Integer amountOfQuestions) {
+        public Builder withAmountOfQuestions(Integer amountOfQuestions) {
             this.amountOfQuestions = amountOfQuestions;
             return this;
         }
 
-        public Builder setUsersPassed(Long usersPassed) {
+        public Builder withUsersPassed(Long usersPassed) {
             this.usersPassed = usersPassed;
             return this;
         }

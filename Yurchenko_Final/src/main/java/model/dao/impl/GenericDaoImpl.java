@@ -36,11 +36,9 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
     public abstract void prepareStatementToAdd(PreparedStatement ps, T object);
 
-    public abstract T parseResultSetToFindById(ResultSet rs);
+    public abstract Optional<T> parseResultSetToFindById(ResultSet rs);
 
     public abstract List<T> parseResultSet(ResultSet rs);
-
-    //public abstract String getTableName();
 
     @Override
     public void create(T object) {
@@ -128,7 +126,9 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                object = parseResultSetToFindById(rs);
+                if(parseResultSetToFindById(rs).isPresent()) {
+                    object = parseResultSetToFindById(rs).get();
+                }
             }
         } catch (SQLException e) {
             LOGGER.warn("SQLException with finding objects by parameter: " + e.getMessage());

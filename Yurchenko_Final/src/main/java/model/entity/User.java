@@ -12,7 +12,7 @@ import java.util.Arrays;
 //TODO: void methods verify stab
 //TODO: no magic numbers
 public class User {
-    private Long id;
+    private Long userId;
     private String login;
     private String name;
     private String lastName;
@@ -22,7 +22,7 @@ public class User {
     private UserType type;
 
     public User(Builder builder) {
-        this.id = builder.id;
+        this.userId = builder.id;
         this.login = builder.login;
         this.name = builder.name;
         this.lastName = builder.lastName;
@@ -32,8 +32,8 @@ public class User {
         this.type = builder.type;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -67,7 +67,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "userId=" + userId +
                 ", login='" + login + '\'' +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +

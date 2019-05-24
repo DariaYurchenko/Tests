@@ -5,24 +5,15 @@ import model.dao.CourseDao;
 import model.dao.connector.Connector;
 import model.entity.Course;
 import org.apache.log4j.Logger;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
     private static final Logger LOGGER = Logger.getLogger(CourseDaoImpl.class);
-
-    private static final String INSERT_COURSE = "INSERT INTO courses(name, amountOfQuestions) VALUES(?, ?);";
-//    private static final String SELECT_ALL = "SELECT * FROM courses;";
-//    private static final String DELETE_COURSE = "DELETE * FROM courses WHERE id = ?;";
-
-    private static final String SELECT_COURSES_WITH_QUESTIONS = "SELECT courses.name, questions.question FROM courses" +
-            " LEFT JOIN questions ON courses.id = questions.courseId;";
-    private static final String SELECT_COURSE_WITH_QUESTIONS = "SELECT courses.name, questions.question FROM courses" +
-            " LEFT JOIN questions ON courses.id = questions.courseId WHERE course.id = ?;";
 
     public CourseDaoImpl(Connector connector) {
         super(connector);
@@ -35,44 +26,33 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
 
     @Override
     public String createQueryToFindById() {
-        return null;
+        return FIND_COURSE_BY_ID;
     }
 
     @Override
     public String createQueryToDelete() {
-        return null;
+        return DELETE_COURSE;
     }
 
     @Override
     public String createQueryToDeleteAll() {
-        return null;
+        return DELETE_ALL_COURSES;
     }
 
     @Override
     public String createQueryToFindAll() {
-        return null;
+        return SELECT_ALL_COURSES;
     }
 
     @Override
     public String createQueryToFindByParameter(String column) {
-        return null;
+        return String.format(FIND_COURSE_BY_PARAMETER, column);
     }
 
     @Override
     public String createQueryToUpdate(String column) {
-        return null;
+        return String.format(UPDATE_COURSE, column);
     }
-
-
-    /*@Override
-    public String createQueryToFindAll() {
-        return SELECT_ALL;
-    }
-
-    @Override
-    public String createQueryToDeleteRow() {
-        return DELETE_COURSE;
-    }*/
 
     @Override
     public void prepareStatementToAdd(PreparedStatement ps, Course course) {
@@ -87,13 +67,14 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
 
     @Override
     public List<Course> parseResultSet(ResultSet rs) {
-        List<model.entity.Course> courses = new ArrayList<>();
+        List<Course> courses = new ArrayList<>();
         try {
             while(rs.next()) {
                 courses.add(new Course.Builder()
-                        .setCourseName(rs.getString(2))
-                        .setAmountOfQuestions(rs.getInt(3))
-                        .setUsersPassed(rs.getLong(4))
+                        .withId(rs.getLong(COURSE_ID))
+                        .withCourseName(rs.getString(COURSE_NAME))
+                        .withAmountOfQuestions(rs.getInt(AMOUNT_OF_QUESTIONS))
+                        .withUsersPassed(rs.getLong(USERS_PASSED))
                         .build());
             }
         } catch (SQLException e) {
@@ -104,14 +85,14 @@ public class CourseDaoImpl extends GenericDaoImpl<Course> implements CourseDao {
     }
 
     @Override
-    public Course parseResultSetToFindById(ResultSet rs) {
+    public Optional<Course> parseResultSetToFindById(ResultSet rs) {
         try {
-            return new Course.Builder()
-                    .setId(rs.getInt(1))
-                    .setCourseName(rs.getString(2))
-                    .setAmountOfQuestions(rs.getInt(3))
-                    .setUsersPassed(rs.getLong(4))
-                    .build();
+            return Optional.ofNullable(new Course.Builder()
+                    .withId(rs.getLong(COURSE_ID))
+                    .withCourseName(rs.getString(COURSE_NAME))
+                    .withAmountOfQuestions(rs.getInt(AMOUNT_OF_QUESTIONS))
+                    .withUsersPassed(rs.getLong(USERS_PASSED))
+                    .build());
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of course: " + e.getMessage());
             throw new DaoException(e);
