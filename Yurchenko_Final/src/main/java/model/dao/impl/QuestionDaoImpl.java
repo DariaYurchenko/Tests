@@ -4,6 +4,7 @@ import exception.DaoException;
 import model.dao.QuestionDao;
 import model.dao.connector.Connector;
 import model.entity.Question;
+import model.entity.Theme;
 import model.entity.entityenum.QuestionType;
 import org.apache.log4j.Logger;
 
@@ -58,7 +59,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     public void prepareStatementToAdd(PreparedStatement ps, Question question) {
         try {
             ps.setInt(1, mapTypeToTable(question));
-            ps.setLong(2, question.getCourseId());
+            ps.setLong(2, mapThemeToTable(question));
             ps.setString(3, question.getQuestion());
             ps.setString(4, question.getIncorrectOption1());
             ps.setString(5, question.getIncorrectOption2());
@@ -86,30 +87,55 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
         }
     }
 
+    private long mapThemeToTable(Question question) {
+        if (question.getTheme().getThemeName().equalsIgnoreCase("collections")) {
+            return 1;
+        }
+        else if (question.getTheme().getThemeName().equalsIgnoreCase("if else, switch and loops")) {
+            return 2;
+        }
+        else if (question.getTheme().getThemeName().equalsIgnoreCase("inheritance and polymorphism")) {
+            return 3;
+        }
+        else if (question.getTheme().getThemeName().equalsIgnoreCase("threads, concurrency")) {
+            return 4;
+        }
+        else if (question.getTheme().getThemeName().equalsIgnoreCase("operators")) {
+            return 5;
+        }
+        else {
+            return 6;
+        }
+    }
+
     @Override
     public List<Question> parseResultSet(ResultSet rs) {
         List<Question> questions = new ArrayList<>();
         try {
             while(rs.next()) {
-                questions.add(( new Question.Builder()
-                        .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
-                        .withId(rs.getLong(QUESTION_ID))
-                        .withCourseId(rs.getLong(COURSE_ID))
-                        .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
-                        .withQuestion(rs.getString(QUESTION))
-                        .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
-                        .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
-                        .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
-                        .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
-                        .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
-                        .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
-                        .build()));
+                questions.add(createQuestion(rs));
             }
             return questions;
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of question: " + e.getMessage());
             throw new DaoException(e);
         }
+    }
+
+    private Question createQuestion(ResultSet rs) throws SQLException {
+        return new Question.Builder()
+                    .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
+                    .withId(rs.getLong(QUESTION_ID))
+                    .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
+                    .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
+                    .withQuestion(rs.getString(QUESTION))
+                    .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
+                    .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
+                    .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
+                    .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
+                    .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
+                    .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
+                    .build();
     }
 
     private Double setPercentOfRightAnswers(ResultSet rs) {
@@ -126,19 +152,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     @Override
     public Optional<Question> parseResultSetToFindById(ResultSet rs) {
         try {
-            return Optional.ofNullable(new Question.Builder()
-                    .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
-                    .withId(rs.getLong(QUESTION_ID))
-                    .withCourseId(rs.getLong(COURSE_ID))
-                    .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
-                    .withQuestion(rs.getString(QUESTION))
-                    .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
-                    .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
-                    .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
-                    .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
-                    .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
-                    .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
-                    .build());
+            return Optional.ofNullable(createQuestion(rs));
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of question while finding by id: " + e.getMessage());
             throw new DaoException(e);
@@ -181,16 +195,16 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public List<Question> getCourseQuestions(Long id) {
+    public List<Question> findThemeQuestions(Long id) {
         List<Question> courseQuestions = new ArrayList<>();
-        try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_QUESTIONS_OF_COURSE)) {
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_QUESTIONS_OF_THEME)) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 courseQuestions.add(( new Question.Builder()
                         .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
+                        .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
                         .withId(rs.getLong(QUESTION_ID))
-                        .withCourseId(rs.getLong(COURSE_ID))
                         .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
                         .withQuestion(rs.getString(QUESTION))
                         .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
@@ -202,7 +216,6 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
                         .build()));
             }
             return courseQuestions;
-
         } catch (SQLException e) {
             LOGGER.warn("SQLException with getting questions of the course: " + e.getMessage());
             throw new DaoException(e);

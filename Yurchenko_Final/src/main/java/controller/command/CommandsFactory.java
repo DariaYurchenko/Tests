@@ -13,6 +13,8 @@ public class CommandsFactory {
         commands.put("LOGIN", new UserLogin());
         commands.put("SHOW_ALL_USERS", new ShowAllUsers());
         commands.put("CHANGE_LANGUAGE", new ChangeLanguage());
+        commands.put("START_TEST", new StartTest());
+        commands.put("SHOW_RESULTS", new ShowResults());
     }
 
     public Command makeCommand(String command) {

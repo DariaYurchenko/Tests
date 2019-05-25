@@ -13,7 +13,6 @@ public class Question {
     //юзер регистрируется паролем и имейлом. а потм может заполнить профиль
     //табличка роль - айди, тип
     private Long questionId;
-    private Long courseId;
     private String question;
     private Double percentOfRightAnswers;
     private String incorrectOption1;
@@ -23,10 +22,10 @@ public class Question {
     private String correctOption2;
     private String correctOption3;
     private QuestionType questionType;
+    private Theme theme;
 
     private Question(Builder builder) {
         this.questionId = builder.id;
-        this.courseId = builder.courseId;
         this.question = builder.question;
         this.percentOfRightAnswers = builder.percentOfRightAnswers;
         this.incorrectOption1 = builder.incorrectOption1;
@@ -36,14 +35,12 @@ public class Question {
         this.correctOption2 = builder.correctOption2;
         this.correctOption3 = builder.correctOption3;
         this.questionType = builder.questionType;
+        this.theme = builder.theme;
+
     }
 
     public Long getQuestionId() {
         return questionId;
-    }
-
-    public Long getCourseId() {
-        return courseId;
     }
 
     public String getQuestion() {
@@ -82,11 +79,16 @@ public class Question {
         return questionType;
     }
 
+
+
+    public Theme getTheme() {
+        return theme;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
                 "questionId=" + questionId +
-                ", courseId=" + courseId +
                 ", question='" + question + '\'' +
                 ", percentOfRightAnswers=" + percentOfRightAnswers +
                 ", incorrectOption1='" + incorrectOption1 + '\'' +
@@ -96,12 +98,12 @@ public class Question {
                 ", correctOption2='" + correctOption2 + '\'' +
                 ", correctOption3='" + correctOption3 + '\'' +
                 ", questionType=" + questionType +
+                ", theme=" + theme +
                 '}';
     }
 
     public static class Builder {
         private Long id;
-        private Long courseId;
         private String question;
         private Double percentOfRightAnswers;
         private String incorrectOption1;
@@ -111,14 +113,10 @@ public class Question {
         private String correctOption2;
         private String correctOption3;
         private QuestionType questionType;
+        private Theme theme;
 
         public Builder withId(Long id) {
             this.id = id;
-            return this;
-        }
-
-        public Builder withCourseId(Long courseId) {
-            this.courseId = courseId;
             return this;
         }
 
@@ -164,6 +162,11 @@ public class Question {
 
         public Builder withQuestionType(QuestionType questionType) {
             this.questionType = questionType;
+            return this;
+        }
+
+        public Builder withTheme(Theme theme) {
+            this.theme = theme;
             return this;
         }
 

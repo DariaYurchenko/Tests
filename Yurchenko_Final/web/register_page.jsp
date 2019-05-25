@@ -27,7 +27,7 @@
                         <a class="nav-link" href="login_page.jsp"><fmt:message key="log_in"/></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="tests_to_pass.jsp"><fmt:message key="tests"/></a>
+                        <a class="nav-link " href="tests.jsp"><fmt:message key="tests"/></a>
                     </li>
                 </ul>
 

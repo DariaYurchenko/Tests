@@ -32,7 +32,7 @@ public class LoginFilter implements Filter {
             filterChain.doFilter(req, resp);
         }
         else {
-            resp.sendRedirect(req.getContextPath()+"/");
+            resp.sendRedirect("login_page.jsp");
         }
     }
 

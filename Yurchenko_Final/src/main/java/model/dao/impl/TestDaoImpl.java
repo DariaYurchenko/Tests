@@ -79,11 +79,6 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
         }
     }
 
-//    @Override
-//    public String createQueryToFindAll() {
-//        return SELECT_ALL;
-//    }
-
     @Override
     public List<Test> parseResultSet(ResultSet rs) {
         List<Test> tests = new ArrayList<>();
@@ -111,7 +106,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
             return new Test.Builder()
                     .withId(rs.getInt(1))
                     .setUserId(rs.getLong(2))
-                    .withCourseId(rs.getInt(3))
+                    .withThemeId(rs.getInt(3))
                     .setDate(LocalDate.parse(rs.getString(4)))
                     .setGrade(rs.getDouble(5))
                     .setTestStatus(TestStatus.valueOf(rs.getString(6)))

@@ -136,10 +136,4 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
         }
         return Optional.ofNullable(object);
     }
-
-
-
-
-
-
 }
