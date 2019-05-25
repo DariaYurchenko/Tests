@@ -74,11 +74,55 @@
                     <div class="answers">
                     <c:if test="${question.questionType.type eq 'RADIO'}">
                         <form action="tests" method="get">
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="customControlValidation1" name="radio" value="${question.incorrectOption1}" required>
-                                <label class="custom-control-label" for="customControlValidation1"><c:out value="${question.incorrectOption1}"/></label>
-                            </div>
-                            <div class="custom-control custom-radio">
+                            <c:set var="id_counter" value="1"/>
+                        <c:if test="${requestScope.forward == null}">
+                            <c:forEach items="${options}" var="options">
+                                <div class="custom-control custom-radio">
+                                <%--<input type="radio" class="custom-control-input" id="id${id_counter}" name="radio" value="${options}" required>
+                                <label class="custom-control-label" for="id${id_counter}"><c:out value="${options}"/></label>--%>
+                                    <input type="radio" class="custom-control-input" id="id${id_counter}" name="radio" value="${options}" required>
+                                    <label class="custom-control-label" for="id${id_counter}"><c:out value="${options}"/></label>
+                                        <c:set var="id_counter" value="${id_counter + 1}"/>
+                                </div>
+                                    </c:forEach>
+                                    </c:if>
+
+                                    <c:if test="${requestScope.forward != null}">
+                                        <c:forEach items="${options}" var="options">
+                                    <c:if test="${options == question.correctOption1}">
+                            <div class="custom-control custom-radio bg-success">
+                                            <%--<input type="radio" class="custom-control-input" id="id${id_counter}" name="radio" value="${options}" required>
+                                            <label class="custom-control-label" for="id${id_counter}"><c:out value="${options}"/></label>--%>
+
+                                        <c:out value="${options}"/>
+                                <c:if test="${options == userAnswer}">
+                                    <p>Your answer</p>
+                                </c:if>
+
+                                    </div>
+                                    </c:if>
+                                            <c:if test="${options != question.correctOption1}">
+                                                <div class="custom-control custom-radio bg-danger">
+                                                        <%--<input type="radio" class="custom-control-input" id="id${id_counter}" name="radio" value="${options}" required>
+                                                        <label class="custom-control-label" for="id${id_counter}"><c:out value="${options}"/></label>--%>
+
+                                                    <c:out value="${options}"/>
+                                                            <c:if test="${options == userAnswer}">
+                                                                <p>Your answer</p>
+                                                            </c:if>
+
+                                                </div>
+                                            </c:if>
+
+                                                <c:set var="id_counter" value="${id_counter + 1}"/>
+                                                </c:forEach>
+                                        <p>Percent of right answers: <c:out value="${requestScope.answerPercent}"/>%</p>
+                                                </c:if>
+
+<%--                                        <c:set var="id_counter" value="${id_counter + 1}"/>--%>
+
+                            </c:if>
+                            <%--<div class="custom-control custom-radio">
                                 <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio" value="${question.incorrectOption2}" required>
                                 <label class="custom-control-label" for="customControlValidation2"><c:out value="${question.incorrectOption2}"/></label>
                             </div>
@@ -90,17 +134,30 @@
                             <div class="custom-control custom-radio">
                                 <input type="radio" class="custom-control-input" id="customControlValidation4" name="radio" value="${question.correctOption1}" required>
                                 <label class="custom-control-label" for="customControlValidation4"><c:out value="${question.correctOption1}"/></label>
-                            </div>
-                            </c:if>
-                            <c:if test="${counter < length}">
+                            </div>--%>
+
+
+
+                            <c:if test="${(counter < length) && (requestScope.forward == null)}">
                                 <input type="hidden" name="command" value="PASS_TESTS">
+                                <input type="hidden" name="forward" value="TRUE">
                                 <input type="hidden" name="counter" value="${counter}">
                                 <input type="hidden" name="theme_id" value="1">
+                                <button type="submit">Continue</button>
+                            </c:if>
+                            <c:if test="${(counter < length) && (requestScope.forward != null)}">
+                                <input type="hidden" name="command" value="PASS_TESTS">
+                                <input type="hidden" name="forward" value="FALSE">
+                                <input type="hidden" name="counter" value="${counter}">
+                                <input type="hidden" name="theme_id" value="1">
+                                <button type="submit">Next</button>
                             </c:if>
                             <c:if test="${counter >= length}">
                                 <input type="hidden" name="command" value="SHOW_RESULTS">
+                                <button type="submit">Next</button>
                             </c:if>
-                            <button type="submit">Forward</button>
+
+
                         </form>
 
 

@@ -28,9 +28,9 @@ public class Main {
         //questionDao.update("incorrect_option1", "DS", 5L);
         //questionDao.deleteById(5L);
         //questionDao.changeAmountOfAnswers(3L, 23, 45);
-        Question question1 = questionDao.findById(6L).get();
-        List<Question> questions = questionService.findQuestionsByTheme(Long.parseLong("1"));
-        System.out.println(questions);
+        Question question1 = questionService.findById(6L);
+        System.out.println(question1);
+
         //System.out.println(list);
         //System.out.println(questionDao.findById(6L));
         //questionDao.getCurrentAmountOfAnswers(3L);
