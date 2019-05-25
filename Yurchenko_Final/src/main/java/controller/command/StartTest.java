@@ -6,6 +6,7 @@ import model.service.impl.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.List;
 
 public class StartTest extends Command implements Pages {
@@ -15,18 +16,17 @@ public class StartTest extends Command implements Pages {
         this.questionService = new QuestionService();
     }
 
-
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         String themeId = req.getParameter("theme_id");
-        int counter = Integer.parseInt(req.getParameter("counter"));
         List<Question> questions = questionService.findQuestionsByTheme(Long.parseLong(themeId));
+        Collections.shuffle(questions);
 
-        Question question = questions.get(counter);
-        req.getSession().setAttribute("question", question);
-        req.getSession().setAttribute("counter", counter+1);
-        req.getSession().setAttribute("length", questions.size());
+        req.getSession().setAttribute("questions", questions);
 
-        return CommandResult.forward(START_TESTS);
+        int counter = Integer.parseInt(req.getParameter("counter"));
+        req.getSession().setAttribute("counter", counter);
+
+        return CommandResult.forward(new PassTest());
     }
 }

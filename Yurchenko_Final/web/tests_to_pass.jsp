@@ -51,7 +51,8 @@
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
                     <button type="submit">Collections</button>
-                </form></div>
+                </form>
+            </div>
         </div>
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="images/if-else.svg"></div>

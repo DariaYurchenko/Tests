@@ -44,7 +44,7 @@
     </header>
 
     <div><h1 align="center"><c:out value="${question.theme.themeName}"/></h1>
-
+<%--
     <c:if test="${question.questionType.type eq 'RADIO'}">
     <c:out value="${question.question}"/>
         <p>Answers</p>
@@ -59,7 +59,7 @@
         </c:if>
         <c:if test="${counter >= length}">
             <button onclick="window.location = '<c:url value="/tests?command=SHOW_RESULTS"/>'">Forward</button>
-        </c:if>
+        </c:if>--%>
 
     </div>
     <div class="container d-flex justify-content-center">
@@ -70,38 +70,41 @@
                 </div>
                 <div>
                     <div>What will be printed as a result of the following code execution?</div>
-                    <pre>
-public class Main {
- public static void main(String args[]) {
-  byte b = 0;
-  while (++b > 0);
-  System.out.println(b);
- }
-}
-        </pre>
+                    <pre><c:out value="${question.question}"/></pre>
                     <div class="answers">
-                        <form>
+                    <c:if test="${question.questionType.type eq 'RADIO'}">
+                        <form action="tests" method="get">
                             <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="customControlValidation1" name="radio-stacked" required>
-                                <label class="custom-control-label" for="customControlValidation1">Toggle this custom radio</label>
+                                <input type="radio" class="custom-control-input" id="customControlValidation1" name="radio" value="${question.incorrectOption1}" required>
+                                <label class="custom-control-label" for="customControlValidation1"><c:out value="${question.incorrectOption1}"/></label>
                             </div>
                             <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio-stacked" required>
-                                <label class="custom-control-label" for="customControlValidation2">Or toggle this other custom radio</label>
-                                <div class="invalid-feedback">More example invalid feedback text</div>
+                                <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio" value="${question.incorrectOption2}" required>
+                                <label class="custom-control-label" for="customControlValidation2"><c:out value="${question.incorrectOption2}"/></label>
                             </div>
                             <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="customControlValidation3" name="radio-stacked" required>
-                                <label class="custom-control-label" for="customControlValidation3">Or toggle this other custom radio</label>
-                                <div class="invalid-feedback">More example invalid feedback text</div>
+                                <input type="radio" class="custom-control-input" id="customControlValidation3" name="radio" value="${question.incorrectOption3}" required>
+                                <label class="custom-control-label" for="customControlValidation3"><c:out value="${question.incorrectOption3}"/></label>
+
                             </div>
                             <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="customControlValidation4" name="radio-stacked" required>
-                                <label class="custom-control-label" for="customControlValidation4">Or toggle this other custom radio</label>
-                                <div class="invalid-feedback">More example invalid feedback text</div>
+                                <input type="radio" class="custom-control-input" id="customControlValidation4" name="radio" value="${question.correctOption1}" required>
+                                <label class="custom-control-label" for="customControlValidation4"><c:out value="${question.correctOption1}"/></label>
                             </div>
-                            <div class="button-div text-center"><button class="btn" type="submit">Go on!</button></div>
+                            </c:if>
+                            <c:if test="${counter < length}">
+                                <input type="hidden" name="command" value="PASS_TESTS">
+                                <input type="hidden" name="counter" value="${counter}">
+                                <input type="hidden" name="theme_id" value="1">
+                            </c:if>
+                            <c:if test="${counter >= length}">
+                                <input type="hidden" name="command" value="SHOW_RESULTS">
+                            </c:if>
+                            <button type="submit">Forward</button>
                         </form>
+
+
+
                     </div>
                 </div>
             </section>

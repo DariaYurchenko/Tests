@@ -1,5 +1,6 @@
 package controller;
 
+import controller.command.Command;
 import controller.command.CommandResult;
 import controller.command.CommandsFactory;
 import javax.servlet.ServletException;
@@ -28,6 +29,10 @@ public class TestServlet extends HttpServlet {
         String command = request.getParameter("command");
         CommandsFactory factory = new CommandsFactory();
         CommandResult result = factory.makeCommand(command).execute(request, response);
+        if(result.getChainCommand() != null) {
+            Command newCommand = result.getChainCommand();
+            result = newCommand.execute(request, response);
+        }
         String page = result.getPage();
         request.getRequestDispatcher(page).forward(request, response);
     }
