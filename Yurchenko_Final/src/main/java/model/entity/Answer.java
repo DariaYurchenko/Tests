@@ -5,11 +5,20 @@ import model.entity.entityenum.AnswerStatus;
 public class Answer {
 
     //TODO: different types of answers: field, some correct answers
-    //TODO: Maybe to do payful version
-    private Integer id;
-    private Integer testId;
-    private Integer questionId;
-    private String correctAnswer;
-    private String userAnswer;
+
+    private int maxPoints;
     private AnswerStatus answerStatus;
+
+    public Answer(int maxPoints, AnswerStatus answerStatus) {
+        this.maxPoints = maxPoints;
+        this.answerStatus = answerStatus;
+    }
+
+    public int getMaxPoints() {
+        return maxPoints;
+    }
+
+    public AnswerStatus getAnswerStatus() {
+        return answerStatus;
+    }
 }

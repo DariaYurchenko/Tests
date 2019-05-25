@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class QuestionService {
+    private static final int RADIO_POINTS = 1;
+    private static final int CHECKBOX_POINTS = 2;
+    private static final int TEXT_POINTS = 3;
+
     private QuestionDao questionDao;
     private Connector connector = new Connector();
 
@@ -59,6 +63,18 @@ public class QuestionService {
 
     private Integer changeAnswers(Integer startAnswersAmount, Integer plusAnswersAmount) {
         return startAnswersAmount + plusAnswersAmount;
+    }
+
+    public int setQuestionPoints(Question question) {
+        if(question.getQuestionType().getType().equalsIgnoreCase("Radio")) {
+            return RADIO_POINTS;
+        }
+        if(question.getQuestionType().getType().equalsIgnoreCase("Checkbox")) {
+            return CHECKBOX_POINTS;
+        }
+        else {
+            return TEXT_POINTS;
+        }
     }
 
 

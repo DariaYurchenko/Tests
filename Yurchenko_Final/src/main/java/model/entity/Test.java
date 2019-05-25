@@ -5,38 +5,40 @@ import model.entity.entityenum.TestStatus;
 import java.time.LocalDate;
 
 public class Test {
-    private Integer id;
+    private Long testId;
     private Long userId;
-    private Integer courseId;
-    private Double grade;
-
-    //TODO: Maybe should change to Date + Locale
+    private Long themeId;
+    private Integer userPoints;
+    private Integer maxPoints;
+    private Double rightAnswersPercent;
     private LocalDate date;
     private TestStatus testStatus;
 
     public Test(Builder builder) {
-        this.id = builder.id;
+        this.testId = builder.testId;
         this.userId = builder.userId;
-        this.courseId = builder.courseId;
-        this.grade = builder.grade;
+        this.themeId = builder.themeId;
+        this.userPoints = builder.userPoints;
+        this.maxPoints = builder.maxPoints;
+        this.rightAnswersPercent = builder.rightAnswersPercent;
         this.date = builder.date;
         this.testStatus = builder.testStatus;
     }
 
-    public Integer getId() {
-        return id;
+    public Long getTestId() {
+        return testId;
     }
 
     public Long getUserId() {
         return userId;
     }
 
-    public Integer getCourseId() {
-        return courseId;
+    public Long getThemeId() {
+        return themeId;
     }
 
-    public Double getGrade() {
-        return grade;
+    public Double getRightAnswersPercent() {
+        return rightAnswersPercent;
     }
 
     public LocalDate getDate() {
@@ -47,44 +49,64 @@ public class Test {
         return testStatus;
     }
 
-    public void setGrade(Double grade) {
-        this.grade = grade;
+    public void setRightAnswersPercent(Double rightAnswersPercent) {
+        this.rightAnswersPercent = rightAnswersPercent;
+    }
+
+    public Integer getUserPoints() {
+        return userPoints;
+    }
+
+    public Integer getMaxPoints() {
+        return maxPoints;
     }
 
     public static class Builder {
-        private Integer id;
+        private Long testId;
         private Long userId;
-        private Integer courseId;
-        private double grade;
+        private Long themeId;
+        private Integer userPoints;
+        private Integer maxPoints;
+        private double rightAnswersPercent;
         private LocalDate date;
         private TestStatus testStatus;
 
-        public Builder setId(Integer id) {
-            this.id = id;
+        public Builder withId(Long testId) {
+            this.testId = testId;
             return this;
         }
 
-        public Builder setUserId(Long userId) {
+        public Builder withUserId(Long userId) {
             this.userId = userId;
             return this;
         }
 
-        public Builder setCourseId(Integer courseId) {
-            this.courseId = courseId;
+        public Builder withThemeId(Long themeId) {
+            this.themeId = themeId;
             return this;
         }
 
-        public Builder setGrade(Double grade) {
-            this.grade = grade;
+        public Builder withUserPoints(Integer userPoints) {
+            this.userPoints = userPoints;
             return this;
         }
 
-        public Builder setDate(LocalDate date) {
+        public Builder withMaxPoints(Integer maxPoints) {
+            this.maxPoints = maxPoints;
+            return this;
+        }
+
+        public Builder withRightAnswersPercent(Double rightAnswersPercent) {
+            this.rightAnswersPercent = rightAnswersPercent;
+            return this;
+        }
+
+        public Builder withDate(LocalDate date) {
             this.date = date;
             return this;
         }
 
-        public Builder setTestStatus(TestStatus testStatus) {
+        public Builder withTestStatus(TestStatus testStatus) {
             this.testStatus = testStatus;
             return this;
         }

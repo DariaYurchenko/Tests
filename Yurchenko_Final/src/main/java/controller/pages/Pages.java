@@ -10,5 +10,7 @@ public interface Pages {
     static final String TESTS = "tests_to_pass.jsp";
     static final String PASS_TESTS = "tests.jsp";
     static final String START_TESTS = "tests.jsp";
+    static final String SHOW_RESULTS = "show_results.jsp";
+
 
 }

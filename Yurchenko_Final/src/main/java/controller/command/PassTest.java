@@ -1,7 +1,10 @@
 package controller.command;
 
 import controller.pages.Pages;
+import model.entity.Answer;
 import model.entity.Question;
+import model.entity.entityenum.AnswerStatus;
+import model.service.impl.AnswerService;
 import model.service.impl.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,15 +16,19 @@ import java.util.List;
 
 public class PassTest extends Command implements Pages {
     private QuestionService questionService;
+    private AnswerService answerService;
 
     public PassTest() {
         this.questionService = new QuestionService();
+        this.answerService = new AnswerService();
     }
 
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        List<Question> questions = (ArrayList<Question>) req.getSession().getAttribute("questions");
+        //List<Answer> answers = new ArrayList<>();
+        List<Question> questions = (ArrayList) req.getSession().getAttribute("questions");
+        //req.getSession().setAttribute("userAnswers", answers);
 
         if(req.getParameter("forward") == null || req.getParameter("forward").equals("FALSE")) {
             //List<Question> questions = (ArrayList<Question>) req.getSession().getAttribute("questions");
@@ -43,6 +50,27 @@ public class PassTest extends Command implements Pages {
             String userAnswer = req.getParameter("radio");
             Question question = (Question) req.getSession().getAttribute("question");
 
+            int questionPoints = questionService.setQuestionPoints(question);
+            answerService.addAnswerToList(questionPoints, userAnswer, question.getCorrectOption1());
+
+            Answer answer;
+            if(userAnswer.equalsIgnoreCase(question.getCorrectOption1())) {
+               answer = new Answer(questionPoints, AnswerStatus.CORRECT);
+            }
+            else {
+                answer = new Answer(questionPoints, AnswerStatus.INCORRECT);
+            }
+
+
+            //answers.add(answer);
+            //adds answers to list and put it in session
+            List<Answer> ses = (ArrayList) req.getSession().getAttribute("userAnswers");
+            ses.add(answer);
+            req.getSession().setAttribute("userAnswers", ses);
+
+
+
+
             if(userAnswer.equals(question.getCorrectOption1())) {
                 questionService.setAnswers(question.getQuestionId(), 1, 1);
             }
@@ -53,7 +81,7 @@ public class PassTest extends Command implements Pages {
             String answerPercent = String.valueOf(question1.getPercentOfRightAnswers());
 
 
-            List<String> options = (ArrayList<String>) req.getSession().getAttribute("options");
+            List<String> options = (ArrayList) req.getSession().getAttribute("options");
             req.getSession().setAttribute("options", options);
             req.getSession().setAttribute("question", question);
             req.getSession().setAttribute("userAnswer", userAnswer);
@@ -64,8 +92,7 @@ public class PassTest extends Command implements Pages {
             req.getSession().setAttribute("length", questions.size());
         }
 
-
-
+        List<Answer> userAnswers = answerService.getAnswerList();
         return CommandResult.forward(PASS_TESTS);
     }
 }

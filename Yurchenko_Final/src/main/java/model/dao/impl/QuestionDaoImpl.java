@@ -142,7 +142,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
         try {
             int rightAnswers = rs.getInt(RIGHT_ANSWERS);
             int answers = rs.getInt(ANSWERS);
-            return Math.round((rightAnswers * 100.0 / answers) * 100.0) / 100.0;
+            return Math.round((rightAnswers * 1.0 / answers) * 100) / 1.0;
         } catch (SQLException e) {
             LOGGER.error("SQLException with counting of percent of right answers: " + e.getMessage());
             throw new DaoException(e);

@@ -16,6 +16,7 @@ public class CommandsFactory {
         commands.put("PASS_TESTS", new PassTest());
         commands.put("SHOW_RESULTS", new ShowResults());
         commands.put("START_TEST", new StartTest());
+        commands.put("SEND_RESULTS", new SendResults());
     }
 
     public Command makeCommand(String command) {

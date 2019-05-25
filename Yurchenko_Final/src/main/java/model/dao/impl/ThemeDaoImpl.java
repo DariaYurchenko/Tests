@@ -21,37 +21,37 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
 
     @Override
     public String createQueryToAdd() {
-        return INSERT_COURSE;
+        return INSERT_THEME;
     }
 
     @Override
     public String createQueryToFindById() {
-        return FIND_COURSE_BY_ID;
+        return FIND_THEME_BY_ID;
     }
 
     @Override
     public String createQueryToDelete() {
-        return DELETE_COURSE;
+        return DELETE_THEME;
     }
 
     @Override
     public String createQueryToDeleteAll() {
-        return DELETE_ALL_COURSES;
+        return DELETE_ALL_THEMES;
     }
 
     @Override
     public String createQueryToFindAll() {
-        return SELECT_ALL_COURSES;
+        return SELECT_ALL_THEMES;
     }
 
     @Override
     public String createQueryToFindByParameter(String column) {
-        return String.format(FIND_COURSE_BY_PARAMETER, column);
+        return String.format(FIND_THEME_BY_PARAMETER, column);
     }
 
     @Override
     public String createQueryToUpdate(String column) {
-        return String.format(UPDATE_COURSE, column);
+        return String.format(UPDATE_THEME, column);
     }
 
     @Override
