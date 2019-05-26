@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 
 public final class Encryptor {
     private static final Logger logger = Logger.getLogger(Encryptor.class);
-    public static final String SHA_1 = "SHA-1";
+    private static final String SHA_1 = "SHA-1";
 
     public static boolean verifyPassword(String passwordToCheck, String hash, byte[] salt) {
         String hashToCheck = getSecurePassword(passwordToCheck, salt);

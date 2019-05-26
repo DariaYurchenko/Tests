@@ -6,22 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 public interface QuestionDao extends GenericDao<Question> {
-    static final String INSERT_QUESTION = "INSERT INTO questions(question_type, theme_id, question, incorrect_option1, " +
+    static final String INSERT_QUESTION = "INSERT INTO questions(question_type, question_theme_id, question, incorrect_option1, " +
             "incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
     static final String DELETE_QUESTION = "DELETE FROM questions WHERE question_id = ?;";
     static final String DELETE_ALL_QUESTIONS = "DELETE FROM questions;";
     static final String SELECT_ALL_QUESTIONS = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.theme_id=t.theme_id;";
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id;";
     static final String FIND_QUESTION_BY_ID = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.theme_id=t.theme_id " +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id " +
             "WHERE question_id = ?;";
     static final String UPDATE_QUESTION_ANSWERS = "UPDATE questions SET right_answers = ?, " +
             "answers = ? WHERE question_id = ?;";
     static final String FIND_QUESTIONS_OF_THEME = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.theme_id=t.theme_id WHERE t.theme_id = ?";
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE t.theme_id = ?";
     static final String FIND_QUESTION_BY_PARAMETER = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.theme_id=t.theme_id WHERE %s = ?;";
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE %s = ?;";
     static final String UPDATE_QUESTION = "UPDATE questions SET %s = ? WHERE question_id = ?;";
 
     static final String QUESTION_ID = "question_id";

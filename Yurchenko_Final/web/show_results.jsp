@@ -16,7 +16,7 @@
     <p>YOU PASSED!</p>
 </c:if>
 <p>For more detailed information send email:</p>
-<form action="tests" method="get">
+<form action="tests" method="post">
     <input type="hidden" name="command" value="SEND_RESULTS">
     <button type="submit">Send!</button>
 </form>

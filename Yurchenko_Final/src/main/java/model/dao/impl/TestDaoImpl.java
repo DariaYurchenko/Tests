@@ -67,7 +67,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
             ps.setInt(3, test.getUserPoints());
             ps.setInt(4, test.getMaxPoints());
             ps.setDate(5, Date.valueOf(test.getDate()));
-            ps.setDouble(6, mapStatusToTable(test));
+            ps.setInt(6, mapStatusToTable(test));
         } catch (SQLException e) {
             LOGGER.error("SQLException with preparing statement for creating test: " + e.getMessage());
             throw new DaoException();
@@ -96,7 +96,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
         return LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate(DATE)));
     }
 
-    private Double setPointsPercent(ResultSet rs) {
+    public Double setPointsPercent(ResultSet rs) {
         try {
             int rightAnswers = rs.getInt(USER_POINTS);
             int answers = rs.getInt(MAX_POINTS);
@@ -107,7 +107,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
         }
     }
 
-    private TestStatus setTestStatus(ResultSet rs) throws SQLException {
+    public TestStatus setTestStatus(ResultSet rs) throws SQLException {
         return rs.getInt(TEST_STATUS) == 1 ? TestStatus.PASSED : TestStatus.NOT_PASSED;
     }
 

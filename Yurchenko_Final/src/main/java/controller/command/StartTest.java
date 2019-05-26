@@ -30,6 +30,7 @@ public class StartTest extends Command implements Pages {
         int counter = Integer.parseInt(req.getParameter("counter"));
         req.getSession().setAttribute("counter", counter);
         req.getSession().setAttribute("userAnswers", answers);
+        req.getSession().setAttribute("theme_id", themeId);
 
         return CommandResult.forward(new PassTest());
     }

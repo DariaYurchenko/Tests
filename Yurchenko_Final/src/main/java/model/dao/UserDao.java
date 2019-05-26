@@ -2,6 +2,7 @@ package model.dao;
 
 import model.entity.User;
 
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,12 +17,12 @@ public interface UserDao extends GenericDao<User> {
     static final String DELETE_USER = "DELETE FROM users WHERE user_id = ?;";
     static final String DELETE_ALL_USERS = "DELETE FROM users;";
     static final String UPDATE_USER_PASSWORD = "UPDATE users SET hash = ?, salt = ? WHERE login = ?;";
-    static final String UPDATE_USER_POINTS = "UPDATE users SET number_of_points = ?, " +
-            "max_number_of_points = ? WHERE user_id = ?;";
+    static final String UPDATE_USER_POINTS = "UPDATE users SET user_number_of_points = ?, " +
+            "user_max_number_of_points = ? WHERE user_id = ?;";
 
     static final String ROLE = "role";
-    static final String USER_POINTS = "number_of_points";
-    static final String MAX_POINTS = "max_number_of_points";
+    static final String USER_POINTS = "user_number_of_points";
+    static final String MAX_POINTS = "user_max_number_of_points";
     static final String USER_NAME = "name";
     static final String USER_LASTNAME = "lastname";
     static final String USER_ID = "user_id";
@@ -38,5 +39,7 @@ public interface UserDao extends GenericDao<User> {
     void changeRank(Long id, Integer plusPoints, Integer plusMaxPoints);
 
     List<User> findUsersForPagination(int currentPage, int recordsPerPage);
+
+    Double setUserRank(ResultSet rs);
 
 }

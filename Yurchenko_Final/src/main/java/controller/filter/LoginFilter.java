@@ -39,7 +39,7 @@ public class LoginFilter implements Filter {
     private boolean isDoFilter(HttpServletRequest req) {
 
         String command = req.getParameter("command");
-        return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command);
+        return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command) || REGISTER.equals(command);
     }
 
     @Override

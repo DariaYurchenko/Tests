@@ -104,7 +104,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     //TODO: separate method
-    private Double setUserRank(ResultSet rs) {
+    public Double setUserRank(ResultSet rs) {
         try {
             int userPoints = rs.getInt(USER_POINTS);
             int maxPoints = rs.getInt(MAX_POINTS);
