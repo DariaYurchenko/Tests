@@ -22,9 +22,9 @@ public class SubmitKey extends Command implements Pages {
         String login = req.getParameter("login");
         String key = req.getParameter("key");
 
-        if(key == null) {
+       /* if(key == null) {
             return new CommandResult(TESTS);
-        }
+        }*/
         /*User user = userDao.findUserByLogin(login).get();
         Long id = user.getUserId();*/
 

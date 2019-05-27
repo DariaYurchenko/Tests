@@ -247,10 +247,10 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public List<User> findUsersForPagination(int currentPage, int recordsPerPage) throws DaoException {
+    public List<User> findUsersForPagination(int startRecord, int recordsPerPage) throws DaoException {
         List<User> users = new ArrayList<>();
         try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_USERS_FOR_PAGINATION)) {
-            preparedStatement.setInt(1, currentPage);
+            preparedStatement.setInt(1, startRecord);
             preparedStatement.setInt(2, recordsPerPage);
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {

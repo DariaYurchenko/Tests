@@ -1,15 +1,16 @@
 package controller.command;
 
 import controller.pages.Pages;
-
+import model.service.impl.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class LogOutUser extends Command implements Pages {
+public class DeleteAllUsers extends Command implements Pages {
+    private UserService userService = new UserService();
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        req.getSession().invalidate();
-        return CommandResult.redirect(LOGIN_PAGE);
+        userService.deleteAllUsers();
+        return CommandResult.forward(new ShowAllUsers());
     }
 }

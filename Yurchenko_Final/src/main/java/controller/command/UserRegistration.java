@@ -65,7 +65,7 @@ public class UserRegistration extends Command implements Pages {
             return CommandResult.forward(REGISTRATION_PAGE);
         }
 
-        User newUser = buildUser(name, lastname, login, password);
+        User newUser = buildUser(req, name, lastname, login, password);
 
         userService.registerUser(newUser);
 
@@ -101,8 +101,18 @@ public class UserRegistration extends Command implements Pages {
         return true;
     }
 
-    private User buildUser(String name, String lastname, String login, String password) {
+    private User buildUser(HttpServletRequest req, String name, String lastname, String login, String password) {
         EncryptorBuilder builder = new EncryptorBuilder(password);
+        if("ADMIN".equals(req.getParameter("userType"))) {
+            return new User.Builder()
+                    .setName(name)
+                    .setLastName(lastname)
+                    .setLogin(login)
+                    .setHash(builder.getHash())
+                    .setSalt(builder.getSalt())
+                    .setUserType(UserType.ADMIN)
+                    .build();
+        }
         return new User.Builder()
                 .setName(name)
                 .setLastName(lastname)

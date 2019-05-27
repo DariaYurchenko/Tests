@@ -106,4 +106,22 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
                 .withTestStatus(testDao.setTestStatus(rs))
                 .build();
     }
+
+    @Override
+    public List<TestInfo> findTestsForPagination(Long userId, int currentPage, int recordsPerPage) {
+        List<TestInfo> testsInfoList = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_TESTS_FOR_PAGINATION)) {
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setInt(2, currentPage);
+            preparedStatement.setInt(3, recordsPerPage);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()) {
+                testsInfoList.add(createTestInfo(rs));
+            }
+            return testsInfoList;
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
 }

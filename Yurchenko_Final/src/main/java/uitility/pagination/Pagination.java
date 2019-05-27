@@ -9,15 +9,13 @@ public final class Pagination {
         this.currentPage = currentPage;
     }
 
-    public  int calculateStart(int rows) throws RuntimeException {
+    //TODO: >max amount af pages
+    public  int calculateStart() throws RuntimeException {
         if(currentPage == 0) {
             throw new RuntimeException("Argument 'currentPage' is 0");
         }
-        if (currentPage < 1) {
+         if (currentPage < 1) {
             return 0;
-        }
-        if(currentPage > calculateNumOfPages(rows)) {
-            return calculateNumOfPages(rows)* recordsPerPage - recordsPerPage;
         }
         return currentPage * recordsPerPage - recordsPerPage;
     }

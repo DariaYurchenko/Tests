@@ -34,6 +34,10 @@ public class TestServlet extends HttpServlet {
             result = newCommand.execute(request, response);
         }
         String page = result.getPage();
-        request.getRequestDispatcher(page).forward(request, response);
+        if (result.isRedirect()) {
+            response.sendRedirect(page);
+        } else {
+            request.getRequestDispatcher(page).forward(request, response);
+        }
     }
 }

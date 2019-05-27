@@ -58,6 +58,12 @@
                 </form>
             </div>
         </div>
+        <c:if test="${user != null}">
+            <form action="tests" method="get">
+                <input type="hidden" name="command" value="LOGOUT">
+                <button type="submit">LogOUT</button>
+            </form>
+        </c:if>
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="images/if-else.svg"></div>
             <div class="course"><a href="">If else, switch and loops</a></div>

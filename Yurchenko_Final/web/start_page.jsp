@@ -40,6 +40,7 @@
             </div>
         </nav>
     </header>
+
     <section class="first-section col-lg-12">
         <div class="col-lg-6 col-md-6 col-sm-12 text-center">
             <h1>Become the Best Java Developer</h1>

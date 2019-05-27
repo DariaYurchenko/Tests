@@ -37,7 +37,7 @@ public class SendResults extends Command implements Pages {
 
         MailsSender.send(testInfo);
 
-        return new CommandResult(SHOW_RESULTS);
+        return CommandResult.forward(SHOW_RESULTS);
     }
 
 }

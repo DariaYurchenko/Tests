@@ -26,12 +26,31 @@ public class ShowAllUsers extends Command implements Pages {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        int currentPage = Integer.valueOf(req.getParameter("currentPage"));
+
+        int currentPage = Integer.parseInt(req.getParameter("currentPage"));
+
+        String act = req.getParameter("act");
+        if("DELETE_USER_BY_ID".equals(act)) {
+            req.getSession().setAttribute("act", "DELETE_USER_BY_ID");
+        }
+        if("JUST_SHOW".equals(act)) {
+            req.getSession().setAttribute("act", "JUST_SHOW");
+        }
+        if("DELETE_ALL_USERS".equals(act)) {
+            req.getSession().setAttribute("act", "DELETE_ALL_USERS");
+        }
+        if("SHOW_USER_RESULTS".equals(act)) {
+            req.getSession().setAttribute("act", "SHOW_USER_RESULTS");
+        }
+        if("REGISTER_ADMIN".equals(act)) {
+            req.getSession().setAttribute("act", "REGISTER_ADMIN");
+        }
+
+
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<User> users;
-        users = userService.findUsersForPagination(pagination.calculateStart(5), recordsPerPage);
+        List<User> users = userService.findUsersForPagination(pagination.calculateStart(), recordsPerPage);
 
         /*try {
             users = userService.findUsersForPagination(pagination.calculateStart(), recordsPerPage);
@@ -44,9 +63,9 @@ public class ShowAllUsers extends Command implements Pages {
         }*/
 
         int rows = userService.findAll().size();
-        req.setAttribute("start", pagination.calculateStart(5));
+        req.setAttribute("start", pagination.calculateStart());
         req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
-        req.setAttribute("currentPage", pagination.getCurrentPage());
+        req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
         req.setAttribute("recordsPerPage", pagination.getRecordsPerPage());
         req.setAttribute("showUsers", "The list of users: ");
         req.setAttribute("users", users);

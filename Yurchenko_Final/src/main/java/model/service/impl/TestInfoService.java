@@ -18,4 +18,8 @@ public class TestInfoService {
     public List<TestInfo> findTestsByParameter(String column, Object value) {
         return testInfoDao.findByParameter(column, value);
     }
+
+    public List<TestInfo> findTestsForPagination(Long userId, int currentPage, int recordsPerPage) {
+        return testInfoDao.findTestsForPagination(userId, currentPage, recordsPerPage);
+    }
 }

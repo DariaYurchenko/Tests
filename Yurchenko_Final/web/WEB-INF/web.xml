@@ -4,17 +4,17 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <welcome-file-list>
-        <welcome-file>start_page.jsp</welcome-file>
+        <welcome-file>admin_page.jsp</welcome-file>
     </welcome-file-list>
 
-    <filter-mapping>
+    <!--<filter-mapping>
         <filter-name>loginFilter</filter-name>
         <url-pattern>/tests</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
+    </filter-mapping>-->
+    <!--<filter-mapping>
         <filter-name>submitFilter</filter-name>
         <url-pattern>/tests</url-pattern>
-    </filter-mapping>
+    </filter-mapping>&ndash;&gt;-->
 
 
 

@@ -20,6 +20,11 @@ public class CommandsFactory {
         commands.put("CHANGE_PASSWORD", new ChangePassword());
         commands.put("SUBMIT_KEY", new SubmitKey());
         commands.put("SEND_EMAIL_AGAIN", new SendEmailAgain());
+        commands.put("LOGOUT", new LogOutUser());
+        commands.put("DELETE_USER_BY_ID", new DeleteUserById());
+        commands.put("DELETE_ALL_USERS", new DeleteAllUsers());
+        commands.put("SHOW_USER_RESULTS", new ShowUserResults());
+        commands.put("REGISTER_ADMIN", new RegisterAdmin());
     }
 
     public Command makeCommand(String command) {
