@@ -17,6 +17,7 @@ public class CommandsFactory {
         commands.put("SHOW_RESULTS", new ShowResults());
         commands.put("START_TEST", new StartTest());
         commands.put("SEND_RESULTS", new SendResults());
+        commands.put("CHANGE_PASSWORD", new ChangePassword());
     }
 
     public Command makeCommand(String command) {

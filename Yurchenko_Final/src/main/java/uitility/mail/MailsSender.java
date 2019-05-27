@@ -11,9 +11,7 @@ import javax.mail.internet.MimeMessage;
 import java.security.Security;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Properties;
-import java.util.Scanner;
 
 public final class MailsSender {
     private static final Logger LOGGER = Logger.getLogger(MailsSender.class);
@@ -26,6 +24,7 @@ public final class MailsSender {
     private static final String CONTENT = "<h1>Dear %s!</h1><h2>The results of the test ont theme %s percent:</h2>" +
             "<p>You've got %s points from %s having scored %s  of max amount of points.</p><p>The test is %s." +
             "</p><p>The date of the test is %s.</p><p>Now your rank is %s percent.</p>";
+
 
     public static void send(TestInfo testInfo) {
         try {

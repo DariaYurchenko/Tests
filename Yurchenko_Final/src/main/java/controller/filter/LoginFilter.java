@@ -14,6 +14,7 @@ public class LoginFilter implements Filter {
     private static final String CHANGE_LANGUAGE = "CHANGE_LANGUAGE";
     private static final String LOGIN = "LOGIN";
     private static final String REGISTER = "REGISTER";
+    private static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
 
     @Override
@@ -39,7 +40,8 @@ public class LoginFilter implements Filter {
     private boolean isDoFilter(HttpServletRequest req) {
 
         String command = req.getParameter("command");
-        return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command) || REGISTER.equals(command);
+        return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command) || REGISTER.equals(command) ||
+                CHANGE_PASSWORD.equals(command);
     }
 
     @Override

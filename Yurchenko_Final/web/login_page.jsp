@@ -32,7 +32,6 @@
         </nav>
     </header>
     <form action="tests" method="POST" name="login-form" class="col-lg-6 col-md-8 col-sm-9">
-        <input value="LOGIN" name="command" type="text" hidden>
         <div class="form-group">
             <label for="login">Email</label>
             <input type="email" class="form-control" id="login" placeholder="ivan.petrov@gmail.com" name="login">
@@ -40,18 +39,43 @@
                 <small class="text-danger"><c:out value="${requestScope.errLogin}"/></small>
             </c:if>
         </div>
+        <c:if test="${requestScope.forgot != null}">
+                <input name="command" value="CHANGE_PASSWORD" type="hidden">
+                <label for="newPassword">New Password</label>
+                <input type="password" class="form-control" id="newPassword" name="newPassword">
+        </c:if>
+        <c:if test="${requestScope.forgot == null}">
+        <input value="LOGIN" name="command" type="hidden">
         <div class="form-group">
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" name="password">
-            <c:if test="${requestScope.errPassword != null}">
+
+            <c:if test="${requestScope.forgotPassword != null}">
                 <small class="text-danger"><c:out value="${requestScope.errPassword}"/></small>
             </c:if>
         </div>
+        </c:if>
 
         <div class="button-div form-group col-md-12 text-center">
             <input type="submit" class="btn" value="Log In">
         </div>
     </form>
+    <c:if test="${requestScope.errPassword != null}">
+        <small class="text-danger"><c:out value="${requestScope.errPassword}"/></small>
+        <form action="tests" method="get">
+            <input value="LOGIN" name="command" type="hidden">
+            <input type="hidden" name="ifForgot" value="TRUE">
+            <p>Forgot password?</p>
+            <button type="submit">Yes</button>
+        </form>
+
+    </c:if>
+
+
+    <c:if test="${requestScope.passwordChanged != null}">
+        <c:out value="${requestScope.passwordChanged}"/>
+    </c:if>
+
     <section class="img-section">
         <div class="img-div text-center"><img src="images/reg_fox.jpg"></div>
     </section>

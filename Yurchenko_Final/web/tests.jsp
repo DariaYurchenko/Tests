@@ -69,6 +69,9 @@
                     <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <div>
+                    <c:if test="${user != null}">
+                        <p>Hi, </p><c:out value="${user.name}"/>
+                    </c:if>
                     <div>What will be printed as a result of the following code execution?</div>
                     <pre><c:out value="${question.question}"/></pre>
                     <div class="answers">

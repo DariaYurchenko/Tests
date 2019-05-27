@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -41,6 +42,9 @@
             </div>
         </nav>
     </header>
+    <c:if test="${user != null}">
+        <p>Hi, </p><c:out value="${user.name}"/>
+    </c:if>
     <section class="courses col-lg-8 col-md-9 col-sm-12">
         <div class="select-div">Select module:</div>
         <div class="course-container d-flex align-items-center">

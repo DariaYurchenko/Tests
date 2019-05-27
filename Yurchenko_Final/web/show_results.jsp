@@ -16,11 +16,19 @@
     <p>YOU PASSED!</p>
 </c:if>
 <p>For more detailed information send email:</p>
-<form action="tests" method="post">
+<c:if test="${sent == null}">
+    <form action="tests" method="get">
     <input type="hidden" name="command" value="SEND_RESULTS">
     <button type="submit">Send!</button>
+        <a href="start_page.jsp">No</a>
 </form>
-    <a href="start_page.jsp">No</a>
+</c:if>
+<c:if test="${sent != null}">
+    <p>Email was sent!</p>
+    <button onclick="window.location = 'start_page.jsp'">Back</button>
+</c:if>
+
+
 
 
 </body>

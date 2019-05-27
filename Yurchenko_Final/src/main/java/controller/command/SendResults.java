@@ -33,9 +33,11 @@ public class SendResults extends Command implements Pages {
 
         TestInfo testInfo = userTests.get(userTests.size() - 1);
 
+        req.getSession().setAttribute("sent", "TRUE");
+
         MailsSender.send(testInfo);
 
-        return new CommandResult(START_PAGE);
+        return new CommandResult(SHOW_RESULTS);
     }
 
 }

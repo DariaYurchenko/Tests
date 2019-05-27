@@ -31,6 +31,13 @@ public class UserLogin extends Command implements Pages {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
+        if("TRUE".equals(req.getParameter("ifForgot"))) {
+            req.setAttribute("forgot", "TRUE");
+            req.getSession().setAttribute("login", login);
+            return CommandResult.forward(LOGIN_PAGE);
+        }
+
+        //TODO: nullpointer if nothinf
         if(!validatePasswordLogin(req, login, password)) {
             return CommandResult.forward(LOGIN_PAGE);
         }
@@ -42,6 +49,7 @@ public class UserLogin extends Command implements Pages {
             return CommandResult.forward(LOGIN_PAGE);
         }
         User user = userLogging.get();
+
 
 
         boolean isCorrectPassword = Encryptor.verifyPassword(password, user.getHash(), user.getSalt());

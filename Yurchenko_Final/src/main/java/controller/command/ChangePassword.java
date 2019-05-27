@@ -28,27 +28,31 @@ public class ChangePassword extends Command implements Pages {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
 
+
         String login = req.getParameter("login");
+        if(login == null) {
+            return CommandResult.forward(REGISTRATION_PAGE);
+        }
         String newPassword = req.getParameter("newPassword");
 
-        if(!validatePasswordLogin(req, login, newPassword)) {
+        /*if(!validatePasswordLogin(req, login, newPassword)) {
             return CommandResult.forward(CHANGE_PASSWORD_PAGE);
-        }
+        }*/
 
         Optional<User> userLogging = userService.findUserByLogin(login);
-        if(!userLogging.isPresent()) {
+        /*if(!userLogging.isPresent()) {
             logger.warn("Someone tries to login without registration.");
             req.setAttribute("loginMessage", "There is no user with such login. Please, sign in.");
             return CommandResult.forward(CHANGE_PASSWORD_PAGE);
-        }
+        }*/
 
         EncryptorBuilder builder = new EncryptorBuilder(newPassword);
         String hash = builder.getHash();
         byte[] salt = builder.getSalt();
-        userService.changeUsersPassword(newPassword, salt, hash);
+        userService.changeUsersPassword(hash, salt, login);
 
         req.setAttribute("passwordChanged", "Your password was successfully changed.");
-        return CommandResult.forward(CHANGE_PASSWORD_PAGE);
+        return CommandResult.forward(LOGIN_PAGE);
     }
 
     private boolean validatePasswordLogin(HttpServletRequest req, String login, String password) {

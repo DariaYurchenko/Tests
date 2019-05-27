@@ -55,7 +55,8 @@ public class UserRegistration extends Command implements Pages {
         User newUser = buildUser(name, lastname, login, password);
 
         userService.registerUser(newUser);
-        req.getSession().setAttribute("user", optionalUser);
+        req.getSession().setAttribute("user", newUser);
+
         return CommandResult.forward(TESTS);
     }
 
