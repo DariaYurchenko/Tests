@@ -9,9 +9,10 @@ public interface Pages {
     static final String ADMIN_PAGE = "admin_page.jsp";
     static final String TESTS = "tests_to_pass.jsp";
     static final String PASS_TESTS = "tests.jsp";
-    static final String START_TESTS = "tests.jsp";
     static final String SHOW_RESULTS = "show_results.jsp";
     static final String SUBMIT_KEY = "submit_key.jsp";
+    static final String NOT_SUBMIT_EMAIL = "not_submit_email.jsp";
+
 
 
 }

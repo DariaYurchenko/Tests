@@ -12,6 +12,7 @@
     <title>Title</title>
 </head>
 <body>
+<c:out value="${user.login}"/>
 Submit key successfully!!!!
 <a href="start_page.jsp">Back</a>
 </body>

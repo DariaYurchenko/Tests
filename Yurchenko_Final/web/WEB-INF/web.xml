@@ -11,5 +11,11 @@
         <filter-name>loginFilter</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>submitFilter</filter-name>
+        <url-pattern>/tests</url-pattern>
+    </filter-mapping>
+
+
 
 </web-app>

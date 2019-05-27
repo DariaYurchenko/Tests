@@ -76,4 +76,8 @@ public class UserService {
         userDao.addMagicKey(magicKey, login);
     }
 
+    public String getMagicKey(String login) {
+        return userDao.getMagicKey(login);
+    }
+
 }

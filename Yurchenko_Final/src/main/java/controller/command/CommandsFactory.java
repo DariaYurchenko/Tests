@@ -19,6 +19,7 @@ public class CommandsFactory {
         commands.put("SEND_RESULTS", new SendResults());
         commands.put("CHANGE_PASSWORD", new ChangePassword());
         commands.put("SUBMIT_KEY", new SubmitKey());
+        commands.put("SEND_EMAIL_AGAIN", new SendEmailAgain());
     }
 
     public Command makeCommand(String command) {

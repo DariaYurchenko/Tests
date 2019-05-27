@@ -46,4 +46,6 @@ public interface UserDao extends GenericDao<User> {
 
     String getMagicKey(String login);
 
+    int getSubmit(String login);
+
 }

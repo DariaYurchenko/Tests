@@ -1,5 +1,6 @@
 package controller.filter;
 
+import model.entity.User;
 import org.apache.log4j.Logger;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -28,9 +29,12 @@ public class LoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
-        String command = req.getParameter("command");
 
         if(session != null && session.getAttribute("user")!= null || isDoFilter(req)) {
+            if(session.getAttribute("user")== null) {
+                req.getSession().setAttribute("user", "TRUE");
+            }
+
             filterChain.doFilter(req, resp);
         }
         else {
