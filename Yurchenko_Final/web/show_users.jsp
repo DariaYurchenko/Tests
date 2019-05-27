@@ -31,6 +31,10 @@
             <input type="hidden" name="command" value="DELETE_USER_BY_ID">
             <input type="hidden" name="currentPage" value="${currentPage}">
             <button type="submit">Delete by id</button>
+        </c:if><c:if test="${act == 'DELETE_USER_BY_ID'}">
+            <input type="hidden" name="command" value="DELETE_USER_BY_ID">
+            <input type="hidden" name="currentPage" value="${currentPage}">
+            <button type="submit">Delete by id</button>
         </c:if>
         <c:if test="${act == 'SHOW_USER_RESULTS'}">
             <input type="hidden" name="command" value="SHOW_USER_RESULTS">

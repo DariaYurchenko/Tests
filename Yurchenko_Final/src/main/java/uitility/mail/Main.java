@@ -5,6 +5,8 @@ import model.dao.connector.Connector;
 import model.dao.impl.TestDaoImpl;
 import model.dao.impl.TestInfoDaoImpl;
 import model.entity.TestInfo;
+import model.entity.Theme;
+import model.service.impl.ThemeService;
 import org.apache.commons.io.FileUtils;
 
 import javax.mail.Message;
@@ -39,13 +41,16 @@ public class Main {
         Connector connector = new Connector();
         TestInfoDaoImpl testInfoDao = new TestInfoDaoImpl(connector);
         List<TestInfo> list = testInfoDao.findByParameter("test_id", 2L);
-        TestInfo testInfo = list.get(0);
+
+
+        ThemeService themeService = new ThemeService();
+        List<Theme> themes = themeService.findThemesForPagination(1, 5);
+        System.out.println(themes);
 
 
 
 
-        TestDao testDao = new TestDaoImpl(connector);
-        testDao.deleteAll();
+
 
 
 

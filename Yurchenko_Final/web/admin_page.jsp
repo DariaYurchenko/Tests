@@ -38,6 +38,30 @@
     <input type="hidden" name="act" value="REGISTER_ADMIN">
     <input type="submit" value="REGISTER ADMIN">
 </form>
+<form method="get" action="tests">
+    <input type="hidden" name="currentPage" value="1">
+    <input type="hidden" name="act" value="JUST_SHOW">
+    <input type="hidden" name="command" value="SHOW_ALL_QUESTIONS">
+    <input type="submit" value="Show Questions">
+</form>
+<form method="get" action="tests">
+    <input type="hidden" name="currentPage" value="1">
+    <input type="hidden" name="act" value="SHOW_BY_THEME">
+    <input type="hidden" name="command" value="SHOW_QUESTIONS_BY_THEME">
+    <input type="submit" value="Show Questions by theme">
+</form>
+<%--<form method="get" action="tests">
+    <input type="hidden" name="command" value="SHOW_ALL_QUESTIONS">
+    <input type="hidden" name="act" value="DELETE_QUESTION_BY_ID">
+    <input type="hidden" name="currentPage" value="1">
+    <input type="submit" value="DELETE by id">
+</form>
+<form method="get" action="tests">
+    <input type="hidden" name="command" value="SHOW_ALL_QUESTIONS">
+    <input type="hidden" name="act" value="DELETE_ALL_QUESTIONS">
+    <input type="hidden" name="currentPage" value="1">
+    <input type="submit" value="DELETE all">
+</form>--%>
 
 
 </body>

@@ -23,6 +23,10 @@ public interface QuestionDao extends GenericDao<Question> {
     static final String FIND_QUESTION_BY_PARAMETER = "SELECT * FROM questions q JOIN question_type qt" +
             " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE %s = ?;";
     static final String UPDATE_QUESTION = "UPDATE questions SET %s = ? WHERE question_id = ?;";
+    static final String FIND_QUESTIONS_FOR_PAGINATION = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id LIMIT ?, ?;";
+    static final String FIND_QUESTIONS_FOR_PAGINATION_ID = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE theme_id = ? LIMIT ?, ?;";
 
     static final String QUESTION_ID = "question_id";
     static final String TYPE = "question_type";
@@ -45,5 +49,9 @@ public interface QuestionDao extends GenericDao<Question> {
     void changeAmountOfAnswers(Long id, Integer plusPoints, Integer plusMaxPoints);
 
     List<Question> findThemeQuestions(Long id);
+
+    List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage);
+
+    List<Question> findQuestionsForPaginationId(int startRecord, int recordsPerPage, Long id);
 
 }

@@ -77,5 +77,13 @@ public class QuestionService {
         }
     }
 
+    public List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage) {
+        return questionDao.findQuestionsForPagination(startRecord, recordsPerPage);
+    }
+
+    public List<Question> findQuestionsForPaginationId(int startRecord, int recordsPerPage, Long id) {
+        return questionDao.findQuestionsForPaginationId(startRecord, recordsPerPage, id);
+    }
+
 
 }

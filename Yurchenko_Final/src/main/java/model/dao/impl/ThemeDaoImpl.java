@@ -65,21 +65,34 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
     }
 
     @Override
+    public List<Theme> findThemesForPagination(int startRecord, int recordsPerPage) {
+        List<Theme> themes = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(SELECT_ALL_THEMES_FOR_PAGINATION)) {
+            preparedStatement.setInt(1, startRecord);
+            preparedStatement.setInt(2, recordsPerPage);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()) {
+                themes.add(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)));
+            }
+            return themes;
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+
+    @Override
     public List<Theme> parseResultSet(ResultSet rs) {
         List<Theme> cours = new ArrayList<>();
-        /*try {
+        try {
             while(rs.next()) {
-                cours.add(new Theme.Builder()
-                        .withId(rs.getLong(COURSE_ID))
-                        .withCourseName(rs.getString(COURSE_NAME))
-                        .withAmountOfQuestions(rs.getInt(AMOUNT_OF_QUESTIONS))
-                        .withUsersPassed(rs.getLong(USERS_PASSED))
-                        .build());
+                cours.add(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)));
             }
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of question: " + e.getMessage());
             throw new DaoException(e);
-        }*/
+        }
         return cours;
     }
 

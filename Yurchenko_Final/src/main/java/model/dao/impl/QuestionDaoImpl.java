@@ -52,7 +52,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
 
     @Override
     public String createQueryToUpdate(String column) {
-        return  String.format(UPDATE_QUESTION, column);
+        return String.format(UPDATE_QUESTION, column);
     }
 
     @Override
@@ -78,11 +78,9 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     private int mapTypeToTable(Question question) {
         if (question.getQuestionType().getType().equalsIgnoreCase("Radio")) {
             return 1;
-        }
-        else if (question.getQuestionType().getType().equalsIgnoreCase("Checkbox")) {
+        } else if (question.getQuestionType().getType().equalsIgnoreCase("Checkbox")) {
             return 2;
-        }
-        else {
+        } else {
             return 3;
         }
     }
@@ -90,20 +88,15 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     private long mapThemeToTable(Question question) {
         if (question.getTheme().getThemeName().equalsIgnoreCase("collections")) {
             return 1;
-        }
-        else if (question.getTheme().getThemeName().equalsIgnoreCase("if else, switch and loops")) {
+        } else if (question.getTheme().getThemeName().equalsIgnoreCase("if else, switch and loops")) {
             return 2;
-        }
-        else if (question.getTheme().getThemeName().equalsIgnoreCase("inheritance and polymorphism")) {
+        } else if (question.getTheme().getThemeName().equalsIgnoreCase("inheritance and polymorphism")) {
             return 3;
-        }
-        else if (question.getTheme().getThemeName().equalsIgnoreCase("threads, concurrency")) {
+        } else if (question.getTheme().getThemeName().equalsIgnoreCase("threads, concurrency")) {
             return 4;
-        }
-        else if (question.getTheme().getThemeName().equalsIgnoreCase("operators")) {
+        } else if (question.getTheme().getThemeName().equalsIgnoreCase("operators")) {
             return 5;
-        }
-        else {
+        } else {
             return 6;
         }
     }
@@ -112,7 +105,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     public List<Question> parseResultSet(ResultSet rs) {
         List<Question> questions = new ArrayList<>();
         try {
-            while(rs.next()) {
+            while (rs.next()) {
                 questions.add(createQuestion(rs));
             }
             return questions;
@@ -124,18 +117,18 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
 
     private Question createQuestion(ResultSet rs) throws SQLException {
         return new Question.Builder()
-                    .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
-                    .withId(rs.getLong(QUESTION_ID))
-                    .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
-                    .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
-                    .withQuestion(rs.getString(QUESTION))
-                    .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
-                    .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
-                    .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
-                    .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
-                    .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
-                    .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
-                    .build();
+                .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
+                .withId(rs.getLong(QUESTION_ID))
+                .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
+                .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
+                .withQuestion(rs.getString(QUESTION))
+                .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
+                .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
+                .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
+                .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
+                .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
+                .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
+                .build();
     }
 
     private Double setPercentOfRightAnswers(ResultSet rs) {
@@ -200,8 +193,8 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
         try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_QUESTIONS_OF_THEME)) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
-                courseQuestions.add(( new Question.Builder()
+            while (rs.next()) {
+                courseQuestions.add((new Question.Builder()
                         .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
                         .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
                         .withId(rs.getLong(QUESTION_ID))
@@ -221,4 +214,66 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage) {
+        List<Question> questions = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_QUESTIONS_FOR_PAGINATION)) {
+            preparedStatement.setInt(1, startRecord);
+            preparedStatement.setInt(2, recordsPerPage);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                questions.add((new Question.Builder()
+                        .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
+                        .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
+                        .withId(rs.getLong(QUESTION_ID))
+                        .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
+                        .withQuestion(rs.getString(QUESTION))
+                        .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
+                        .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
+                        .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
+                        .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
+                        .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
+                        .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
+                        .build()));
+            }
+            return questions;
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Question> findQuestionsForPaginationId(int startRecord, int recordsPerPage, Long id) {
+        List<Question> questions = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_QUESTIONS_FOR_PAGINATION_ID)) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(2, startRecord);
+            preparedStatement.setInt(3, recordsPerPage);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                questions.add((new Question.Builder()
+                        .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
+                        .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
+                        .withId(rs.getLong(QUESTION_ID))
+                        .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
+                        .withQuestion(rs.getString(QUESTION))
+                        .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
+                        .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
+                        .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
+                        .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
+                        .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
+                        .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
+                        .build()));
+            }
+            return questions;
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
 }
+
+

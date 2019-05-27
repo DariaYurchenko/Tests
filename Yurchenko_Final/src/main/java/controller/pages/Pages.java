@@ -12,6 +12,7 @@ public interface Pages {
     static final String SHOW_RESULTS = "show_results.jsp";
     static final String SUBMIT_KEY = "submit_key.jsp";
     static final String NOT_SUBMIT_EMAIL = "not_submit_email.jsp";
+    static final String SHOW_QUESTIONS = "show_questions.jsp";
 
 
 

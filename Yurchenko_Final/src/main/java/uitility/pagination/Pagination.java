@@ -20,6 +20,7 @@ public final class Pagination {
         return currentPage * recordsPerPage - recordsPerPage;
     }
 
+    //TODO: on 1 page more!!!
     public  int calculateNumOfPages(int rows) throws RuntimeException {
         if (recordsPerPage==0)
             throw new RuntimeException("Argument 'recordsPerPage' is 0");

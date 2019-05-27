@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <welcome-file-list>
-        <welcome-file>admin_page.jsp</welcome-file>
+        <welcome-file>login_page.jsp</welcome-file>
     </welcome-file-list>
 
     <!--<filter-mapping>

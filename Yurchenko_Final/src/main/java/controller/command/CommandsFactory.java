@@ -25,6 +25,12 @@ public class CommandsFactory {
         commands.put("DELETE_ALL_USERS", new DeleteAllUsers());
         commands.put("SHOW_USER_RESULTS", new ShowUserResults());
         commands.put("REGISTER_ADMIN", new RegisterAdmin());
+        commands.put("SHOW_ALL_QUESTIONS", new ShowAllQuestions());
+        commands.put("SHOW_QUESTIONS_BY_THEME", new ShowThemes() );
+        commands.put("SHOW_THEME_QUESTIONS", new ShowThemeQuestions());
+        /*commands.put("DELETE_QUESTION_BY_ID", new DeleteQuestionById());
+        commands.put("DELETE_ALL_QUESTIONS", new DeleteAllQuestions());*/
+
     }
 
     public Command makeCommand(String command) {
