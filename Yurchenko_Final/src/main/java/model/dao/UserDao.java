@@ -42,4 +42,8 @@ public interface UserDao extends GenericDao<User> {
 
     Double setUserRank(ResultSet rs);
 
+    void addMagicKey(String magicKey, String login);
+
+    String getMagicKey(String login);
+
 }

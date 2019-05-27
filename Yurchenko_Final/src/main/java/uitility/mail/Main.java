@@ -1,6 +1,8 @@
 package uitility.mail;
 
+import model.dao.TestDao;
 import model.dao.connector.Connector;
+import model.dao.impl.TestDaoImpl;
 import model.dao.impl.TestInfoDaoImpl;
 import model.entity.TestInfo;
 import org.apache.commons.io.FileUtils;
@@ -39,38 +41,11 @@ public class Main {
         List<TestInfo> list = testInfoDao.findByParameter("test_id", 2L);
         TestInfo testInfo = list.get(0);
 
-     File file = new File("src\\main\\resources\\userMail");
-        FileReader reader = new FileReader(file);
-        String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-        LocalDate localDate = testInfo.getDate();
 
-        System.out.println(content);
-         String ready = String.format(content, testInfo.getUserName() + " " + testInfo.getUserLastName(), testInfo.getTheme(),
-                testInfo.getUserPoints().toString(), testInfo.getMaxPoints().toString(), testInfo.getRightAnswersPercent().toString(), "passed", localDate.format(formatter),
-                testInfo.getUserRank());
-        System.out.println(ready);
 
-        final Properties properties = new Properties();
-     properties.load(Main.class.getClassLoader().getResourceAsStream("mail.properties"));
-
-     Session session = Session.getDefaultInstance(properties);
-     MimeMessage message = new MimeMessage(session);
-     message.setFrom(new InternetAddress("yurchenkod2017"));
-     message.addRecipient(Message.RecipientType.TO, new InternetAddress("yurchenkod95@gmail.com"));
-
-     message.setSubject("Hi");
-     message.setContent(ready, "text/html; charset=utf-8");
-
-     Transport transport = session.getTransport();
-     transport.connect(null, "230da68sha19");
-     //transport.sendMessage(message, message.getAllRecipients());
-     transport.close();
-
-    // MailSender.sendEmail(testInfo);
-    /*MailsSender.Send(testInfo, "yurchenkod2017", "230da68sha19", "yurchenkod95@gmail.com",
-            "", "HJDS", "fsdfs");*/
+        TestDao testDao = new TestDaoImpl(connector);
+        testDao.deleteAll();
 
 
 

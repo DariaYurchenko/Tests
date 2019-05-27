@@ -43,8 +43,8 @@ public class UserService {
         userDao.deleteAll();
     }
 
-    public void updateUserById(String column, String value, Long id) {
-        userDao.update(column, value, id);
+    public void updateUserById(String column, String value, String login) {
+        userDao.update(column, value, login);
     }
 
     public Optional<User> findUserByLogin(String login) {
@@ -70,6 +70,10 @@ public class UserService {
 
     public List<User> findUsersForPagination(int currentPage, int recordsPerPage) throws DaoException {
         return userDao.findUsersForPagination(currentPage, recordsPerPage);
+    }
+
+    public void addKey(String magicKey, String login ) {
+        userDao.addMagicKey(magicKey, login);
     }
 
 }

@@ -40,8 +40,8 @@ public class QuestionService {
         return questionDao.findByParameter(column, value);
     }
 
-    public void update(String column, Object value, Long id) {
-        questionDao.update(column, value, id);
+    public void update(String column, Object value,String login) {
+        questionDao.update(column, value, login);
     }
 
     public Question findById(Long id) throws ServiceException {

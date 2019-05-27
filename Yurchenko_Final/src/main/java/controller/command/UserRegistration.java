@@ -1,18 +1,31 @@
 package controller.command;
 
+import com.sun.mail.smtp.SMTPTransport;
 import controller.pages.Pages;
 import model.entity.User;
 import model.entity.entityenum.UserType;
 import model.service.impl.UserService;
 import org.apache.log4j.Logger;
 import uitility.language.LanguageManager;
+import uitility.mail.MailsSender;
 import uitility.validator.LoginValidator;
 import uitility.encryption.EncryptorBuilder;
 import uitility.validator.NameLastnameValidator;
 import uitility.validator.PasswordValidator;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.Security;
 import java.util.Optional;
+import java.util.Properties;
 
 public class UserRegistration extends Command implements Pages {
     private static final Logger logger = Logger.getLogger(UserRegistration.class);
@@ -55,6 +68,14 @@ public class UserRegistration extends Command implements Pages {
         User newUser = buildUser(name, lastname, login, password);
 
         userService.registerUser(newUser);
+
+        User user = userService.findUserByLogin(login).get();
+        Long id = user.getUserId();
+        String key = generateMagicKey(password);
+        userService.addKey(key, login);
+
+        sendEmail(login, key);
+
         req.getSession().setAttribute("user", newUser);
 
         return CommandResult.forward(TESTS);
@@ -92,4 +113,58 @@ public class UserRegistration extends Command implements Pages {
                 .build();
     }
 
-}
+    private String generateMagicKey(String password) {
+        try {
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+        messageDigest.update(salt);
+        byte[] digest = messageDigest.digest(password.getBytes());
+        StringBuilder builder = new StringBuilder();
+        for (byte b : digest) {
+            builder.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
+        return builder.toString();
+        }  catch (NoSuchAlgorithmException e) {
+            throw new NullPointerException();
+        }
+    }
+
+    private void sendEmail(String login, String key) {
+        try {
+            Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+
+            Properties props = System.getProperties();
+            props.setProperty("mail.smtps.host", "smtp.gmail.com");
+            props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            props.setProperty("mail.smtp.socketFactory.fallback", "false");
+            props.setProperty("mail.smtp.port", "587");
+            props.setProperty("mail.smtp.socketFactory.port", "587");
+            props.setProperty("mail.smtps.auth", "true");
+            props.put("mail.smtps.quitwait", "false");
+
+            Session session = Session.getInstance(props, null);
+
+            final MimeMessage msg = new MimeMessage(session);
+
+            String href = "http://localhost:8081/Yurchenko_Final_war_exploded/tests?command=SUBMIT_KEY&login=" + login +
+                    "&key=" + key;
+
+            msg.setFrom(new InternetAddress("yurchenkod2017" + "@gmail.com"));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(login, false));
+            msg.setSubject("Reg");
+            msg.setContent("<a href=\"" + href + "\">Pass</a>", "text/html; charset=utf-8");
+
+            SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
+
+            t.connect("smtp.gmail.com", "yurchenkod2017", "230da68sha19");
+            t.sendMessage(msg, msg.getAllRecipients());
+            t.close();
+        } catch (MessagingException e) {
+
+        }
+    }
+    }
+
+

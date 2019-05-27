@@ -106,11 +106,11 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     @Override
-    public void update(String column, Object value, Long id) {
+    public void update(String column, Object value, String login) {
         String command = createQueryToUpdate(column);
         try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
             ps.setObject(1, value);
-            ps.setLong(2, id);
+            ps.setString(2, login);
             ps.executeUpdate();
         } catch (SQLException e) {
             LOGGER.warn("SQLException with updating object: " + e.getMessage());

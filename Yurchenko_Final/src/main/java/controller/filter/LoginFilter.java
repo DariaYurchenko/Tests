@@ -15,6 +15,7 @@ public class LoginFilter implements Filter {
     private static final String LOGIN = "LOGIN";
     private static final String REGISTER = "REGISTER";
     private static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
+    private static final String SUBMIT_KEY = "SUBMIT_KEY";
 
 
     @Override
@@ -41,7 +42,7 @@ public class LoginFilter implements Filter {
 
         String command = req.getParameter("command");
         return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command) || REGISTER.equals(command) ||
-                CHANGE_PASSWORD.equals(command);
+                CHANGE_PASSWORD.equals(command) || SUBMIT_KEY.equals(command);
     }
 
     @Override

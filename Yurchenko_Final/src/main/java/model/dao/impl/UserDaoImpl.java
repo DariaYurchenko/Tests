@@ -58,7 +58,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     //TODO: constants StringFormat
     @Override
     public String createQueryToUpdate(String column) {
-        return "UPDATE users SET " + column + " = ? WHERE user_id = ?;";
+        return "UPDATE users SET " + column + " = ? WHERE login = ?;";
     }
 
     @Override
@@ -72,6 +72,43 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
             ps.setBytes(6, user.getSalt());
         } catch (SQLException e) {
             LOGGER.error("SQLException with preparing statement for creating user: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    public void addMagicKey(String magicKey, String login) {
+        update("magic_key", magicKey, login);
+        update("submited", 1, login);
+    }
+
+    public String getMagicKey(String login) {
+        String mykey = null;
+        String sql = "SELECT magic_key FROM users WHERE login = ?";
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(sql)) {
+            ps.setString(1, login);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+               mykey = rs.getString("magic_key");
+            }
+            return mykey;
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding user by login: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    public int getSubmit(String login) {
+        int submit = 0;
+        String sql = "SELECT submited FROM users WHERE login = ?";
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(sql)) {
+            ps.setString(1, login);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                submit = rs.getInt("submited");
+            }
+            return submit;
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding user by login: " + e.getMessage());
             throw new DaoException(e);
         }
     }

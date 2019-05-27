@@ -11,7 +11,7 @@ public interface GenericDao<T> {
 
     public void deleteAll();
 
-    void update(String column, Object value, Long id);
+    void update(String column, Object value, String login);
 
     List<T> findAll();
 
