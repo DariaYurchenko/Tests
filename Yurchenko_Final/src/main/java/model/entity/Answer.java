@@ -1,11 +1,9 @@
 package model.entity;
 
-import model.entity.entityenum.AnswerStatus;
+import model.entity.status.AnswerStatus;
+import java.util.Objects;
 
 public class Answer {
-
-    //TODO: different types of answers: field, some correct answers
-
     private int maxPoints;
     private AnswerStatus answerStatus;
 
@@ -20,5 +18,23 @@ public class Answer {
 
     public AnswerStatus getAnswerStatus() {
         return answerStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Answer answer = (Answer) o;
+        return maxPoints == answer.maxPoints &&
+                answerStatus == answer.answerStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(maxPoints, answerStatus);
     }
 }

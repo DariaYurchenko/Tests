@@ -1,39 +1,42 @@
 package controller.command;
 
-import controller.pages.Pages;
-import model.dao.UserDao;
-import model.dao.connector.Connector;
-import model.dao.impl.UserDaoImpl;
-import model.entity.User;
-
+import controller.pages.CommandPages;
+import model.service.UserService;
+import model.service.impl.UserServiceImpl;
+import org.apache.log4j.Logger;
+import uitility.language.LanguageManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SubmitKey extends Command implements Pages {
-    private UserDao userDao;
-    private Connector connector = new Connector();
+public class SubmitKey extends Command implements CommandPages {
+    private static final Logger LOGGER = Logger.getLogger(SubmitKey.class);
+
+    private UserService userService;
+    private LanguageManager languageManager;
 
     public SubmitKey() {
-        this.userDao = new UserDaoImpl(connector);
+        this.userService = new UserServiceImpl();
+        this.languageManager =  LanguageManager.INSTANCE;
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         String login = req.getParameter("login");
         String key = req.getParameter("key");
+        String language = String.valueOf(req.getParameter("appLocale"));
 
-       /* if(key == null) {
-            return new CommandResult(TESTS);
-        }*/
-        /*User user = userDao.findUserByLogin(login).get();
-        Long id = user.getUserId();*/
+        languageManager.setLanguage(language);
 
-
-        String userKey = userDao.getMagicKey(login);
+        String userKey = userService.findMagicKey(login);
         if(userKey.equals(key)) {
-            userDao.update("submited", 2, login);
+            userService.changeSubmitKeyStatus(login);
         }
-
+        else {
+            LOGGER.warn("Someone put in incorrect key.");
+            req.getSession().setAttribute("incorrectKey", "TRUE");
+        }
         return CommandResult.forward(SUBMIT_KEY);
     }
+
+
 }

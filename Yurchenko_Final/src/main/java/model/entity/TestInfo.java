@@ -1,8 +1,8 @@
 package model.entity;
 
-import model.entity.entityenum.TestStatus;
-
+import model.entity.status.TestStatus;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class TestInfo {
     private String userName;
@@ -63,21 +63,6 @@ public class TestInfo {
 
     public TestStatus getTestStatus() {
         return testStatus;
-    }
-
-    @Override
-    public String toString() {
-        return "TestInfo{" +
-                "userName='" + userName + '\'' +
-                ", userLastName='" + userLastName + '\'' +
-                ", userRank=" + userRank +
-                ", theme='" + theme + '\'' +
-                ", userPoints=" + userPoints +
-                ", maxPoints=" + maxPoints +
-                ", rightAnswersPercent=" + rightAnswersPercent +
-                ", date=" + date +
-                ", testStatus=" + testStatus +
-                '}';
     }
 
     public String getUserLogin() {
@@ -150,7 +135,33 @@ public class TestInfo {
             return new TestInfo(this);
         }
 
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TestInfo testInfo = (TestInfo) o;
+        return Objects.equals(userName, testInfo.userName) &&
+                Objects.equals(userLastName, testInfo.userLastName) &&
+                Objects.equals(userLogin, testInfo.userLogin) &&
+                Objects.equals(userRank, testInfo.userRank) &&
+                Objects.equals(theme, testInfo.theme) &&
+                Objects.equals(userPoints, testInfo.userPoints) &&
+                Objects.equals(maxPoints, testInfo.maxPoints) &&
+                Objects.equals(rightAnswersPercent, testInfo.rightAnswersPercent) &&
+                Objects.equals(date, testInfo.date) &&
+                testStatus == testInfo.testStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName, userLastName, userLogin, userRank, theme, userPoints, maxPoints,
+                rightAnswersPercent, date, testStatus);
     }
 
 }

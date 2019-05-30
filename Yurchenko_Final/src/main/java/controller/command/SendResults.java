@@ -1,25 +1,24 @@
 package controller.command;
 
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.TestInfo;
 import model.entity.User;
-import model.service.impl.TestInfoService;
+import model.service.impl.TestInfoServiceImpl;
 import uitility.mail.MailsSender;
 
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
-public class SendResults extends Command implements Pages {
+public class SendResults extends Command implements CommandPages {
     private static final String USER_ID = "test_user_id";
 
-    private TestInfoService testInfoService;
+    private TestInfoServiceImpl testInfoServiceImpl;
 
     public SendResults() {
-        this.testInfoService = new TestInfoService();
+        this.testInfoServiceImpl = new TestInfoServiceImpl();
     }
 
 
@@ -29,13 +28,13 @@ public class SendResults extends Command implements Pages {
         User user = (User) req.getSession().getAttribute("user");
         Long userId = user.getUserId();
 
-        List<TestInfo> userTests = testInfoService.findTestsByParameter(USER_ID, userId);
+        List<TestInfo> userTests = testInfoServiceImpl.findTestsByParameter(USER_ID, userId);
 
         TestInfo testInfo = userTests.get(userTests.size() - 1);
 
         req.getSession().setAttribute("sent", "TRUE");
 
-        MailsSender.send(testInfo);
+        MailsSender.sendTestResults(testInfo);
 
         return CommandResult.forward(SHOW_RESULTS);
     }

@@ -1,16 +1,16 @@
 package controller.command;
 
-import controller.pages.Pages;
-import model.service.impl.QuestionService;
+import controller.pages.CommandPages;
+import model.service.impl.QuestionServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DeleteAllQuestions extends Command implements Pages {
-    private QuestionService questionService = new QuestionService();
+public class DeleteAllQuestions extends Command implements CommandPages {
+    private QuestionServiceImpl questionServiceImpl = new QuestionServiceImpl();
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        questionService.deleteAll();
+        questionServiceImpl.deleteAll();
         return CommandResult.forward(new ShowAllQuestions());
     }
 }

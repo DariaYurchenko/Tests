@@ -20,7 +20,7 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
         this.connector = connector;
     }
 
-    public abstract String createQueryToAdd();
+    public abstract String createQueryToSave();
 
     public abstract String createQueryToFindById();
 
@@ -30,21 +30,23 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
     public abstract String createQueryToFindAll();
 
+    public abstract String createQueryToPagination();
+
     public abstract String createQueryToFindByParameter(String column);
 
     public abstract String createQueryToUpdate(String column);
 
-    public abstract void prepareStatementToAdd(PreparedStatement ps, T object);
+    public abstract void prepareStatementToSave(PreparedStatement ps, T object);
 
     public abstract Optional<T> parseResultSetToFindById(ResultSet rs);
 
     public abstract List<T> parseResultSet(ResultSet rs);
 
     @Override
-    public void create(T object) {
-        String command = createQueryToAdd();
+    public void add(T object) {
+        String command = createQueryToSave();
         try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
-            prepareStatementToAdd(ps, object);
+            prepareStatementToSave(ps, object);
             int count = ps.executeUpdate();
             //TODO: if should do such check in dao
             if(count != 1) {
@@ -93,32 +95,6 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     @Override
-    public List<T> findByParameter(String column, Object value) {
-        String command = createQueryToFindByParameter(column);
-        try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
-            ps.setObject(1, value);
-            ResultSet rs = ps.executeQuery();
-            return parseResultSet(rs);
-        } catch (SQLException e) {
-            LOGGER.warn("SQLException with finding objects by parameter: " + e.getMessage());
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public void update(String column, Object value, String login) {
-        String command = createQueryToUpdate(column);
-        try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
-            ps.setObject(1, value);
-            ps.setString(2, login);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.warn("SQLException with updating object: " + e.getMessage());
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
     public Optional<T> findById(Long id) {
         T object = null;
         String command = createQueryToFindById();
@@ -135,5 +111,45 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
             throw new DaoException(e);
         }
         return Optional.ofNullable(object);
+    }
+
+    @Override
+    public List<T> findByParameter(String column, Object value) {
+        String command = createQueryToFindByParameter(column);
+        try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
+            ps.setObject(1, value);
+            ResultSet rs = ps.executeQuery();
+            return parseResultSet(rs);
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding objects by parameter: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<T> findForPagination(int startRecord, int recordsPerPage) {
+        String command = createQueryToPagination();
+        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(command)) {
+            preparedStatement.setInt(1, startRecord);
+            preparedStatement.setInt(2, recordsPerPage);
+            ResultSet rs = preparedStatement.executeQuery();
+            return parseResultSet(rs);
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding objects for pagination: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void update(String column, Object value, Long id) {
+        String command = createQueryToUpdate(column);
+        try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
+            ps.setObject(1, value);
+            ps.setLong(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with updating object: " + e.getMessage());
+            throw new DaoException(e);
+        }
     }
 }

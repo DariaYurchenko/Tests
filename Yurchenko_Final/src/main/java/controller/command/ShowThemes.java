@@ -1,16 +1,16 @@
 package controller.command;
 
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.Theme;
-import model.service.impl.ThemeService;
+import model.service.impl.ThemeServiceImpl;
 import uitility.pagination.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public class ShowThemes extends Command implements Pages {
-    private ThemeService themeService = new ThemeService();
+public class ShowThemes extends Command implements CommandPages {
+    private ThemeServiceImpl themeServiceImpl = new ThemeServiceImpl();
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
@@ -19,10 +19,10 @@ public class ShowThemes extends Command implements Pages {
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<Theme> themes = themeService.findThemesForPagination(pagination.calculateStart(), recordsPerPage);
-        //List<Theme> themes = themeService.findAll();
+        List<Theme> themes = themeServiceImpl.findThemesForPagination(pagination.calculateStart(), recordsPerPage);
+        //List<Theme> themes = themeServiceImpl.findAll();
 
-        int rows = themeService.findAll().size();
+        int rows = themeServiceImpl.findAll().size();
         req.setAttribute("start", pagination.calculateStart());
         req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());

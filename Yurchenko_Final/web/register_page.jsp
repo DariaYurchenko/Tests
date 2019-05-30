@@ -11,23 +11,66 @@
     <link href="css/reg_page.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <style>
+        form[name="logout-form"]{
+            margin-bottom: 0;
+            padding: 8px
+        }
+        form[name="logout-form"] button[type="submit"]{
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: white
+        }
+        @font-face{
+            font-family: "Cookie Regular";
+            src: url("fonts/shumi.otf")
+
+        }
+    </style>
 </head>
 <body>
 <div class="row">
     <header class="header col-lg-12">
         <nav class="navbar navbar-dark bg-dark navbar-expand-md col-lg-12">
-            <a class="navbar-brand" href="#">JavaFox</a>
-            <div class="signUp"><button onclick="window.location = '#'" class="btn btn-primary"><fmt:message key="sign_up"/></button></div>
+            <a class="navbar-brand" href="start_page.jsp">JavaFox</a>
+            <div class="signUp">
+                <ul class="navbar-nav mr-4 d-inline-block">
+                    <c:if test="${sessionScope.user != null && sessionScope.userStatus == 'Student'}">
+                        <li class="nav-item d-inline-block">
+                            <a class="nav-link"><fmt:message key="hello"/><c:out value="${sessionScope.user.name}"/></a>
+                        </li>
+                    </c:if>
+                    <c:if test="${sessionScope.user != null && sessionScope.userStatus == 'Admin'}">
+                        <li class="nav-item d-inline-block">
+                            <a class="nav-link" href="admin_page.jsp"><fmt:message key="admin_page"/></a>
+                        </li>
+                    </c:if>
+                </ul>
+                <button onclick="window.location = 'register_page.jsp'" class="btn btn-primary"><fmt:message key="sign_up"/></button>
+            </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse " id="navbarSupportedContent">
                 <ul class="navbar-nav mr-4">
+                    <c:if test="${sessionScope.user == null}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="login_page.jsp"><fmt:message key="log_in"/></a>
+                        </li>
+                    </c:if>
+                    <c:if test="${sessionScope.user != null}">
+                        <li>
+                            <form method="get" action="tests" name="logout-form">
+                                <input type="hidden" name="command" value="LOGOUT">
+                                <div>
+                                    <button type="submit"><fmt:message key="log_out"/></button>
+                                </div>
+                            </form>
+                        </li>
+                    </c:if>
                     <li class="nav-item">
-                        <a class="nav-link" href="login_page.jsp"><fmt:message key="log_in"/></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="tests.jsp"><fmt:message key="tests"/></a>
+                        <a class="nav-link " href="tests_to_pass.jsp"><fmt:message key="tests"/></a>
                     </li>
                 </ul>
 
@@ -58,15 +101,15 @@
                 <small class="text-danger"><c:out value="${requestScope.errLastname}"/></small>
             </c:if>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
+        <div class="form-row login-pass">
+            <div class="form-group col-md-6 margin-none">
                 <label for="email"><fmt:message key="register_login"/></label>
                 <input type="email" class="form-control" id="email" placeholder="ivan.petrov@gmail.com" name="email">
                 <c:if test="${requestScope.errLogin != null}">
                     <small class="text-danger"><c:out value="${requestScope.errLogin}"/></small>
                 </c:if>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-6 margin-none">
                 <label for="password"><fmt:message key="register_password"/></label>
                 <input type="password" class="form-control" id="password" name="password">
                 <c:if test="${requestScope.errPassword != null}">
@@ -74,12 +117,12 @@
                 </c:if>
             </div>
         </div>
-        <div class="button-div form-group col-md-12 text-center">
-            <input type="submit" class="btn" value="Sign Up">
-        </div>
         <div><c:if test="${requestScope.user_exists != null}">
             <small class="text-danger"><c:out value="${requestScope.user_exists}"/></small>
         </c:if></div>
+        <div class="button-div form-group col-md-12 text-center">
+            <input type="submit" class="btn" value="Sign Up">
+        </div>
     </form>
     <section class="img-section">
         <div class="img-div text-center"><img src="images/reg_fox.jpg"></div>

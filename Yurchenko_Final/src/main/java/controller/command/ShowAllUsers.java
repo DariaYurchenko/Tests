@@ -1,27 +1,26 @@
 package controller.command;
 
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.User;
-import model.service.impl.UserService;
+import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.pagination.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ShowAllUsers extends Command implements Pages {
+public class ShowAllUsers extends Command implements CommandPages {
     private static final Logger LOGGER = Logger.getLogger(UserLogin.class);
 
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
-    public ShowAllUsers(UserService userService) {
-        this.userService = userService;
+    public ShowAllUsers(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
     }
 
     public ShowAllUsers() {
-        this.userService = new UserService();
+        this.userServiceImpl = new UserServiceImpl();
     }
 
     @Override
@@ -50,25 +49,15 @@ public class ShowAllUsers extends Command implements Pages {
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<User> users = userService.findUsersForPagination(pagination.calculateStart(), recordsPerPage);
+        List<User> users = userServiceImpl.findUsersForPagination(pagination.calculateStart(), recordsPerPage);
 
-        /*try {
-            users = userService.findUsersForPagination(pagination.calculateStart(), recordsPerPage);
-            if (users == null) {
-                LOGGER.warn("No users in database.");
-                return CommandResult.forward(ERROR_PAGE);
-            }
-        } catch (Exception e) {
-            return CommandResult.forward(ERROR_PAGE);
-        }*/
-
-        int rows = userService.findAll().size();
-        req.setAttribute("start", pagination.calculateStart());
+        int rows = userServiceImpl.findAll().size();
+        //req.setAttribute("start", pagination.calculateStart());
         req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
         req.setAttribute("recordsPerPage", pagination.getRecordsPerPage());
         req.setAttribute("showUsers", "The list of users: ");
         req.setAttribute("users", users);
-        return CommandResult.forward("show_users.jsp");
+        return CommandResult.forward(SHOW_USERS);
     }
 }

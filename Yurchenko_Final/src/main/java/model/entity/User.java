@@ -1,16 +1,10 @@
 package model.entity;
 
-import model.entity.entityenum.UserType;
+import model.entity.status.UserStatus;
 import uitility.encryption.Encryptor;
 import java.util.Arrays;
+import java.util.Objects;
 
-
-//TODO: write documenttaion to fields which are not obvious
-//TODO: not add but save
-//TODO: in dao use optional if return one object
-//TODO: not get but find
-//TODO: void methods verify stab
-//TODO: no magic numbers
 public class User {
     private Long userId;
     private String login;
@@ -19,7 +13,7 @@ public class User {
     private String hash;
     private byte[] salt;
     private Double rank;
-    private UserType type;
+    private UserStatus status;
 
     public User(Builder builder) {
         this.userId = builder.id;
@@ -29,7 +23,7 @@ public class User {
         this.hash = builder.hash;
         this.salt = builder.salt;
         this.rank = builder.rank;
-        this.type = builder.type;
+        this.status = builder.status;
     }
 
     public Long getUserId() {
@@ -52,8 +46,8 @@ public class User {
         return salt;
     }
 
-    public UserType getType() {
-        return type;
+    public UserStatus getStatus() {
+        return status;
     }
 
     public String getLogin() {
@@ -64,18 +58,8 @@ public class User {
         return rank;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", login='" + login + '\'' +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", hash='" + hash + '\'' +
-                ", salt=" + Arrays.toString(salt) +
-                ", rank=" + rank +
-                ", type=" + type +
-                '}';
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 
     public static class Builder {
@@ -86,50 +70,50 @@ public class User {
         private String hash;
         private Double rank;
         byte[] salt;
-        private UserType type;
+        private UserStatus status;
 
-        public Builder setId(Long id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder setLogin(String login) {
+        public Builder withLogin(String login) {
             this.login = login;
             return this;
         }
 
-        public Builder setName(String name) {
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder setLastName(String lastName) {
+        public Builder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public Builder setPassword(String password) {
+        public Builder withPassword(String password) {
             this.salt = Encryptor.getSalt();
             this.hash = Encryptor.getSecurePassword(password, salt);
             return this;
         }
 
-        public Builder setUserType(UserType type) {
-            this.type = type;
+        public Builder withUserType(UserStatus type) {
+            this.status = type;
             return this;
         }
 
-        public Builder setHash(String hash) {
+        public Builder withHash(String hash) {
             this.hash = hash;
             return this;
         }
 
-        public Builder setSalt(byte[] salt) {
+        public Builder withSalt(byte[] salt) {
             this.salt = salt;
             return this;
         }
 
-        public Builder setRank(Double rank) {
+        public Builder withRank(Double rank) {
             this.rank = rank;
             return this;
         }
@@ -138,5 +122,31 @@ public class User {
             return new User(this);
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(userId, user.userId) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(hash, user.hash) &&
+                Arrays.equals(salt, user.salt) &&
+                Objects.equals(rank, user.rank) &&
+                status == user.status;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(userId, login, name, lastName, hash, rank, status);
+        result = 31 * result + Arrays.hashCode(salt);
+        return result;
     }
 }

@@ -1,9 +1,11 @@
 package controller.command;
 
 import com.sun.mail.smtp.SMTPTransport;
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.User;
-import model.service.impl.UserService;
+import model.service.impl.UserServiceImpl;
+import uitility.encryption.EncryptorBuilder;
+import uitility.mail.MailsSender;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -15,27 +17,30 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.Security;
 import java.util.Properties;
 
-public class SendEmailAgain extends Command implements Pages {
-    private UserService userService;
+public class SendEmailAgain extends Command implements CommandPages {
+    private UserServiceImpl userServiceImpl;
 
     public SendEmailAgain() {
-        this.userService = new UserService();
+        this.userServiceImpl = new UserServiceImpl();
     }
-
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         User user = (User) req.getSession().getAttribute("user");
         String login = user.getLogin();
 
-        String key = userService.getMagicKey(login);
-        sendEmail(login, key);
-        req.setAttribute("sent", "true");
+        sendEmailToConfirmRegistrationAgain(login);
+        req.setAttribute("sent", "TRUE");
 
         return CommandResult.forward(NOT_SUBMIT_EMAIL);
     }
 
-    private void sendEmail(String login, String key) {
+    private void sendEmailToConfirmRegistrationAgain(String login) {
+        String magicKey = userServiceImpl.findMagicKey(login);
+        MailsSender.sendEmailToConfirmRegistration(login, magicKey);
+    }
+
+    /*private void sendEmail(String login, String key) {
         try {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
@@ -68,5 +73,5 @@ public class SendEmailAgain extends Command implements Pages {
         } catch (MessagingException e) {
 
         }
-    }
+    }*/
 }

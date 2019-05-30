@@ -14,30 +14,41 @@ import java.io.IOException;
 public class TestServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        process(request, response);
+        process(req, resp);
 
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        process(request, response);
+        process(req, resp);
     }
 
-    private void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String command = request.getParameter("command");
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String command = req.getParameter("command");
         CommandsFactory factory = new CommandsFactory();
-        CommandResult result = factory.makeCommand(command).execute(request, response);
-        if(result.getChainCommand() != null) {
-            Command newCommand = result.getChainCommand();
-            result = newCommand.execute(request, response);
+        CommandResult result = factory.makeCommand(command).execute(req, resp);
+
+        if(checkIfLeadsToAnotherCommand(result)) {
+            Command chainCommand = result.getChainCommand();
+            result = chainCommand.execute(req, resp);
         }
+
+        chooseRedirectType(req, resp, result);
+
+    }
+
+    private void chooseRedirectType(HttpServletRequest req, HttpServletResponse resp, CommandResult result) throws IOException, ServletException {
         String page = result.getPage();
         if (result.isRedirect()) {
-            response.sendRedirect(page);
+            resp.sendRedirect(page);
         } else {
-            request.getRequestDispatcher(page).forward(request, response);
+            req.getRequestDispatcher(page).forward(req, resp);
         }
+    }
+
+    private boolean checkIfLeadsToAnotherCommand(CommandResult result) {
+        return result.getChainCommand() != null;
     }
 }

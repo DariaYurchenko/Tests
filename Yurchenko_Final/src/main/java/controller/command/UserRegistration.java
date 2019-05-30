@@ -1,10 +1,10 @@
 package controller.command;
 
 import com.sun.mail.smtp.SMTPTransport;
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.User;
-import model.entity.entityenum.UserType;
-import model.service.impl.UserService;
+import model.entity.status.UserStatus;
+import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.language.LanguageManager;
 import uitility.mail.MailsSender;
@@ -27,19 +27,14 @@ import java.security.Security;
 import java.util.Optional;
 import java.util.Properties;
 
-public class UserRegistration extends Command implements Pages {
-    private static final Logger logger = Logger.getLogger(UserRegistration.class);
+public class UserRegistration extends Command implements CommandPages {
+    private static final Logger LOGGER = Logger.getLogger(UserRegistration.class);
 
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
     private LanguageManager languageManager;
 
     public UserRegistration() {
-        this.userService = new UserService();
-        this.languageManager =  LanguageManager.INSTANCE;
-    }
-
-    public UserRegistration(UserService userService) {
-        this.userService = userService;
+        this.userServiceImpl = new UserServiceImpl();
         this.languageManager =  LanguageManager.INSTANCE;
     }
 
@@ -49,13 +44,13 @@ public class UserRegistration extends Command implements Pages {
         String lastname = req.getParameter("lastname");
         String login = req.getParameter("email");
         String password = req.getParameter("password");
-        String language = String.valueOf(req.getParameter("appLocale"));
+        String language = String.valueOf(req.getSession().getAttribute("appLocale"));
 
         languageManager.setLanguage(language);
 
-        Optional<User> optionalUser = userService.findUserByLogin(login);
-        if(optionalUser.isPresent()) {
-            logger.warn("Unknown user attempted to register by existing email - " + login);
+        Optional<User> userOptional = userServiceImpl.findUserByLogin(login);
+        if(userOptional.isPresent()) {
+            LOGGER.warn("Unknown user attempted to register by existing email - " + login);
             req.setAttribute("user_exists", languageManager.getMessage("user_exists"));
             return CommandResult.forward(REGISTRATION_PAGE);
         }
@@ -67,16 +62,12 @@ public class UserRegistration extends Command implements Pages {
 
         User newUser = buildUser(req, name, lastname, login, password);
 
-        userService.registerUser(newUser);
+        userServiceImpl.registerUser(newUser);
 
-        User user = userService.findUserByLogin(login).get();
-        Long id = user.getUserId();
-        String key = generateMagicKey(password);
-        userService.addKey(key, login);
-
-        sendEmail(login, key);
+        sendEmailToConfirmRegistration(password, login);
 
         req.getSession().setAttribute("user", newUser);
+        req.getSession().setAttribute("appLocale", language);
 
         return CommandResult.forward(TESTS);
     }
@@ -103,78 +94,36 @@ public class UserRegistration extends Command implements Pages {
 
     private User buildUser(HttpServletRequest req, String name, String lastname, String login, String password) {
         EncryptorBuilder builder = new EncryptorBuilder(password);
-        if("ADMIN".equals(req.getParameter("userType"))) {
-            return new User.Builder()
-                    .setName(name)
-                    .setLastName(lastname)
-                    .setLogin(login)
-                    .setHash(builder.getHash())
-                    .setSalt(builder.getSalt())
-                    .setUserType(UserType.ADMIN)
-                    .build();
-        }
-        return new User.Builder()
-                .setName(name)
-                .setLastName(lastname)
-                .setLogin(login)
-                .setHash(builder.getHash())
-                .setSalt(builder.getSalt())
-                .setUserType(UserType.STUDENT)
+        User user = new User.Builder()
+                .withName(name)
+                .withLastName(lastname)
+                .withLogin(login)
+                .withHash(builder.getHash())
+                .withSalt(builder.getSalt())
                 .build();
-    }
 
-    private String generateMagicKey(String password) {
-        try {
-        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-        messageDigest.update(salt);
-        byte[] digest = messageDigest.digest(password.getBytes());
-        StringBuilder builder = new StringBuilder();
-        for (byte b : digest) {
-            builder.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        if("ADMIN".equals(req.getParameter("userType"))) {
+            user.setStatus(UserStatus.ADMIN);
         }
-        return builder.toString();
-        }  catch (NoSuchAlgorithmException e) {
-            throw new NullPointerException();
+        else {
+            user.setStatus(UserStatus.STUDENT);
         }
+        return user;
     }
 
-    private void sendEmail(String login, String key) {
-        try {
-            Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-
-            Properties props = System.getProperties();
-            props.setProperty("mail.smtps.host", "smtp.gmail.com");
-            props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            props.setProperty("mail.smtp.socketFactory.fallback", "false");
-            props.setProperty("mail.smtp.port", "587");
-            props.setProperty("mail.smtp.socketFactory.port", "587");
-            props.setProperty("mail.smtps.auth", "true");
-            props.put("mail.smtps.quitwait", "false");
-
-            Session session = Session.getInstance(props, null);
-
-            final MimeMessage msg = new MimeMessage(session);
-
-            String href = "http://localhost:8081/Yurchenko_Final_war_exploded/tests?command=SUBMIT_KEY&login=" + login +
-                    "&key=" + key;
-
-            msg.setFrom(new InternetAddress("yurchenkod2017" + "@gmail.com"));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(login, false));
-            msg.setSubject("Reg");
-            msg.setContent("<a href=\"" + href + "\">Pass</a>", "text/html; charset=utf-8");
-
-            SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
-
-            t.connect("smtp.gmail.com", "yurchenkod2017", "230da68sha19");
-            t.sendMessage(msg, msg.getAllRecipients());
-            t.close();
-        } catch (MessagingException e) {
-
-        }
+    private void sendEmailToConfirmRegistration(String password, String login) {
+        String magicKey = generateMagicKey(password, login);
+        MailsSender.sendEmailToConfirmRegistration(login, magicKey);
     }
+
+    private String generateMagicKey(String password, String login) {
+        EncryptorBuilder builder = new EncryptorBuilder(password);
+        String magicKey = builder.getHash();
+        userServiceImpl.addKey(magicKey, login);
+        return magicKey;
     }
+
+}
+
 
 

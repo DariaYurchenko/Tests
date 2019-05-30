@@ -7,6 +7,7 @@ import java.util.Optional;
 public class CommandsFactory {
     private final Map<String, Command> commands;
 
+    //TODO:static
     public CommandsFactory() {
         this.commands = new HashMap<>();
         commands.put("REGISTER", new UserRegistration());

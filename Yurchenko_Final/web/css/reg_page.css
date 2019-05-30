@@ -87,7 +87,8 @@ section.img-section > div.img-div > img{
     max-width: 220px
 }
 div.button-div{
-    margin-bottom: 0
+    margin-bottom: 0;
+    margin-top: 16px;
 }
 div.button-div input.btn{
     width: 170px;
@@ -97,9 +98,17 @@ div.button-div input.btn{
     font-family: "Cookie Regular";
     color: #ffa500
 }
+
 div.button-div input.btn:hover{
     transform: scale(1.1);
     transition: transform 1s
+}
+div.login-pass small{
+    display: inline-block;
+    margin-top: 12px;
+}
+div.margin-none{
+    margin-bottom: 0 !important;
 }
 footer{
     width: 100%;

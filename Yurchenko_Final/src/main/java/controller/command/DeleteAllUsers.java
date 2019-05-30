@@ -1,16 +1,17 @@
 package controller.command;
 
-import controller.pages.Pages;
-import model.service.impl.UserService;
+import controller.pages.CommandPages;
+import model.service.impl.UserServiceImpl;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DeleteAllUsers extends Command implements Pages {
-    private UserService userService = new UserService();
+public class DeleteAllUsers extends Command implements CommandPages {
+    private UserServiceImpl userServiceImpl = new UserServiceImpl();
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        userService.deleteAllUsers();
+        userServiceImpl.deleteAllUsers();
         return CommandResult.forward(new ShowAllUsers());
     }
 }

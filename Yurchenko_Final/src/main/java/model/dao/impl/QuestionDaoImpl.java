@@ -5,7 +5,7 @@ import model.dao.QuestionDao;
 import model.dao.connector.Connector;
 import model.entity.Question;
 import model.entity.Theme;
-import model.entity.entityenum.QuestionType;
+import model.entity.QuestionType;
 import org.apache.log4j.Logger;
 
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public String createQueryToAdd() {
+    public String createQueryToSave() {
         return INSERT_QUESTION;
     }
 
@@ -46,6 +46,11 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
+    public String createQueryToPagination() {
+        return FIND_QUESTIONS_FOR_PAGINATION;
+    };
+
+    @Override
     public String createQueryToFindByParameter(String column) {
         return String.format(FIND_QUESTION_BY_PARAMETER, column);
     }
@@ -56,7 +61,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public void prepareStatementToAdd(PreparedStatement ps, Question question) {
+    public void prepareStatementToSave(PreparedStatement ps, Question question) {
         try {
             ps.setInt(1, mapTypeToTable(question));
             ps.setLong(2, mapThemeToTable(question));
@@ -68,13 +73,11 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
             ps.setString(8, question.getCorrectOption2());
             ps.setString(9, question.getCorrectOption3());
         } catch (SQLException e) {
-            LOGGER.error("SQLException with preparing statement for creating question: " + e.getMessage());
+            LOGGER.error("SQLException with preparing statement for adding question: " + e.getMessage());
             throw new DaoException(e);
         }
     }
 
-    //TODO: find out how to do that
-    //TODO: admin can choose type of question to add by checkbox
     private int mapTypeToTable(Question question) {
         if (question.getQuestionType().getType().equalsIgnoreCase("Radio")) {
             return 1;
@@ -106,7 +109,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
         List<Question> questions = new ArrayList<>();
         try {
             while (rs.next()) {
-                questions.add(createQuestion(rs));
+                questions.add(buildQuestion(rs));
             }
             return questions;
         } catch (SQLException e) {
@@ -115,7 +118,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
         }
     }
 
-    private Question createQuestion(ResultSet rs) throws SQLException {
+    private Question buildQuestion(ResultSet rs) throws SQLException {
         return new Question.Builder()
                 .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
                 .withId(rs.getLong(QUESTION_ID))
@@ -134,18 +137,22 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     private Double setPercentOfRightAnswers(ResultSet rs) {
         try {
             int rightAnswers = rs.getInt(RIGHT_ANSWERS);
-            int answers = rs.getInt(ANSWERS);
-            return Math.round((rightAnswers * 1.0 / answers) * 100) / 1.0;
+            int allAnswers = rs.getInt(ANSWERS);
+            return countPercentOfRightAnswers(rightAnswers, allAnswers);
         } catch (SQLException e) {
             LOGGER.error("SQLException with counting of percent of right answers: " + e.getMessage());
             throw new DaoException(e);
         }
     }
 
+    private Double countPercentOfRightAnswers(int rightAnswers, int allAnswers) {
+        return Math.round((rightAnswers * 1.0 / allAnswers) * 100) / 1.0;
+    }
+
     @Override
     public Optional<Question> parseResultSetToFindById(ResultSet rs) {
         try {
-            return Optional.ofNullable(createQuestion(rs));
+            return Optional.ofNullable(buildQuestion(rs));
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of question while finding by id: " + e.getMessage());
             throw new DaoException(e);
@@ -153,19 +160,19 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public Map<String, Integer> getCurrentAmountOfAnswers(Long id) {
+    public Map<String, Integer> getCurrentAnswersOfQuestionFromDb(Long questionId) {
         Map<String, Integer> answers = new HashMap<>();
         int rightAnswers = 0;
         int allAnswers = 0;
         try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_QUESTION_BY_ID)) {
-            ps.setLong(1, id);
+            ps.setLong(1, questionId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rightAnswers = rs.getInt(RIGHT_ANSWERS);
                 allAnswers = rs.getInt(ANSWERS);
             }
             answers.put("rightAnswers", rightAnswers);
-            answers.put("answers", allAnswers);
+            answers.put("AllAnswers", allAnswers);
             return answers;
         } catch (SQLException e) {
             LOGGER.warn("SQLException with getting answers: " + e.getMessage());
@@ -174,11 +181,11 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public void changeAmountOfAnswers(Long id, Integer plusRightAnswers, Integer plusAnswers) {
+    public void changeAmountOfAnswersInDb(Long questionId, Integer plusRightAnswers, Integer plusAnswers) {
         try (PreparedStatement ps = connector.getConnection().prepareStatement(UPDATE_QUESTION_ANSWERS)) {
             ps.setInt(1, plusRightAnswers);
             ps.setInt(2, plusAnswers);
-            ps.setLong(3, id);
+            ps.setLong(3, questionId);
             ps.executeUpdate();
         } catch (SQLException e) {
             LOGGER.warn("SQLException with updating question's answers: " + e.getMessage());
@@ -188,34 +195,22 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public List<Question> findThemeQuestions(Long id) {
-        List<Question> courseQuestions = new ArrayList<>();
+    public List<Question> findThemeQuestions(Long themeId) {
+        List<Question> themeQuestions = new ArrayList<>();
         try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_QUESTIONS_OF_THEME)) {
-            ps.setLong(1, id);
+            ps.setLong(1, themeId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                courseQuestions.add((new Question.Builder()
-                        .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
-                        .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
-                        .withId(rs.getLong(QUESTION_ID))
-                        .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
-                        .withQuestion(rs.getString(QUESTION))
-                        .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
-                        .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
-                        .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
-                        .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
-                        .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
-                        .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
-                        .build()));
+                themeQuestions.add(buildQuestion(rs));
             }
-            return courseQuestions;
+            return themeQuestions;
         } catch (SQLException e) {
             LOGGER.warn("SQLException with getting questions of the course: " + e.getMessage());
             throw new DaoException(e);
         }
     }
 
-    @Override
+    /*@Override
     public List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage) {
         List<Question> questions = new ArrayList<>();
         try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_QUESTIONS_FOR_PAGINATION)) {
@@ -242,30 +237,18 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
             LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
             throw new DaoException(e);
         }
-    }
+    }*/
 
     @Override
-    public List<Question> findQuestionsForPaginationId(int startRecord, int recordsPerPage, Long id) {
+    public List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Long themeId) {
         List<Question> questions = new ArrayList<>();
         try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_QUESTIONS_FOR_PAGINATION_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(1, themeId);
             preparedStatement.setInt(2, startRecord);
             preparedStatement.setInt(3, recordsPerPage);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                questions.add((new Question.Builder()
-                        .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
-                        .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
-                        .withId(rs.getLong(QUESTION_ID))
-                        .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
-                        .withQuestion(rs.getString(QUESTION))
-                        .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
-                        .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
-                        .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
-                        .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
-                        .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
-                        .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
-                        .build()));
+                questions.add(buildQuestion(rs));
             }
             return questions;
         } catch (SQLException e) {
@@ -273,6 +256,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
             throw new DaoException(e);
         }
     }
+
 
 }
 

@@ -20,7 +20,7 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
     }
 
     @Override
-    public String createQueryToAdd() {
+    public String createQueryToSave() {
         return INSERT_THEME;
     }
 
@@ -45,6 +45,11 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
     }
 
     @Override
+    public String createQueryToPagination() {
+        return FIND_THEMES_FOR_PAGINATION;
+    }
+
+    @Override
     public String createQueryToFindByParameter(String column) {
         return String.format(FIND_THEME_BY_PARAMETER, column);
     }
@@ -55,19 +60,19 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
     }
 
     @Override
-    public void prepareStatementToAdd(PreparedStatement ps, Theme theme) {
+    public void prepareStatementToSave(PreparedStatement ps, Theme theme) {
         try {
             ps.setString(1, theme.getThemeName());
         } catch (SQLException e) {
-            LOGGER.error("SQLException with preparing statement for creating theme: " + e.getMessage());
+            LOGGER.error("SQLException with preparing statement for adding theme: " + e.getMessage());
             throw new DaoException(e);
         }
     }
 
-    @Override
+    /*@Override
     public List<Theme> findThemesForPagination(int startRecord, int recordsPerPage) {
         List<Theme> themes = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(SELECT_ALL_THEMES_FOR_PAGINATION)) {
+        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_THEMES_FOR_PAGINATION)) {
             preparedStatement.setInt(1, startRecord);
             preparedStatement.setInt(2, recordsPerPage);
             ResultSet rs = preparedStatement.executeQuery();
@@ -76,40 +81,33 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
             }
             return themes;
         } catch (SQLException e) {
-            LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
+            LOGGER.warn("SQLException with finding themes for pagination: " + e.getMessage());
             throw new DaoException(e);
         }
-    }
-
+    }*/
 
     @Override
     public List<Theme> parseResultSet(ResultSet rs) {
-        List<Theme> cours = new ArrayList<>();
+        List<Theme> themes = new ArrayList<>();
         try {
             while(rs.next()) {
-                cours.add(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)));
+                themes.add(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)));
             }
         } catch (SQLException e) {
-            LOGGER.error("SQLException with parsing resultset of question: " + e.getMessage());
+            LOGGER.error("SQLException with parsing resultset of theme: " + e.getMessage());
             throw new DaoException(e);
         }
-        return cours;
+        return themes;
     }
 
     @Override
     public Optional<Theme> parseResultSetToFindById(ResultSet rs) {
-        /*try {
-            return Optional.ofNullable(new Theme.Builder()
-                    .withId(rs.getLong(COURSE_ID))
-                    .withCourseName(rs.getString(COURSE_NAME))
-                    .withAmountOfQuestions(rs.getInt(AMOUNT_OF_QUESTIONS))
-                    .withUsersPassed(rs.getLong(USERS_PASSED))
-                    .build());
+        try {
+            return Optional.of(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)));
         } catch (SQLException e) {
-            LOGGER.error("SQLException with parsing resultset of course: " + e.getMessage());
+            LOGGER.error("SQLException with parsing resultset of theme while finding by id: " + e.getMessage());
             throw new DaoException(e);
-        }*/
-        return null;
+        }
     }
 
 }

@@ -1,16 +1,16 @@
 package controller.command;
 
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.TestInfo;
-import model.service.impl.TestInfoService;
+import model.service.impl.TestInfoServiceImpl;
 import uitility.pagination.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public class ShowUserResults extends Command implements Pages {
-    private TestInfoService testInfoService = new TestInfoService();
+public class ShowUserResults extends Command implements CommandPages {
+    private TestInfoServiceImpl testInfoServiceImpl = new TestInfoServiceImpl();
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
@@ -20,10 +20,10 @@ public class ShowUserResults extends Command implements Pages {
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<TestInfo> testInfoList = testInfoService.findTestsForPagination(userId, pagination.calculateStart(),
+        List<TestInfo> testInfoList = testInfoServiceImpl.findUserTestsForPagination(userId, pagination.calculateStart(),
                 recordsPerPage);
 
-        int rows = testInfoService.findTestsByParameter("test_user_id", userId).size();
+        int rows = testInfoServiceImpl.findTestsByParameter("test_user_id", userId).size();
         req.setAttribute("start", pagination.calculateStart());
         req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
@@ -31,7 +31,7 @@ public class ShowUserResults extends Command implements Pages {
         req.setAttribute("showTests", "The list of tests: ");
         req.setAttribute("testInfoList", testInfoList);
 
-        return CommandResult.forward("user_tests.jsp");
+        return CommandResult.forward(SHOW_USER_TESTS);
 
 
     }

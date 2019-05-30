@@ -1,17 +1,8 @@
 package model.entity;
 
-import model.entity.entityenum.QuestionType;
+import java.util.Objects;
 
 public class Question {
-    //в сервисах возвращать опшонсы. Переписать ошибки, чтоб успокоить юзера. Подумать над таблицами в бд. Разбить валидацию на несколько классов
-    //Статику не использовать валидатор не статика.
-    //в ресурсы - ресорбандл и бд, логгер. для месседжей переводы не надо
-    //фейковая БД h2 + хорошо интеграционные тесты
-    //таблица роли, подумать над разными айдишниками
-    //подуамть над логин - имейл
-    // локалдейт дата, в базе дейт
-    //юзер регистрируется паролем и имейлом. а потм может заполнить профиль
-    //табличка роль - айди, тип
     private Long questionId;
     private String question;
     private Double percentOfRightAnswers;
@@ -79,27 +70,8 @@ public class Question {
         return questionType;
     }
 
-
-
     public Theme getTheme() {
         return theme;
-    }
-
-    @Override
-    public String toString() {
-        return "Question{" +
-                "questionId=" + questionId +
-                ", question='" + question + '\'' +
-                ", percentOfRightAnswers=" + percentOfRightAnswers +
-                ", incorrectOption1='" + incorrectOption1 + '\'' +
-                ", incorrectOption2='" + incorrectOption2 + '\'' +
-                ", incorrectOption3='" + incorrectOption3 + '\'' +
-                ", correctOption1='" + correctOption1 + '\'' +
-                ", correctOption2='" + correctOption2 + '\'' +
-                ", correctOption3='" + correctOption3 + '\'' +
-                ", questionType=" + questionType +
-                ", theme=" + theme +
-                '}';
     }
 
     public static class Builder {
@@ -174,6 +146,34 @@ public class Question {
             return new Question(this);
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Question question1 = (Question) o;
+        return Objects.equals(questionId, question1.questionId) &&
+                Objects.equals(question, question1.question) &&
+                Objects.equals(percentOfRightAnswers, question1.percentOfRightAnswers) &&
+                Objects.equals(incorrectOption1, question1.incorrectOption1) &&
+                Objects.equals(incorrectOption2, question1.incorrectOption2) &&
+                Objects.equals(incorrectOption3, question1.incorrectOption3) &&
+                Objects.equals(correctOption1, question1.correctOption1) &&
+                Objects.equals(correctOption2, question1.correctOption2) &&
+                Objects.equals(correctOption3, question1.correctOption3) &&
+                Objects.equals(questionType, question1.questionType) &&
+                Objects.equals(theme, question1.theme);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(questionId, question, percentOfRightAnswers, incorrectOption1, incorrectOption2,
+                incorrectOption3, correctOption1, correctOption2, correctOption3, questionType, theme);
     }
 
 }

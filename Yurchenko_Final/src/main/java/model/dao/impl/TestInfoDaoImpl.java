@@ -7,7 +7,6 @@ import model.dao.UserDao;
 import model.dao.connector.Connector;
 import model.entity.TestInfo;
 import org.apache.log4j.Logger;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +29,7 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
     }
 
     @Override
-    public String createQueryToAdd() {
+    public String createQueryToSave() {
         throw new UnsupportedOperationException();
     }
 
@@ -60,18 +59,23 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
     }
 
     @Override
-    public String createQueryToFindByParameter(String column) {
-        return String.format(FIND_TEST_INFO_BY_PARAMETER, column);
-    }
-
-    @Override
-    public void prepareStatementToAdd(PreparedStatement ps, TestInfo object) {
+    public void prepareStatementToSave(PreparedStatement ps, TestInfo object) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Optional<TestInfo> parseResultSetToFindById(ResultSet rs) {
-        return Optional.empty();
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String createQueryToPagination() {
+        return FIND_TESTS_FOR_PAGINATION;
+    }
+
+    @Override
+    public String createQueryToFindByParameter(String column) {
+        return String.format(FIND_TEST_INFO_BY_PARAMETER, column);
     }
 
     @Override
@@ -79,7 +83,7 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
         List<TestInfo> testsInfoList = new ArrayList<>();
         try {
             while(rs.next()) {
-                testsInfoList.add(createTestInfo(rs));
+                testsInfoList.add(buildTestInfo(rs));
             }
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of testsInfo: " + e.getMessage());
@@ -92,7 +96,7 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
         return LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate(DATE)));
     }
 
-    private TestInfo createTestInfo(ResultSet rs) throws SQLException {
+    private TestInfo buildTestInfo(ResultSet rs) throws SQLException {
         return new TestInfo.Builder()
                 .withUserName(rs.getString(USER_NAME))
                 .withUserLastName(rs.getString(USER_LASTNAME))
@@ -102,21 +106,20 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
                 .withUserPoints(rs.getInt(TEST_POINTS))
                 .withMaxPoints(rs.getInt(TEST_MAX_POINTS))
                 .withUserRank(userDao.setUserRank(rs))
-                .withPercentOfRightAnswers(testDao.setPointsPercent(rs))
+                .withPercentOfRightAnswers(testDao.setPercentOfUserPoints(rs))
                 .withTestStatus(testDao.setTestStatus(rs))
                 .build();
     }
 
-    @Override
-    public List<TestInfo> findTestsForPagination(Long userId, int currentPage, int recordsPerPage) {
+    public List<TestInfo> findUserTestsForPagination(Long userId, int currentPage, int recordsPerPage) {
         List<TestInfo> testsInfoList = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_TESTS_FOR_PAGINATION)) {
+        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_USER_TESTS_FOR_PAGINATION)) {
             preparedStatement.setLong(1, userId);
             preparedStatement.setInt(2, currentPage);
             preparedStatement.setInt(3, recordsPerPage);
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
-                testsInfoList.add(createTestInfo(rs));
+                testsInfoList.add(buildTestInfo(rs));
             }
             return testsInfoList;
         } catch (SQLException e) {

@@ -5,15 +5,17 @@ import java.util.Optional;
 
 public interface GenericDao<T> {
 
-    void create(T object);
+    void add(T object);
 
     void deleteById(Long id);
 
-    public void deleteAll();
+    void deleteAll();
 
-    void update(String column, Object value, String login);
+    void update(String column, Object value, Long id);
 
     List<T> findAll();
+
+    List<T> findForPagination(int startRecord, int recordsPerPage);
 
     List<T> findByParameter(String column, Object value);
 

@@ -4,20 +4,13 @@ import exception.DaoException;
 import model.dao.UserDao;
 import model.dao.connector.Connector;
 import model.entity.User;
-import model.entity.entityenum.UserType;
+import model.entity.status.UserStatus;
 import org.apache.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-
-//TODO: вся логика в сервисах
-//TODO: джойны в репозитория на юзер/роль
-//TODO: фильтры + индексация???3
-//TODO: mapper entity
-//TODO: think about amount of varchar (45 to much) + госты для пароля и имейла.
-//can save roles in db like strings and map them
 public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
 
@@ -41,7 +34,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public String createQueryToAdd() {
+    public String createQueryToSave() {
         return INSERT_USER;
     }
 
@@ -51,18 +44,22 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     @Override
+    public String createQueryToPagination() {
+        return FIND_USERS_FOR_PAGINATION;
+    };
+
+    @Override
     public String createQueryToFindByParameter(String column) {
-        return "SELECT * FROM users WHERE " + column + " = ?";
+        return String.format(FIND_USER_BY_PARAMETER, column);
     }
 
-    //TODO: constants StringFormat
     @Override
     public String createQueryToUpdate(String column) {
-        return "UPDATE users SET " + column + " = ? WHERE login = ?;";
+        return String.format(UPDATE_USER_BY_LOGIN, column);
     }
 
     @Override
-    public void prepareStatementToAdd(PreparedStatement ps, User user) {
+    public void prepareStatementToSave(PreparedStatement ps, User user) {
         try {
             ps.setInt(1, mapRoleToTable(user));
             ps.setString(2, user.getLogin());
@@ -71,50 +68,13 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
             ps.setString(5, user.getHash());
             ps.setBytes(6, user.getSalt());
         } catch (SQLException e) {
-            LOGGER.error("SQLException with preparing statement for creating user: " + e.getMessage());
-            throw new DaoException(e);
-        }
-    }
-
-    public void addMagicKey(String magicKey, String login) {
-        update("magic_key", magicKey, login);
-        update("submited", 1, login);
-    }
-
-    public String getMagicKey(String login) {
-        String mykey = null;
-        String sql = "SELECT magic_key FROM users WHERE login = ?";
-        try (PreparedStatement ps = connector.getConnection().prepareStatement(sql)) {
-            ps.setString(1, login);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-               mykey = rs.getString("magic_key");
-            }
-            return mykey;
-        } catch (SQLException e) {
-            LOGGER.warn("SQLException with finding user by login: " + e.getMessage());
-            throw new DaoException(e);
-        }
-    }
-
-    public int getSubmit(String login) {
-        int submit = 0;
-        String sql = "SELECT submited FROM users WHERE login = ?";
-        try (PreparedStatement ps = connector.getConnection().prepareStatement(sql)) {
-            ps.setString(1, login);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                submit = rs.getInt("submited");
-            }
-            return submit;
-        } catch (SQLException e) {
-            LOGGER.warn("SQLException with finding user by login: " + e.getMessage());
+            LOGGER.error("SQLException with preparing statement for adding user: " + e.getMessage());
             throw new DaoException(e);
         }
     }
 
     private int mapRoleToTable(User user) {
-        return user.getType().equals(UserType.STUDENT) ? 1 : 2;
+        return user.getStatus().equals(UserStatus.STUDENT) ? 1 : 2;
     }
 
     @Override
@@ -122,16 +82,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         List<User> users = new ArrayList<>();
         try {
             while(rs.next()) {
-                users.add(( new User.Builder()
-                        .setId(rs.getLong(1))
-                        .setUserType(setUserRole(rs))
-                        .setLogin(rs.getString(3))
-                        .setName(rs.getString(4))
-                        .setLastName(rs.getString(5))
-                        .setHash(rs.getString(6))
-                        .setSalt(rs.getBytes(7))
-                        .setRank(setUserRank(rs))
-                        .build()));
+                users.add(buildUser(rs));
             }
             return users;
         } catch (SQLException e) {
@@ -140,44 +91,28 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         }
     }
 
-    //TODO: separate method
+    @Override
     public Double setUserRank(ResultSet rs) {
         try {
             int userPoints = rs.getInt(USER_POINTS);
             int maxPoints = rs.getInt(MAX_POINTS);
-            return Math.round((userPoints * 100.0 / maxPoints) * 100.0) / 100.0;
+            return getUserRank(userPoints, maxPoints);
         } catch (SQLException e) {
             LOGGER.error("SQLException with setting rank of user: " + e.getMessage());
             throw new DaoException(e);
         }
     }
 
-    private UserType setUserRole(ResultSet rs) {
-        try {
-            return (rs.getInt(ROLE) == 1) ? UserType.STUDENT : UserType.ADMIN;
-        } catch (SQLException e) {
-            LOGGER.error("SQLException with setting role of user: " + e.getMessage());
-            throw new DaoException(e);
-        }
+    private Double getUserRank(int userPoints, int maxPoints) {
+        return Math.round((userPoints * 100.0 / maxPoints) * 100.0) / 100.0;
     }
 
-    //TODO: bring all constants to UserDao
-    //TODO: utf8
     @Override
     public Optional<User> parseResultSetToFindById(ResultSet rs) {
         try {
-            return Optional.ofNullable(new User.Builder()
-                    .setId(rs.getLong(USER_ID))
-                    .setUserType(setUserRole(rs))
-                    .setLogin(rs.getString(USER_LOGIN))
-                    .setName(rs.getString(USER_NAME))
-                    .setLastName(rs.getString(USER_LASTNAME))
-                    .setHash(rs.getString(USER_HASH))
-                    .setSalt(rs.getBytes(USER_SALT))
-                    .setRank(setUserRank(rs))
-                    .build());
+            return Optional.ofNullable(buildUser(rs));
         } catch (SQLException e) {
-            LOGGER.error("SQLException with parsing resultset of user: " + e.getMessage());
+            LOGGER.error("SQLException with parsing resultset of user to find by id: " + e.getMessage());
             throw new DaoException(e);
         }
     }
@@ -214,19 +149,19 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public Map<String, Integer> getCurrentPoints(Long id) {
+    public Map<String, Integer> getUserPointsFromDb(String login) {
         Map<String, Integer> rank = new HashMap<>();
         int points = 0;
         int maxPoints = 0;
-        try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_USER_BY_ID)) {
-            ps.setLong(1, id);
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_USER_BY_LOGIN)) {
+            ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 points = rs.getInt(USER_POINTS);
                 maxPoints = rs.getInt(MAX_POINTS);
             }
             rank.put("currentPoints", points);
-            rank.put("maxCurrentPoints", maxPoints);
+            rank.put("maxPossiblePoints", maxPoints);
             return rank;
         } catch (SQLException e) {
             LOGGER.warn("SQLException with getting current points: " + e.getMessage());
@@ -234,7 +169,8 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         }
     }
 
-    public void changeRank(Long id, Integer plusPoints, Integer plusMaxPoints) {
+    /*@Override
+    public void changeUserRankInDb(Long id, Integer plusPoints, Integer plusMaxPoints) {
         try (PreparedStatement ps = connector.getConnection().prepareStatement(UPDATE_USER_POINTS)) {
             ps.setInt(1, plusPoints);
             ps.setInt(2, plusMaxPoints);
@@ -244,31 +180,121 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
             LOGGER.warn("SQLException with updating user's points: " + e.getMessage());
             throw new DaoException(e);
         }
-    }
+    }*/
 
     @Override
-    public List<User> findUsersForPagination(int startRecord, int recordsPerPage) throws DaoException {
+    public void changeUserRankInDb(String login, Integer plusPoints, Integer plusMaxPoints) {
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(UPDATE_USER_POINTS)) {
+            ps.setInt(1, plusPoints);
+            ps.setInt(2, plusMaxPoints);
+            ps.setString(3, login);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with updating user's points: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    /*@Override
+    public List<User> findUsersForPagination(int startRecord, int recordsPerPage) {
         List<User> users = new ArrayList<>();
         try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_USERS_FOR_PAGINATION)) {
             preparedStatement.setInt(1, startRecord);
             preparedStatement.setInt(2, recordsPerPage);
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
-                users.add(( new User.Builder()
-                        .setId(rs.getLong(USER_ID))
-                        .setUserType(setUserRole(rs))
-                        .setLogin(rs.getString(USER_LOGIN))
-                        .setName(rs.getString(USER_NAME))
-                        .setLastName(rs.getString(USER_LASTNAME))
-                        .setHash(rs.getString(USER_HASH))
-                        .setSalt(rs.getBytes(USER_SALT))
-                        .setRank(setUserRank(rs))
-                        .build()));
-                }
+                users.add(buildUser(rs));
+            }
             return users;
         } catch (SQLException e) {
-            LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
+            LOGGER.warn("SQLException with finding user for pagination: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }*/
+
+    @Override
+    public void updateUserByLogin(String column, Object value, String login) {
+        String command = createQueryToUpdate(column);
+        try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
+            ps.setObject(1, value);
+            ps.setString(2, login);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with updating user by login: " + e.getMessage());
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public void addMagicKey(String magicKey, String login) {
+        updateUserByLogin(MAGIC_KEY, magicKey, login);
+        updateUserByLogin(SUBMIT_KEY, NOT_SUBMITTED_KEY, login);
+    }
+
+    @Override
+    public Optional<String> findMagicKey(String login) {
+        String magicKey = null;
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(SELECT_USER_MAGIC_KEY)) {
+            ps.setString(1, login);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                magicKey = rs.getString(MAGIC_KEY);
+            }
+            return Optional.ofNullable(magicKey);
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding user's magic key: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public Optional<Integer> findIfSubmit(String login) {
+        Integer submit = null;
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(SELECT_SUBMIT_TYPE_OF_MAGIC_KEY)) {
+            ps.setString(1, login);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                submit = rs.getInt(SUBMIT_KEY);
+            }
+            return Optional.ofNullable(submit);
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with finding user by login: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void changeSubmitKeyStatus(String login) {
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(UPDATE_USER_SUBMIT_STATUS)) {
+            ps.setInt(1, SUBMITTED_KEY);
+            ps.setString(2, login);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("SQLException with preparing statement for changing password: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    private User buildUser(ResultSet rs) throws SQLException {
+        return new User.Builder()
+                .withId(rs.getLong(USER_ID))
+                .withUserType(setUserRole(rs))
+                .withLogin(rs.getString(USER_LOGIN))
+                .withName(rs.getString(USER_NAME))
+                .withLastName(rs.getString(USER_LASTNAME))
+                .withHash(rs.getString(USER_HASH))
+                .withSalt(rs.getBytes(USER_SALT))
+                .withRank(setUserRank(rs))
+                .build();
+    }
+
+    private UserStatus setUserRole(ResultSet rs) {
+        try {
+            return (rs.getInt(ROLE) == 1) ? UserStatus.STUDENT : UserStatus.ADMIN;
+        } catch (SQLException e) {
+            LOGGER.error("SQLException with setting role of user: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
 }

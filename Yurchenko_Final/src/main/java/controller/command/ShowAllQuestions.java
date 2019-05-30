@@ -1,17 +1,16 @@
 package controller.command;
 
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.Question;
-import model.entity.User;
-import model.service.impl.QuestionService;
+import model.service.impl.QuestionServiceImpl;
 import uitility.pagination.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-public class ShowAllQuestions extends Command implements Pages {
-    private QuestionService questionService = new QuestionService();
+public class ShowAllQuestions extends Command implements CommandPages {
+    private QuestionServiceImpl questionServiceImpl = new QuestionServiceImpl();
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
@@ -38,14 +37,14 @@ public class ShowAllQuestions extends Command implements Pages {
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<Question> questions = questionService.findQuestionsForPagination(pagination.calculateStart(), recordsPerPage);
+        List<Question> questions = questionServiceImpl.findQuestionsForPagination(pagination.calculateStart(), recordsPerPage);
 
-        int rows = questionService.findAll().size();
+        int rows = questionServiceImpl.findAll().size();
         req.setAttribute("start", pagination.calculateStart());
         req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
         req.setAttribute("recordsPerPage", pagination.getRecordsPerPage());
         req.setAttribute("questions", questions);
-        return CommandResult.forward("show_questions.jsp");
+        return CommandResult.forward(SHOW_QUESTIONS);
     }
 }

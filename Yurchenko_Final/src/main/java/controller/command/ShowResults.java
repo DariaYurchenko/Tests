@@ -1,66 +1,42 @@
 package controller.command;
 
-import controller.pages.Pages;
+import controller.pages.CommandPages;
 import model.entity.Answer;
 import model.entity.Test;
 import model.entity.User;
-import model.entity.entityenum.AnswerStatus;
-import model.entity.entityenum.TestStatus;
-import model.service.impl.TestService;
-import model.service.impl.UserService;
+import model.entity.status.AnswerStatus;
+import model.entity.status.TestStatus;
+import model.service.impl.TestServiceImpl;
+import model.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class ShowResults extends Command implements Pages {
-    private UserService userService;
-    private TestService testService;
+public class ShowResults extends Command implements CommandPages {
+    private UserServiceImpl userServiceImpl;
+    private TestServiceImpl testServiceImpl;
 
     public ShowResults() {
-        this.userService = new UserService();
-        this.testService = new TestService();
+        this.userServiceImpl = new UserServiceImpl();
+        this.testServiceImpl = new TestServiceImpl();
     }
-
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
 
         List<Answer> userAnswers = (ArrayList) req.getSession().getAttribute("userAnswers");
-        int userPoints =  userAnswers.stream()
-                .filter(answer -> answer.getAnswerStatus().equals(AnswerStatus.CORRECT))
-                .mapToInt(Answer::getMaxPoints)
-                .sum();
-        int maxPoints = userAnswers.stream()
-                .mapToInt(Answer::getMaxPoints)
-                .sum();
-        double percent = Math.round((userPoints * 1.0 / maxPoints) * 100) / 1.0;
 
-        /*Optional<User> optUser = (Optional<User>) req.getSession().getAttribute("user");
-        User user = null;
-        if(optUser.isPresent()) {
-            user = optUser.get();
-        }*/
+        int userPoints = countAmountOfRightUserAnswers(userAnswers);
+        int maxPoints = countAmountOfAllUserAnswers(userAnswers);
+        double percent = countPercentOfUserRightAnswers(userAnswers);
 
         User user = (User) req.getSession().getAttribute("user");
+        changeUserRankInDb(user, userPoints, maxPoints);
 
-        userService.setRank(user.getUserId(), userPoints, maxPoints);
-
-        Long themeId = Long.parseLong(String.valueOf(req.getSession().getAttribute("theme_id")));
-
-        Test test = new Test.Builder()
-                .withUserId(user.getUserId())
-                .withThemeId(themeId)
-                .withTestStatus(setStatus(percent))
-                .withUserPoints(userPoints)
-                .withMaxPoints(maxPoints)
-                .withRightAnswersPercent(percent)
-                .withDate(LocalDate.now())
-                .build();
-        testService.addTestToDatabase(test);
+        saveTestInDb(req, user, userPoints, maxPoints, percent);
 
         if(percent >= 50) {
             req.getSession().setAttribute("passed", "TRUE");
@@ -69,10 +45,46 @@ public class ShowResults extends Command implements Pages {
         req.getSession().setAttribute("userPoints", userPoints);
         req.getSession().setAttribute("maxPoints", maxPoints);
         req.getSession().setAttribute("percent", percent);
-        //req.setAttribute("user", userAnswers.size());
-
 
         return CommandResult.forward(SHOW_RESULTS);
+    }
+
+    private Double countPercentOfUserRightAnswers(List<Answer> userAnswers) {
+        int userPoints =  countAmountOfRightUserAnswers(userAnswers);
+        int maxPoints = countAmountOfAllUserAnswers(userAnswers);
+        return Math.round((userPoints * 1.0 / maxPoints) * 100) / 1.0;
+    }
+
+    private int countAmountOfRightUserAnswers(List<Answer> userAnswers) {
+        return userAnswers.stream()
+                .filter(answer -> answer.getAnswerStatus().equals(AnswerStatus.CORRECT))
+                .mapToInt(Answer::getMaxPoints)
+                .sum();
+    }
+
+    private int countAmountOfAllUserAnswers(List<Answer> userAnswers) {
+        return userAnswers.stream()
+                .mapToInt(Answer::getMaxPoints)
+                .sum();
+    }
+
+    private void changeUserRankInDb(User user, int userPoints, int maxPoints) {
+        userServiceImpl.setRank(user.getLogin(), userPoints, maxPoints);
+    }
+
+    private void saveTestInDb(HttpServletRequest req, User user, int userPoints, int maxPoints, double percentOfRightAnswers) {
+        Long themeId = Long.parseLong(String.valueOf(req.getSession().getAttribute("theme_id")));
+
+        Test test = new Test.Builder()
+                .withUserId(user.getUserId())
+                .withThemeId(themeId)
+                .withTestStatus(setStatus(percentOfRightAnswers))
+                .withUserPoints(userPoints)
+                .withMaxPoints(maxPoints)
+                .withRightAnswersPercent(percentOfRightAnswers)
+                .withDate(LocalDate.now())
+                .build();
+        testServiceImpl.addTestToDatabase(test);
     }
 
     private TestStatus setStatus(double percent) {

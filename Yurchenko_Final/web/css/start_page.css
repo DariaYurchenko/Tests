@@ -1,7 +1,4 @@
-@font-face{
-    font-family: "Cookie Regular";
-    src: url("../fonts/Cookie Regular.ttf")
-}
+
 body{
     background: #F2F2F2
 }
@@ -127,12 +124,6 @@ div.languages > form > button{
     background: orange;
     border-radius: 15px;
     border: 2px solid black
-}
-.owl-item > div > a{
-    color: black;
-    text-decoration: none;
-    padding: 30px calc(50% - 53px);
-    display: inline-block
 }
 .owl-stage-outer{
     margin: 15px 0

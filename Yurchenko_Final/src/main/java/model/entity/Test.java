@@ -1,8 +1,8 @@
 package model.entity;
 
-import model.entity.entityenum.TestStatus;
-
+import model.entity.status.TestStatus;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Test {
     private Long testId;
@@ -47,10 +47,6 @@ public class Test {
 
     public TestStatus getTestStatus() {
         return testStatus;
-    }
-
-    public void setRightAnswersPercent(Double rightAnswersPercent) {
-        this.rightAnswersPercent = rightAnswersPercent;
     }
 
     public Integer getUserPoints() {
@@ -115,4 +111,29 @@ public class Test {
             return new Test(this);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Test test = (Test) o;
+        return Objects.equals(testId, test.testId) &&
+                Objects.equals(userId, test.userId) &&
+                Objects.equals(themeId, test.themeId) &&
+                Objects.equals(userPoints, test.userPoints) &&
+                Objects.equals(maxPoints, test.maxPoints) &&
+                Objects.equals(rightAnswersPercent, test.rightAnswersPercent) &&
+                Objects.equals(date, test.date) &&
+                testStatus == test.testStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(testId, userId, themeId, userPoints, maxPoints, rightAnswersPercent, date, testStatus);
+    }
+
 }

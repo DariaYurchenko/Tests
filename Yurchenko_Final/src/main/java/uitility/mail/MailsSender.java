@@ -1,8 +1,12 @@
 package uitility.mail;
 
 import com.sun.mail.smtp.SMTPTransport;
+import exception.MailsSenderException;
 import model.entity.TestInfo;
+import model.entity.status.TestStatus;
 import org.apache.log4j.Logger;
+import uitility.language.LanguageManager;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -18,15 +22,17 @@ public final class MailsSender {
 
     private static final String SEND_FROM = "yurchenkod2017";
     private static final String PASSWORD = "230da68sha19";
-    private static final String SUBJECT = "Test's results";
     private static final String PROTOCOL = "smtps";
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-    private static final String CONTENT = "<h1>Dear %s!</h1><h2>The results of the test ont theme %s percent:</h2>" +
-            "<p>You've got %s points from %s having scored %s  of max amount of points.</p><p>The test is %s." +
-            "</p><p>The date of the test is %s.</p><p>Now your rank is %s percent.</p>";
+    private static final String CONTENT_CONFIRM_EMAIL = "<a href=\"%s\">Confirm your email!</a>";
+    private static final String HREF_CONFIRM_EMAIL = "http://localhost:8081/Yurchenko_Final_war_exploded/tests?command=SUBMIT_KEY&login=%s" +
+            "&key=%s";
+
+    private static LanguageManager languageManager = LanguageManager.INSTANCE;
 
 
-    public static void send(TestInfo testInfo) {
+
+    public static void sendTestResults(TestInfo testInfo) {
         try {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
@@ -39,8 +45,8 @@ public final class MailsSender {
 
             msg.setFrom(new InternetAddress(SEND_FROM + "@gmail.com"));
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(testInfo.getUserLogin(), false));
-            msg.setSubject(SUBJECT);
-            msg.setContent(makeMessage(CONTENT, testInfo), "text/html; charset=utf-8");
+            msg.setSubject(languageManager.getMessage("tests_subject"));
+            msg.setContent(makeMessageTestResults(testInfo), "text/html; charset=utf-8");
 
             SMTPTransport t = (SMTPTransport)session.getTransport(PROTOCOL);
 
@@ -48,20 +54,61 @@ public final class MailsSender {
             t.sendMessage(msg, msg.getAllRecipients());
             t.close();
         } catch (MessagingException e) {
-            LOGGER.error("MessagingException while sending email: " + e.getMessage());
+            LOGGER.error("MessagingException while sending test results by email: " + e.getMessage());
+            throw new MailsSenderException(e);
         }
     }
-    private static String makeMessage(String content, TestInfo testInfo) {
-        return String.format(content, testInfo.getUserName() + " " + testInfo.getUserLastName(), testInfo.getTheme(),
+
+    private static String makeMessageTestResults(TestInfo testInfo) {
+        return String.format(languageManager.getMessage("email_results"), testInfo.getUserName() + " " + testInfo.getUserLastName(), testInfo.getTheme(),
                 testInfo.getUserPoints().toString(), testInfo.getMaxPoints().toString(),
-                testInfo.getRightAnswersPercent().toString(), "passed", convertLocalDateToString(testInfo),
+                testInfo.getRightAnswersPercent().toString(), checkTestStatus(testInfo), convertLocalDateToString(testInfo),
                 testInfo.getUserRank());
+    }
+
+    private static String checkTestStatus (TestInfo testInfo) {
+        if(testInfo.getTestStatus().equals(TestStatus.PASSED)) {
+            return languageManager.getMessage("passed");
+        }
+        else {
+            return languageManager.getMessage("not_passed");
+        }
     }
 
     private static String convertLocalDateToString(TestInfo testInfo) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
         LocalDate localDate = testInfo.getDate();
         return localDate.format(formatter);
+    }
+
+    public static void sendEmailToConfirmRegistration(String login, String magicKey) {
+        try {
+            Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+
+            Properties props = System.getProperties();
+            putProperties(props);
+
+            Session session = Session.getInstance(props, null);
+
+            final MimeMessage msg = new MimeMessage(session);
+
+            String href = String.format(HREF_CONFIRM_EMAIL, login, magicKey);
+            String content = String.format(CONTENT_CONFIRM_EMAIL, href);
+
+            msg.setFrom(new InternetAddress(SEND_FROM + "@gmail.com"));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(login, false));
+            msg.setSubject(languageManager.getMessage("confirm_subject"));
+            msg.setContent(content, "text/html; charset=utf-8");
+
+            SMTPTransport t = (SMTPTransport) session.getTransport(PROTOCOL);
+
+            t.connect("smtp.gmail.com", SEND_FROM, PASSWORD);
+            t.sendMessage(msg, msg.getAllRecipients());
+            t.close();
+        }catch (MessagingException e) {
+            LOGGER.error("MessagingException while sending magic key to confirm email: " + e.getMessage());
+            throw new MailsSenderException(e);
+        }
     }
 
     private static void putProperties(Properties props) {

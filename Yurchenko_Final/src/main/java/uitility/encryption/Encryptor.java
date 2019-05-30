@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public final class Encryptor {
-    private static final Logger logger = Logger.getLogger(Encryptor.class);
+    private static final Logger LOGGER = Logger.getLogger(Encryptor.class);
     private static final String SHA_1 = "SHA-1";
 
     public static boolean verifyPassword(String passwordToCheck, String hash, byte[] salt) {
@@ -22,7 +22,7 @@ public final class Encryptor {
             byte[] digest = messageDigest.digest(password.getBytes());
             return createStringPassword(digest);
         } catch (NoSuchAlgorithmException e) {
-            logger.fatal("No such algorithm (getting secure password).");
+            LOGGER.fatal("No such algorithm (getting secure password).");
             throw new EncryptionException(e);
         }
     }
@@ -34,7 +34,7 @@ public final class Encryptor {
             random.nextBytes(salt);
             return salt;
         } catch (NoSuchAlgorithmException e) {
-            logger.fatal("No such algorithm (getting salt).");
+            LOGGER.fatal("No such algorithm (getting salt).");
             throw new EncryptionException(e);
         }
     }

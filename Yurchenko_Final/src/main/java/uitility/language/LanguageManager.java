@@ -4,7 +4,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public final class LanguageManager {
+    //TODO: double check
     public static final LanguageManager INSTANCE = new LanguageManager();
+    //TODO:rename
     private static final String RESOURCE_NAME = "messages/messages";
 
     private ResourceBundle resourceBundle;
@@ -22,6 +24,7 @@ public final class LanguageManager {
         return resourceBundle.getString(key);
     }
 
+    //TODO:map
     private void setLocale(String language) {
         if(language.equalsIgnoreCase("en_UK")) {
             this.locale = new Locale("en", "UK");

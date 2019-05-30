@@ -4,7 +4,7 @@ import exception.DaoException;
 import model.dao.TestDao;
 import model.dao.connector.Connector;
 import model.entity.Test;
-import model.entity.entityenum.TestStatus;
+import model.entity.status.TestStatus;
 import org.apache.log4j.Logger;
 
 import java.sql.Date;
@@ -25,7 +25,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     }
 
     @Override
-    public String createQueryToAdd() {
+    public String createQueryToSave() {
         return INSERT_TEST;
     }
 
@@ -50,6 +50,11 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     }
 
     @Override
+    public String createQueryToPagination() {
+       throw new UnsupportedOperationException();
+    }
+
+    @Override
     public String createQueryToFindByParameter(String column) {
         return String.format(FIND_TEST_BY_PARAMETER, column);
     }
@@ -60,7 +65,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     }
 
     @Override
-    public void prepareStatementToAdd(PreparedStatement ps, Test test) {
+    public void prepareStatementToSave(PreparedStatement ps, Test test) {
         try {
             ps.setLong(1, test.getUserId());
             ps.setLong(2, test.getThemeId());
@@ -69,7 +74,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
             ps.setDate(5, Date.valueOf(test.getDate()));
             ps.setInt(6, mapStatusToTable(test));
         } catch (SQLException e) {
-            LOGGER.error("SQLException with preparing statement for creating test: " + e.getMessage());
+            LOGGER.error("SQLException with preparing statement for adding test: " + e.getMessage());
             throw new DaoException();
         }
     }
@@ -83,7 +88,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
         List<Test> tests = new ArrayList<>();
         try {
             while(rs.next()) {
-                tests.add(createTest(rs));
+                tests.add(buildTest(rs));
             }
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of tests: " + e.getMessage());
@@ -96,15 +101,19 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
         return LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(rs.getDate(DATE)));
     }
 
-    public Double setPointsPercent(ResultSet rs) {
+    public Double setPercentOfUserPoints(ResultSet rs) {
         try {
             int rightAnswers = rs.getInt(USER_POINTS);
-            int answers = rs.getInt(MAX_POINTS);
-            return Math.round((rightAnswers * 1.0 / answers) * 100) / 1.0;
+            int allAnswers = rs.getInt(MAX_POINTS);
+            return countPercentOfUserPoints(rightAnswers, allAnswers);
         } catch (SQLException e) {
             LOGGER.error("SQLException with counting of percent of user's points: " + e.getMessage());
             throw new DaoException(e);
         }
+    }
+
+    private Double countPercentOfUserPoints(int rightAnswers, int allAnswers) {
+        return Math.round((rightAnswers * 1.0 / allAnswers) * 100) / 1.0;
     }
 
     public TestStatus setTestStatus(ResultSet rs) throws SQLException {
@@ -114,14 +123,14 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     @Override
     public Optional<Test> parseResultSetToFindById(ResultSet rs) {
        try {
-            return Optional.ofNullable(createTest(rs));
+            return Optional.ofNullable(buildTest(rs));
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of test: " + e.getMessage());
             throw new DaoException();
         }
     }
 
-    private Test createTest(ResultSet rs) throws SQLException {
+    private Test buildTest(ResultSet rs) throws SQLException {
         return new Test.Builder()
                 .withId(rs.getLong(TEST_ID))
                 .withUserId(rs.getLong(USER_ID))
@@ -129,7 +138,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
                 .withDate(setDate(rs))
                 .withUserPoints(rs.getInt(USER_POINTS))
                 .withMaxPoints(rs.getInt(MAX_POINTS))
-                .withRightAnswersPercent(setPointsPercent(rs))
+                .withRightAnswersPercent(setPercentOfUserPoints(rs))
                 .withTestStatus(setTestStatus(rs))
                 .build();
     }
