@@ -19,17 +19,16 @@ public class ShowThemes extends Command implements CommandPages {
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<Theme> themes = themeServiceImpl.findThemesForPagination(pagination.calculateStart(), recordsPerPage);
-        //List<Theme> themes = themeServiceImpl.findAll();
-
         int rows = themeServiceImpl.findAll().size();
-        req.setAttribute("start", pagination.calculateStart());
-        req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
-        req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
-        req.setAttribute("recordsPerPage", pagination.getRecordsPerPage());
-        req.setAttribute("themes", themes);
-        req.setAttribute("act", "SHOW_BY_THEME");
+        List<Theme> themes = themeServiceImpl.findThemesForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
 
-        return CommandResult.forward("show_questions.jsp");
+        req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateNumOfPages(rows)));
+        req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
+        req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
+        req.getSession().setAttribute("recordsPerPage", pagination.getRecordsPerPage());
+        req.getSession().setAttribute("themes", themes);
+        req.getSession().setAttribute("act", "SHOW_BY_THEME");
+
+        return CommandResult.forward(SHOW_QUESTIONS);
     }
 }

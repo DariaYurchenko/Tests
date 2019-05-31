@@ -20,16 +20,16 @@ public class ShowUserResults extends Command implements CommandPages {
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<TestInfo> testInfoList = testInfoServiceImpl.findUserTestsForPagination(userId, pagination.calculateStart(),
+        int rows = testInfoServiceImpl.findTestsByParameter("test_user_id", userId).size();
+        List<TestInfo> testInfoList = testInfoServiceImpl.findUserTestsForPagination(userId, pagination.calculateStart(pagination.calculateNumOfPages(rows)),
                 recordsPerPage);
 
-        int rows = testInfoServiceImpl.findTestsByParameter("test_user_id", userId).size();
-        req.setAttribute("start", pagination.calculateStart());
-        req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
+        req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateNumOfPages(rows)));
+        req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
-        req.setAttribute("recordsPerPage", pagination.getRecordsPerPage());
-        req.setAttribute("showTests", "The list of tests: ");
-        req.setAttribute("testInfoList", testInfoList);
+        req.getSession().setAttribute("recordsPerPage", pagination.getRecordsPerPage());
+        req.getSession().setAttribute("showTests", "The list of tests: ");
+        req.getSession().setAttribute("testInfoList", testInfoList);
 
         return CommandResult.forward(SHOW_USER_TESTS);
 

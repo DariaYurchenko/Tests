@@ -3,6 +3,8 @@ package model.service.impl;
 import exception.ServiceException;
 import model.dao.TestDao;
 import model.dao.connector.Connector;
+import model.dao.factory.DaoFactory;
+import model.dao.factory.DbNames;
 import model.dao.impl.TestDaoImpl;
 import model.entity.Test;
 import model.service.TestService;
@@ -13,7 +15,7 @@ public class TestServiceImpl implements TestService {
     private TestDao testDao;
 
     public TestServiceImpl() {
-        this.testDao = new TestDaoImpl(new Connector());
+        this.testDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getTestDao();
     }
 
     @Override

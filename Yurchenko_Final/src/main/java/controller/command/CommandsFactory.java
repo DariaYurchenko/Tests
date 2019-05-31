@@ -5,9 +5,20 @@ import java.util.Map;
 import java.util.Optional;
 
 public class CommandsFactory {
+    private static volatile CommandsFactory commandFactory;
     private final Map<String, Command> commands;
 
-    //TODO:static
+    public static CommandsFactory getInstance(){
+        if (commandFactory==null){
+            synchronized (CommandsFactory.class){
+                if (commandFactory==null){
+                    commandFactory = new CommandsFactory();
+                }
+            }
+        }
+        return commandFactory;
+    }
+
     public CommandsFactory() {
         this.commands = new HashMap<>();
         commands.put("REGISTER", new UserRegistration());
@@ -25,25 +36,13 @@ public class CommandsFactory {
         commands.put("DELETE_USER_BY_ID", new DeleteUserById());
         commands.put("DELETE_ALL_USERS", new DeleteAllUsers());
         commands.put("SHOW_USER_RESULTS", new ShowUserResults());
-        commands.put("REGISTER_ADMIN", new RegisterAdmin());
         commands.put("SHOW_ALL_QUESTIONS", new ShowAllQuestions());
         commands.put("SHOW_QUESTIONS_BY_THEME", new ShowThemes() );
         commands.put("SHOW_THEME_QUESTIONS", new ShowThemeQuestions());
-        /*commands.put("DELETE_QUESTION_BY_ID", new DeleteQuestionById());
-        commands.put("DELETE_ALL_QUESTIONS", new DeleteAllQuestions());*/
 
     }
 
     public Command makeCommand(String command) {
-        /* return commands.containsKey(command) ?
-                 commands.get(command):new UndefinedCommand(); */
         return Optional.ofNullable(commands.get(command)).orElse(new UndefinedCommand());
-
-        /*if(commands.containsKey(command)) {
-            return commands.get(command);
-        }
-        else {
-            return new UndefinedCommand();
-        }*/
     }
 }

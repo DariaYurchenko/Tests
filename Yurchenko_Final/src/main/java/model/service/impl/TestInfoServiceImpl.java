@@ -2,6 +2,8 @@ package model.service.impl;
 
 import model.dao.TestInfoDao;
 import model.dao.connector.Connector;
+import model.dao.factory.DaoFactory;
+import model.dao.factory.DbNames;
 import model.dao.impl.TestInfoDaoImpl;
 import model.entity.TestInfo;
 import model.service.TestInfoService;
@@ -12,7 +14,7 @@ public class TestInfoServiceImpl implements TestInfoService {
     private TestInfoDao testInfoDao;
 
     public TestInfoServiceImpl() {
-        this.testInfoDao = new TestInfoDaoImpl(new Connector());
+        this.testInfoDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getTestInfoDao();
     }
 
     @Override

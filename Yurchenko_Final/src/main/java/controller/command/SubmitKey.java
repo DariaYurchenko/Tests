@@ -10,20 +10,26 @@ import javax.servlet.http.HttpServletResponse;
 
 public class SubmitKey extends Command implements CommandPages {
     private static final Logger LOGGER = Logger.getLogger(SubmitKey.class);
+    private static final String LOGIN = "login";
+    private static final String MAGIC_KEY = "key";
+    private static final String APP_LOCALE = "appLocale";
+    private static final String INCORRECT_KEY = "incorrectKey";
+    private static final String TRUE = "TRUE";
+
 
     private UserService userService;
     private LanguageManager languageManager;
 
     public SubmitKey() {
         this.userService = new UserServiceImpl();
-        this.languageManager =  LanguageManager.INSTANCE;
+        this.languageManager =  LanguageManager.getInstance();
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        String login = req.getParameter("login");
-        String key = req.getParameter("key");
-        String language = String.valueOf(req.getParameter("appLocale"));
+        String login = req.getParameter(LOGIN);
+        String key = req.getParameter(MAGIC_KEY);
+        String language = String.valueOf(req.getParameter(APP_LOCALE));
 
         languageManager.setLanguage(language);
 
@@ -33,10 +39,9 @@ public class SubmitKey extends Command implements CommandPages {
         }
         else {
             LOGGER.warn("Someone put in incorrect key.");
-            req.getSession().setAttribute("incorrectKey", "TRUE");
+            req.getSession().setAttribute(INCORRECT_KEY, TRUE);
         }
         return CommandResult.forward(SUBMIT_KEY);
     }
-
 
 }

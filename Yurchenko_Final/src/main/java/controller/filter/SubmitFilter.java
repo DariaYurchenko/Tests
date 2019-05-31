@@ -16,21 +16,24 @@ import java.util.List;
 import java.util.Optional;
 
 
-@WebFilter(filterName = "SubmitFilter")
-public class SubmitFilter implements Filter, CommandPages {
+@WebFilter(filterName = "submit")
+public class SubmitFilter implements Filter {
     private static final String CHANGE_LANGUAGE = "CHANGE_LANGUAGE";
     private static final String LOGIN = "LOGIN";
     private static final String REGISTER = "REGISTER";
+    private static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
     private static final String SUBMIT_KEY = "SUBMIT_KEY";
     private static final String SEND_EMAIL_AGAIN = "SEND_EMAIL_AGAIN";
-    private static final String LOG_OUT = "LOGOUT";
+    private static final String LOGOUT = "LOGOUT";
+    private static final String PASS_TESTS = "PASS_TESTS";
 
-    private static final String  LOGIN_URL = "http://localhost:8081/login_page.jsp";
-    private static final String  START_PAGE_URL = "http://localhost:8081/";
-    private static final String  REGISTER_PAGE_URL = "http://localhost:8081/register_page.jsp";
-    private static final String  TESTS_TO_PASS_URL = "http://localhost:8081/tests_to_pass.jsp";
-    private static final String  NOT_SUBMIT_EMAIL_URL = "http://localhost:8081/not_submit_email.jsp";
-    private static final String  NOT_SUBMIT_EMAIL2_URL = "http://localhost:8081/tests/not_submit_email.jsp";
+    private static final String LOGIN_PAGE = "login_page";
+    private static final String START_PAGE = "start_page";
+    private static final String TESTS_TO_PASS_PAGE = "tests_to_pass";
+    private static final String REGISTER_PAGE = "register_page";
+    private static final String NOT_SUBMIT_EMAIL_PAGE = "not_submit_email";
+    private static final String ERROR_PAGE = "error_page";
+    private static final String NOT_SUBMIT_EMAIL_REDIRECT = "jsp/not_submit_email.jsp";
 
     private static final int SUBMITTED_USER = 2;
 
@@ -46,19 +49,8 @@ public class SubmitFilter implements Filter, CommandPages {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
+        String page = req.getParameter("page");
 
-        /*String login = null;
-        if(session.getAttribute("user") instanceof User) {
-            User user = (User) session.getAttribute("user");
-            login = user.getLogin();
-        }
-
-        Integer submitStatus = null;
-        Optional<Integer> submitOptional = userService.findIfSubmit(login);
-        if(submitOptional.isPresent()) {
-            submitStatus = submitOptional.get();
-        }*/
-        String url = req.getRequestURL().toString();
         Integer ifSubmit = 0;
 
         Optional<User> optionalUser = Optional.ofNullable((User)session.getAttribute("user"));
@@ -67,35 +59,25 @@ public class SubmitFilter implements Filter, CommandPages {
             ifSubmit = userService.findIfSubmit(userLogin).orElse(0);
         }
 
-        if(ifSubmit == SUBMITTED_USER || isDoFilterCommands(req) || isDoFilterForPage(url)) {
+        if(ifSubmit == SUBMITTED_USER || isDoFilterForCommand(req) || isDoFilterForPage(page)) {
            filterChain.doFilter(req, resp);
         }
         else {
-           resp.sendRedirect(NOT_SUBMIT_EMAIL);
+            req.getRequestDispatcher(NOT_SUBMIT_EMAIL_REDIRECT).forward(req, resp);
         }
-
-        //String url = req.getRequestURL().toString();
-
-        /*if(submitStatus != null && submitStatus == SUBMITTED_USER || isDoFilterCommands(req) || isDoFilterForPage(url)) {
-            filterChain.doFilter(req, resp);
-            resp.sendRedirect(NOT_SUBMIT_EMAIL);
-        }
-        else {
-            resp.sendRedirect(NOT_SUBMIT_EMAIL);
-        }*/
-
     }
 
-    private boolean isDoFilterCommands(HttpServletRequest req) {
+    private boolean isDoFilterForCommand(HttpServletRequest req) {
         String command = req.getParameter("command");
-        return CHANGE_LANGUAGE.equals(command) || LOGIN.equals(command) || REGISTER.equals(command) ||
-                SUBMIT_KEY.equals(command) || SEND_EMAIL_AGAIN.equals(command) || LOG_OUT.equals(command);
+        List<String> pagesNotToFilter = new ArrayList<>(Arrays.asList(REGISTER, LOGIN, CHANGE_PASSWORD,
+                CHANGE_LANGUAGE, SEND_EMAIL_AGAIN, SUBMIT_KEY, LOGOUT, PASS_TESTS));
+        return pagesNotToFilter.contains(command);
     }
 
-    private boolean isDoFilterForPage(String url) {
-        List<String> pagesNotToFilter = new ArrayList<>(Arrays.asList(NOT_SUBMIT_EMAIL2_URL, REGISTER_PAGE_URL, LOGIN_URL, TESTS_TO_PASS_URL, START_PAGE_URL,
-                NOT_SUBMIT_EMAIL_URL));
-        return pagesNotToFilter.contains(url);
+    private boolean isDoFilterForPage(String page) {
+        List<String> pagesNotToFilter = new ArrayList<>(Arrays.asList(NOT_SUBMIT_EMAIL_PAGE, REGISTER_PAGE, LOGIN_PAGE,
+                TESTS_TO_PASS_PAGE, START_PAGE, ERROR_PAGE));
+        return pagesNotToFilter.contains(page);
     }
 
     @Override

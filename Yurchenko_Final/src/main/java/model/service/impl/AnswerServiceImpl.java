@@ -19,7 +19,6 @@ public class AnswerServiceImpl implements AnswerService {
         return checkIfUserAnswerCorrect(questionPoints, userAnswers, correctAnswers);
     }
 
-    //TODO: delete
     @Override
     public Answer makeTextAnswer(int questionPoints, String userAnswer, String correctAnswer) {
         return checkIfUserAnswerCorrect(questionPoints, userAnswer, correctAnswer);

@@ -25,7 +25,7 @@ public class Main {
                 .build();
         QuestionServiceImpl questionService = new QuestionServiceImpl();*/
         Connector connector = new Connector();
-        TestInfoDaoImpl testInfoDao = new TestInfoDaoImpl(connector);
+        TestInfoDaoImpl testInfoDao = new TestInfoDaoImpl();
         List<TestInfo> list = testInfoDao.findByParameter("test_id", 2L);
 
 

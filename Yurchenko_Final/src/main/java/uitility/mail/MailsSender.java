@@ -25,10 +25,9 @@ public final class MailsSender {
     private static final String PROTOCOL = "smtps";
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
     private static final String CONTENT_CONFIRM_EMAIL = "<a href=\"%s\">Confirm your email!</a>";
-    private static final String HREF_CONFIRM_EMAIL = "http://localhost:8081/Yurchenko_Final_war_exploded/tests?command=SUBMIT_KEY&login=%s" +
-            "&key=%s";
+    private static final String HREF_CONFIRM_EMAIL = "http://localhost:8081/tests?command=SUBMIT_KEY&login=%s&key=%s";
 
-    private static LanguageManager languageManager = LanguageManager.INSTANCE;
+    private static LanguageManager languageManager = LanguageManager.getInstance();
 
 
 
@@ -37,7 +36,7 @@ public final class MailsSender {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
             Properties props = System.getProperties();
-            putProperties(props);
+            setProperties(props);
 
             Session session = Session.getInstance(props, null);
 
@@ -86,7 +85,7 @@ public final class MailsSender {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
             Properties props = System.getProperties();
-            putProperties(props);
+            setProperties(props);
 
             Session session = Session.getInstance(props, null);
 
@@ -111,7 +110,7 @@ public final class MailsSender {
         }
     }
 
-    private static void putProperties(Properties props) {
+    private static void setProperties(Properties props) {
         props.setProperty("mail.smtps.host", "smtp.gmail.com");
         props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
         props.setProperty("mail.smtp.socketFactory.fallback", "false");

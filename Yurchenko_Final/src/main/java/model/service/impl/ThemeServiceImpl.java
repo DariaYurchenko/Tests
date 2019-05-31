@@ -2,6 +2,8 @@ package model.service.impl;
 
 import model.dao.ThemeDao;
 import model.dao.connector.Connector;
+import model.dao.factory.DaoFactory;
+import model.dao.factory.DbNames;
 import model.dao.impl.ThemeDaoImpl;
 import model.entity.Theme;
 import model.service.ThemeService;
@@ -10,7 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ThemeServiceImpl implements ThemeService {
-    private ThemeDao themeDao = new ThemeDaoImpl(new Connector());
+    private ThemeDao themeDao;
+
+    public ThemeServiceImpl() {
+        this.themeDao =  DaoFactory.getDAOFactory(DbNames.MYSQL).getThemeDao();
+    }
 
     @Override
     public void addTheme(Theme theme) {

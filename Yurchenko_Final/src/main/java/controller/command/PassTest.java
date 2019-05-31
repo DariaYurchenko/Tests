@@ -51,10 +51,6 @@ public class PassTest extends Command implements CommandPages {
 
                 setPointsForSingleChoiceQuestion(question, userAnswer);
 
-                changeQuestionRightAnswersPercent(req, question);
-
-                sendCounterForwardRequest(req);
-
                 req.setAttribute("userAnswer", userAnswer);
             }
 
@@ -70,12 +66,12 @@ public class PassTest extends Command implements CommandPages {
 
                 setPointsForMultipleChoiceQuestion(question, userAnswers, correctAnswers);
 
-                changeQuestionRightAnswersPercent(req, question);
-
                 sendUserAnswersRequest(req, userAnswers);
 
                 sendCounterForwardRequest(req);
                 }
+            changeQuestionRightAnswersPercent(req, question);
+            sendCounterForwardRequest(req);
             }
 
         return CommandResult.forward(PASS_TESTS);
@@ -148,7 +144,6 @@ public class PassTest extends Command implements CommandPages {
     private Answer createMultipleAnswer(int questionPoints, String[] userAnswers, String[] correctAnswers) {
         return answerServiceImpl.makeMultipleChoiceAnswer(questionPoints, userAnswers, correctAnswers);
     }
-
 
     private String[] makeListOfCorrectAnswers(Question question) {
         if(question.getCorrectOption3() != null) {

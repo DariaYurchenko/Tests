@@ -14,9 +14,37 @@ import java.util.*;
 public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
 
-    public UserDaoImpl(Connector connector) {
-        super(connector);
-    }
+    private static final String INSERT_USER = "INSERT INTO users(role, login, name, lastname, hash, salt) " +
+            "VALUES(?, ?, ?, ?, ?, ?);";
+    private static final String FIND_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?;";
+    private static final String FIND_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
+    private static final String FIND_USERS_FOR_PAGINATION = "SELECT * FROM users LIMIT ?, ?;";
+    private static final String FIND_USER_BY_PARAMETER = "SELECT * FROM users WHERE %s = ?";;
+    private static final String SELECT_ALL_USERS = "SELECT * FROM users;";
+    private static final String DELETE_USER = "DELETE FROM users WHERE user_id = ?;";
+    private static final String DELETE_ALL_USERS = "DELETE FROM users;";
+    private static final String UPDATE_USER_PASSWORD = "UPDATE users SET hash = ?, salt = ? WHERE login = ?;";
+    private static final String UPDATE_USER_POINTS = "UPDATE users SET user_number_of_points = ?, " +
+            "user_max_number_of_points = ? WHERE login = ?;";
+    private static final String UPDATE_USER_BY_LOGIN = "UPDATE users SET %s = ? WHERE login = ?;";
+    private static final String UPDATE_USER_SUBMIT_STATUS = "UPDATE users SET submitted = ? WHERE login = ?;";
+    private static final String SELECT_USER_MAGIC_KEY = "SELECT magic_key FROM users WHERE login = ?;";
+    private static final String SELECT_SUBMIT_TYPE_OF_MAGIC_KEY = "SELECT submitted FROM users WHERE login = ?;";
+
+    private static final String ROLE = "role";
+    private static final String USER_POINTS = "user_number_of_points";
+    private static final String MAX_POINTS = "user_max_number_of_points";
+    private static final String USER_NAME = "name";
+    private static final String USER_LASTNAME = "lastname";
+    private static final String USER_ID = "user_id";
+    private static final String USER_LOGIN = "login";
+    private static final String USER_HASH = "hash";
+    private static final String USER_SALT = "salt";
+    private static final String MAGIC_KEY = "magic_key";
+    private static final String SUBMIT_KEY = "submitted";
+
+    private static final int NOT_SUBMITTED_KEY = 1;
+    private static final int SUBMITTED_KEY = 2;
 
     @Override
     public String createQueryToFindById() {
@@ -169,19 +197,6 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         }
     }
 
-    /*@Override
-    public void changeUserRankInDb(Long id, Integer plusPoints, Integer plusMaxPoints) {
-        try (PreparedStatement ps = connector.getConnection().prepareStatement(UPDATE_USER_POINTS)) {
-            ps.setInt(1, plusPoints);
-            ps.setInt(2, plusMaxPoints);
-            ps.setLong(3, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.warn("SQLException with updating user's points: " + e.getMessage());
-            throw new DaoException(e);
-        }
-    }*/
-
     @Override
     public void changeUserRankInDb(String login, Integer plusPoints, Integer plusMaxPoints) {
         try (PreparedStatement ps = connector.getConnection().prepareStatement(UPDATE_USER_POINTS)) {
@@ -194,23 +209,6 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
             throw new DaoException(e);
         }
     }
-
-    /*@Override
-    public List<User> findUsersForPagination(int startRecord, int recordsPerPage) {
-        List<User> users = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_USERS_FOR_PAGINATION)) {
-            preparedStatement.setInt(1, startRecord);
-            preparedStatement.setInt(2, recordsPerPage);
-            ResultSet rs = preparedStatement.executeQuery();
-            while(rs.next()) {
-                users.add(buildUser(rs));
-            }
-            return users;
-        } catch (SQLException e) {
-            LOGGER.warn("SQLException with finding user for pagination: " + e.getMessage());
-            throw new DaoException(e);
-        }
-    }*/
 
     @Override
     public void updateUserByLogin(String column, Object value, String login) {

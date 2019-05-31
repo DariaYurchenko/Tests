@@ -18,12 +18,12 @@ public class ShowAllQuestions extends Command implements CommandPages {
 
         String act = req.getParameter("act");
         if("SHOW_BY_THEME".equals(act)) {
-            req.getSession().setAttribute("act", "DELETE_USER_BY_ID");
+            req.getSession().setAttribute("act", "SHOW_BY_THEME");
         }
         if("JUST_SHOW".equals(act)) {
             req.getSession().setAttribute("act", "JUST_SHOW");
         }
-        if("DELETE_ALL_QUESTIONS".equals(act)) {
+        /*if("DELETE_ALL_QUESTIONS".equals(act)) {
             req.getSession().setAttribute("act", "DELETE_ALL_QUESTIONS");
         }
         if("DELETE_QUESTION_BY_ID".equals(act)) {
@@ -31,20 +31,20 @@ public class ShowAllQuestions extends Command implements CommandPages {
         }
         if("REGISTER_ADMIN".equals(act)) {
             req.getSession().setAttribute("act", "REGISTER_ADMIN");
-        }
+        }*/
 
 
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<Question> questions = questionServiceImpl.findQuestionsForPagination(pagination.calculateStart(), recordsPerPage);
-
         int rows = questionServiceImpl.findAll().size();
-        req.setAttribute("start", pagination.calculateStart());
-        req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
+        List<Question> questions = questionServiceImpl.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
+
+        req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateStart(pagination.calculateNumOfPages(rows))));
+        req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
-        req.setAttribute("recordsPerPage", pagination.getRecordsPerPage());
-        req.setAttribute("questions", questions);
+        req.getSession().setAttribute("recordsPerPage", pagination.getRecordsPerPage());
+        req.getSession().setAttribute("questions", questions);
         return CommandResult.forward(SHOW_QUESTIONS);
     }
 }

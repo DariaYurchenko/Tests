@@ -12,6 +12,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class StartTest extends Command implements CommandPages {
+    private static final String THEME = "theme_id";
+    private static final String COUNTER = "counter";
+    private static final String QUESTIONS_LIST = "questions";
+    private static final String ANSWERS_LIST = "userAnswers";
+
     private QuestionServiceImpl questionServiceImpl;
 
     public StartTest() {
@@ -21,18 +26,18 @@ public class StartTest extends Command implements CommandPages {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
 
-        String themeId = req.getParameter("theme_id");
+        String themeId = req.getParameter(THEME);
         List<Question> questions = questionServiceImpl.findQuestionsByTheme(Long.parseLong(themeId));
-        //List<Answer> answers = new ArrayList<>();
+        List<Answer> answers = new ArrayList<>();
         Collections.shuffle(questions);
 
-        req.getSession().setAttribute("questions", questions);
+        req.getSession().setAttribute(QUESTIONS_LIST, questions);
 
-        int counter = Integer.parseInt(req.getParameter("counter"));
+        int counter = Integer.parseInt(req.getParameter(COUNTER));
 
-        req.getSession().setAttribute("counter", counter);
-        //req.getSession().setAttribute("userAnswers", answers);
-        req.getSession().setAttribute("theme_id", themeId);
+        req.getSession().setAttribute(COUNTER, counter);
+        req.getSession().setAttribute(ANSWERS_LIST, answers);
+        req.getSession().setAttribute(THEME, themeId);
 
         return CommandResult.forward(new PassTest());
     }

@@ -6,43 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface QuestionDao extends GenericDao<Question> {
-    String INSERT_QUESTION = "INSERT INTO questions(question_type, question_theme_id, question, incorrect_option1, " +
-            "incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) " +
-            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    String DELETE_QUESTION = "DELETE FROM questions WHERE question_id = ?;";
-    String DELETE_ALL_QUESTIONS = "DELETE FROM questions;";
-    String SELECT_ALL_QUESTIONS = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id;";
-    String FIND_QUESTION_BY_ID = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id " +
-            "WHERE question_id = ?;";
-    String UPDATE_QUESTION_ANSWERS = "UPDATE questions SET right_answers = ?, " +
-            "answers = ? WHERE question_id = ?;";
-    String FIND_QUESTIONS_OF_THEME = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE t.theme_id = ?";
-    String FIND_QUESTION_BY_PARAMETER = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE %s = ?;";
-    String UPDATE_QUESTION = "UPDATE questions SET %s = ? WHERE question_id = ?;";
-    String FIND_QUESTIONS_FOR_PAGINATION = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id LIMIT ?, ?;";
-    String FIND_QUESTIONS_FOR_PAGINATION_ID = "SELECT * FROM questions q JOIN question_type qt" +
-            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE theme_id = ? LIMIT ?, ?;";
-
-    String QUESTION_ID = "question_id";
-    String TYPE = "question_type";
-    String THEME_ID = "theme_id";
-    String RIGHT_ANSWERS = "right_answers";
-    String ANSWERS = "answers";
-    String QUESTION = "question";
-    String INCORRECT_OPTION_1 = "incorrect_option1";
-    String INCORRECT_OPTION_2 = "incorrect_option2";
-    String INCORRECT_OPTION_3 = "incorrect_option3";
-    String CORRECT_OPTION_1 = "correct_option1";
-    String CORRECT_OPTION_2 = "correct_option2";
-    String CORRECT_OPTION_3 = "correct_option3";
-    String QUESTION_TYPE_ID = "question_type_id";
-    String QUESTION_TYPE = "type";
-    String THEME_NAME = "theme_name";
 
     Map<String, Integer> getCurrentAnswersOfQuestionFromDb(Long id);
 
@@ -50,10 +13,6 @@ public interface QuestionDao extends GenericDao<Question> {
 
     List<Question> findThemeQuestions(Long id);
 
-    //List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage);
-
     List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Long id);
-
-
 
 }

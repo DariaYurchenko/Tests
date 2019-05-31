@@ -15,9 +15,17 @@ import java.util.Optional;
 public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
     private static final Logger LOGGER = Logger.getLogger(ThemeDaoImpl.class);
 
-    public ThemeDaoImpl(Connector connector) {
-        super(connector);
-    }
+    private static final String INSERT_THEME = "INSERT INTO themes(name, amountOfQuestions) VALUES(?, ?);";
+    private static final String DELETE_THEME = "DELETE FROM themes WHERE theme_id = ?;";
+    private static final String DELETE_ALL_THEMES = "DELETE FROM themes;";
+    private static final String SELECT_ALL_THEMES = "SELECT * FROM themes;";
+    private static final String FIND_THEME_BY_ID = "SELECT * FROM themes WHERE theme_id = ?;";
+    private static final String FIND_THEME_BY_PARAMETER = "SELECT * FROM themes WHERE %s = ?;";
+    private static final String FIND_THEMES_FOR_PAGINATION = "SELECT * FROM themes LIMIT ?, ?;";
+    private static final String UPDATE_THEME = "UPDATE themes SET %s = ? WHERE theme_id = ?;";
+
+    private static final String THEME_NAME = "theme_name";
+    private static final String THEME_ID = "theme_id";
 
     @Override
     public String createQueryToSave() {

@@ -16,9 +16,45 @@ import java.util.*;
 public class QuestionDaoImpl extends GenericDaoImpl<Question> implements QuestionDao {
     private static final Logger LOGGER = Logger.getLogger(QuestionDaoImpl.class);
 
-    public QuestionDaoImpl(Connector connector) {
-        super(connector);
-    }
+    private static final String INSERT_QUESTION = "INSERT INTO questions(question_type, question_theme_id, question, incorrect_option1, " +
+            "incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) " +
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String DELETE_QUESTION = "DELETE FROM questions WHERE question_id = ?;";
+    private static final String DELETE_ALL_QUESTIONS = "DELETE FROM questions;";
+    private static final String SELECT_ALL_QUESTIONS = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id;";
+    private static final String FIND_QUESTION_BY_ID = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id " +
+            "WHERE question_id = ?;";
+    private static final String UPDATE_QUESTION_ANSWERS = "UPDATE questions SET right_answers = ?, " +
+            "answers = ? WHERE question_id = ?;";
+    private static final String FIND_QUESTIONS_OF_THEME = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE t.theme_id = ?";
+    private static final String FIND_QUESTION_BY_PARAMETER = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE %s = ?;";
+    private static final String UPDATE_QUESTION = "UPDATE questions SET %s = ? WHERE question_id = ?;";
+    private static final String FIND_QUESTIONS_FOR_PAGINATION = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id LIMIT ?, ?;";
+    private static final String FIND_QUESTIONS_FOR_PAGINATION_ID = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE theme_id = ? LIMIT ?, ?;";
+
+    private static final String QUESTION_ID = "question_id";
+    private static final String THEME_ID = "theme_id";
+    private static final String RIGHT_ANSWERS = "right_answers";
+    private static final String ANSWERS = "answers";
+    private static final String QUESTION = "question";
+    private static final String INCORRECT_OPTION_1 = "incorrect_option1";
+    private static final String INCORRECT_OPTION_2 = "incorrect_option2";
+    private static final String INCORRECT_OPTION_3 = "incorrect_option3";
+    private static final String CORRECT_OPTION_1 = "correct_option1";
+    private static final String CORRECT_OPTION_2 = "correct_option2";
+    private static final String CORRECT_OPTION_3 = "correct_option3";
+    private static final String QUESTION_TYPE_ID = "question_type_id";
+    private static final String QUESTION_TYPE = "type";
+    private static final String THEME_NAME = "theme_name";
+
+    private Map<String, Integer> questionTypeMap = new HashMap<>();
+    private Map<String, Integer> questionThemeMap = new HashMap<>();
 
     @Override
     public String createQueryToSave() {
@@ -79,29 +115,20 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     private int mapTypeToTable(Question question) {
-        if (question.getQuestionType().getType().equalsIgnoreCase("Radio")) {
-            return 1;
-        } else if (question.getQuestionType().getType().equalsIgnoreCase("Checkbox")) {
-            return 2;
-        } else {
-            return 3;
-        }
+        questionTypeMap.put("Radio", 1);
+        questionTypeMap.put("Checkbox", 2);
+        questionTypeMap.put("Text", 3);
+        return questionTypeMap.get(question.getQuestionType().getType().toLowerCase());
     }
 
     private long mapThemeToTable(Question question) {
-        if (question.getTheme().getThemeName().equalsIgnoreCase("collections")) {
-            return 1;
-        } else if (question.getTheme().getThemeName().equalsIgnoreCase("if else, switch and loops")) {
-            return 2;
-        } else if (question.getTheme().getThemeName().equalsIgnoreCase("inheritance and polymorphism")) {
-            return 3;
-        } else if (question.getTheme().getThemeName().equalsIgnoreCase("threads, concurrency")) {
-            return 4;
-        } else if (question.getTheme().getThemeName().equalsIgnoreCase("operators")) {
-            return 5;
-        } else {
-            return 6;
-        }
+        questionTypeMap.put("collections", 1);
+        questionTypeMap.put("if else, switch and loops", 2);
+        questionTypeMap.put("inheritance and polymorphism", 3);
+        questionTypeMap.put("threads, concurrency", 4);
+        questionTypeMap.put("operators", 5);
+        questionTypeMap.put("primitive types conversions", 6);
+        return questionThemeMap.get(question.getTheme().getThemeName().toLowerCase());
     }
 
     @Override
@@ -209,35 +236,6 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
             throw new DaoException(e);
         }
     }
-
-    /*@Override
-    public List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage) {
-        List<Question> questions = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_QUESTIONS_FOR_PAGINATION)) {
-            preparedStatement.setInt(1, startRecord);
-            preparedStatement.setInt(2, recordsPerPage);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                questions.add((new Question.Builder()
-                        .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
-                        .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
-                        .withId(rs.getLong(QUESTION_ID))
-                        .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
-                        .withQuestion(rs.getString(QUESTION))
-                        .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
-                        .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
-                        .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
-                        .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
-                        .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
-                        .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
-                        .build()));
-            }
-            return questions;
-        } catch (SQLException e) {
-            LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
-            throw new DaoException(e);
-        }
-    }*/
 
     @Override
     public List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Long themeId) {

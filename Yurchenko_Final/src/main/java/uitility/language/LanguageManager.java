@@ -1,18 +1,35 @@
 package uitility.language;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public final class LanguageManager {
-    //TODO: double check
-    public static final LanguageManager INSTANCE = new LanguageManager();
-    //TODO:rename
-    private static final String RESOURCE_NAME = "messages/messages";
+    private static final String RESOURCE_NAME = "languages/messages";
 
+    private static volatile LanguageManager instance;
     private ResourceBundle resourceBundle;
     private Locale locale;
+    private Map<String, Locale> localeMap = new HashMap<String, Locale>()
+    {{
+        put("en_UK", new Locale("en", "UK"));
+        put("ru_RU", new Locale("ru", "Ru"));
+    }};
+
 
     private LanguageManager() {
+    }
+
+    public static LanguageManager getInstance() {
+        if (instance == null) {
+            synchronized (LanguageManager.class) {
+                if (instance == null) {
+                    instance = new LanguageManager();
+                }
+            }
+        }
+        return instance;
     }
 
     public void setLanguage(String language) {
@@ -24,13 +41,9 @@ public final class LanguageManager {
         return resourceBundle.getString(key);
     }
 
-    //TODO:map
     private void setLocale(String language) {
-        if(language.equalsIgnoreCase("en_UK")) {
-            this.locale = new Locale("en", "UK");
-        }
-        if(language.equalsIgnoreCase("ru_RU")) {
-            this.locale = new Locale("ru", "Ru");
+        if(localeMap.containsKey(language)) {
+            this.locale = localeMap.get(language);
         }
         else {
             this.locale = Locale.getDefault();

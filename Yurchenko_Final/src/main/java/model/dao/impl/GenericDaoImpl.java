@@ -16,8 +16,8 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
 
     protected Connector connector;
 
-    public GenericDaoImpl(Connector connector) {
-        this.connector = connector;
+    public GenericDaoImpl() {
+        this.connector = new Connector();
     }
 
     public abstract String createQueryToSave();
@@ -48,7 +48,7 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
         try(PreparedStatement ps = connector.getConnection().prepareStatement(command)) {
             prepareStatementToSave(ps, object);
             int count = ps.executeUpdate();
-            //TODO: if should do such check in dao
+            //TODO: if should do such check in db
             if(count != 1) {
                 LOGGER.warn("More then one sign was added.");
                 throw new DaoException("More then one sign was added.");

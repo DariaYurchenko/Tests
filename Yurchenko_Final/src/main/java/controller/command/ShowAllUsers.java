@@ -49,15 +49,15 @@ public class ShowAllUsers extends Command implements CommandPages {
         int recordsPerPage = 5;
         Pagination pagination = new Pagination(5, currentPage);
 
-        List<User> users = userServiceImpl.findUsersForPagination(pagination.calculateStart(), recordsPerPage);
-
         int rows = userServiceImpl.findAll().size();
-        //req.setAttribute("start", pagination.calculateStart());
-        req.setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
+        List<User> users = userServiceImpl.findUsersForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
+
+
+        req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
-        req.setAttribute("recordsPerPage", pagination.getRecordsPerPage());
-        req.setAttribute("showUsers", "The list of users: ");
-        req.setAttribute("users", users);
+        req.getSession().setAttribute("recordsPerPage", pagination.getRecordsPerPage());
+        req.getSession().setAttribute("showUsers", "The list of users: ");
+        req.getSession().setAttribute("users", users);
         return CommandResult.forward(SHOW_USERS);
     }
 }

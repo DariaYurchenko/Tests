@@ -16,12 +16,18 @@ import java.util.Optional;
 public class UserLogin extends Command implements CommandPages {
     private static final Logger LOGGER = Logger.getLogger(UserLogin.class);
 
+    private static final String USER_FORGOT_PASSWORD = "ifForgotPassword";
+    private static final String DID_FORGET = "forgot";
+    private static final String TRUE = "TRUE";
+    private static final String USER_STATUS = "userStatus";
+    private static final String LOGIN_MESSAGE = "loginMessage";
+
     private UserServiceImpl userServiceImpl;
     private LanguageManager languageManager;
 
     public UserLogin() {
         this.userServiceImpl = new UserServiceImpl();
-        this.languageManager =  LanguageManager.INSTANCE;
+        this.languageManager =  LanguageManager.getInstance();
     }
 
     @Override
@@ -32,8 +38,8 @@ public class UserLogin extends Command implements CommandPages {
 
         languageManager.setLanguage(language);
 
-        if ("TRUE".equals(req.getParameter("ifForgotPassword"))) {
-            req.setAttribute("forgot", "TRUE");
+        if (TRUE.equals(req.getParameter(USER_FORGOT_PASSWORD))) {
+            req.setAttribute(DID_FORGET, TRUE);
             req.getSession().setAttribute("login", login);
             return CommandResult.forward(LOGIN_PAGE);
         }
@@ -43,12 +49,10 @@ public class UserLogin extends Command implements CommandPages {
         }
 
         Optional<User> userLogging = userServiceImpl.findUserByLogin(login);
-      /*  userLogging.ifPresent(()->{User user = userLogging.get();
-            setUserStatus(req, user);
-            return checkUserStatus(req, user, password);});*/
+
         if (!userLogging.isPresent()) {
             LOGGER.warn("Someone tries to login without registration.");
-            req.setAttribute("loginMessage", languageManager.getMessage("no_user"));
+            req.setAttribute(LOGIN_MESSAGE, languageManager.getMessage("no_user"));
             return CommandResult.forward(LOGIN_PAGE);
         }
 
@@ -74,10 +78,10 @@ public class UserLogin extends Command implements CommandPages {
 
     private void setUserStatus(HttpServletRequest req, User user) {
         if(user.getStatus() == UserStatus.STUDENT) {
-            req.getSession().setAttribute("userStatus", "Student");
+            req.getSession().setAttribute(USER_STATUS, "Student");
         }
         if(user.getStatus() == UserStatus.ADMIN) {
-            req.getSession().setAttribute("userStatus", "Admin");
+            req.getSession().setAttribute(USER_STATUS, "Admin");
         }
     }
 

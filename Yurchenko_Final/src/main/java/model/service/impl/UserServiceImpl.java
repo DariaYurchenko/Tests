@@ -3,11 +3,10 @@ package model.service.impl;
 import exception.DaoException;
 import exception.ServiceException;
 import model.dao.UserDao;
-import model.dao.connector.Connector;
-import model.dao.impl.UserDaoImpl;
+import model.dao.factory.DaoFactory;
+import model.dao.factory.DbNames;
 import model.entity.User;
 import model.service.UserService;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public UserServiceImpl() {
-        this.userDao = new UserDaoImpl(new Connector());
+        this.userDao =  DaoFactory.getDAOFactory(DbNames.MYSQL).getUserDao();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package controller.command;
 
-import com.sun.mail.smtp.SMTPTransport;
 import controller.pages.CommandPages;
 import model.entity.User;
 import model.entity.status.UserStatus;
@@ -12,30 +11,22 @@ import uitility.validator.LoginValidator;
 import uitility.encryption.EncryptorBuilder;
 import uitility.validator.NameLastnameValidator;
 import uitility.validator.PasswordValidator;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.Security;
 import java.util.Optional;
-import java.util.Properties;
 
 public class UserRegistration extends Command implements CommandPages {
     private static final Logger LOGGER = Logger.getLogger(UserRegistration.class);
+    private static final String STUDENT = "Student";
+    private static final String ADMIN = "Admin";
+    private static final String USER_TYPE_FOR_REGISTRATION = "userType";
 
     private UserServiceImpl userServiceImpl;
     private LanguageManager languageManager;
 
     public UserRegistration() {
         this.userServiceImpl = new UserServiceImpl();
-        this.languageManager =  LanguageManager.INSTANCE;
+        this.languageManager =  LanguageManager.getInstance();
     }
 
     @Override
@@ -47,20 +38,39 @@ public class UserRegistration extends Command implements CommandPages {
         String language = String.valueOf(req.getSession().getAttribute("appLocale"));
 
         languageManager.setLanguage(language);
+        req.getSession().setAttribute("appLocale", language);
 
+        User newUser = null;
         Optional<User> userOptional = userServiceImpl.findUserByLogin(login);
         if(userOptional.isPresent()) {
             LOGGER.warn("Unknown user attempted to register by existing email - " + login);
             req.setAttribute("user_exists", languageManager.getMessage("user_exists"));
+            if("Admin".equals(req.getParameter("userType"))) return CommandResult.forward(SHOW_USERS);
+
             return CommandResult.forward(REGISTRATION_PAGE);
         }
 
         boolean validParameters = validateParameters(req, name, lastname, login, password);
         if(!validParameters) {
+            if(ADMIN.equals(req.getParameter(USER_TYPE_FOR_REGISTRATION))) {
+                return CommandResult.forward(SHOW_USERS);
+            }
             return CommandResult.forward(REGISTRATION_PAGE);
         }
 
-        User newUser = buildUser(req, name, lastname, login, password);
+
+        if(ADMIN.equals(req.getParameter(USER_TYPE_FOR_REGISTRATION))) {
+            newUser = buildAdmin(req, name, lastname, login, password);
+            finishUserRegistration(req, newUser, login, password);
+            return CommandResult.forward(ADMIN_PAGE);
+        }
+        else {
+            newUser = buildStudent(req, name, lastname, login, password);
+            finishUserRegistration(req, newUser, login, password);
+            return CommandResult.forward(TESTS);
+        }
+
+       /* User newUser = buildStudent(req, name, lastname, login, password);
 
         userServiceImpl.registerUser(newUser);
 
@@ -69,7 +79,20 @@ public class UserRegistration extends Command implements CommandPages {
         req.getSession().setAttribute("user", newUser);
         req.getSession().setAttribute("appLocale", language);
 
-        return CommandResult.forward(TESTS);
+        setUserStatus(req, newUser);
+        *//*if("Admin".equals(req.getParameter("userType"))) {
+            return CommandResult.forward(SHOW_USERS);
+        }*//*
+
+        return CommandResult.forward(TESTS);*/
+    }
+
+    private void finishUserRegistration(HttpServletRequest req, User user, String login, String password) {
+        userServiceImpl.registerUser(user);
+        sendEmailToConfirmRegistration(password, login);
+        req.getSession().setAttribute("user", user);
+
+        setUserStatus(req, user);
     }
 
     private boolean validateParameters(HttpServletRequest req, String name, String lastName, String login, String password) {
@@ -92,7 +115,7 @@ public class UserRegistration extends Command implements CommandPages {
         return true;
     }
 
-    private User buildUser(HttpServletRequest req, String name, String lastname, String login, String password) {
+    /*private User buildUser(HttpServletRequest req, String name, String lastname, String login, String password) {
         EncryptorBuilder builder = new EncryptorBuilder(password);
         User user = new User.Builder()
                 .withName(name)
@@ -102,13 +125,44 @@ public class UserRegistration extends Command implements CommandPages {
                 .withSalt(builder.getSalt())
                 .build();
 
-        if("ADMIN".equals(req.getParameter("userType"))) {
-            user.setStatus(UserStatus.ADMIN);
-        }
-        else {
-            user.setStatus(UserStatus.STUDENT);
+        switch(req.getParameter(USER_TYPE_FOR_REGISTRATION)) {
+            case ADMIN: user.setStatus(UserStatus.ADMIN);
+            case STUDENT: user.setStatus(UserStatus.STUDENT);
         }
         return user;
+    }*/
+
+    private User buildStudent(HttpServletRequest req, String name, String lastname, String login, String password) {
+        EncryptorBuilder builder = new EncryptorBuilder(password);
+        return new User.Builder()
+                .withName(name)
+                .withLastName(lastname)
+                .withUserType(UserStatus.STUDENT)
+                .withLogin(login)
+                .withHash(builder.getHash())
+                .withSalt(builder.getSalt())
+                .build();
+    }
+
+    private User buildAdmin(HttpServletRequest req, String name, String lastname, String login, String password) {
+        EncryptorBuilder builder = new EncryptorBuilder(password);
+        return new User.Builder()
+                .withName(name)
+                .withLastName(lastname)
+                .withUserType(UserStatus.ADMIN)
+                .withLogin(login)
+                .withHash(builder.getHash())
+                .withSalt(builder.getSalt())
+                .build();
+    }
+
+    private void setUserStatus(HttpServletRequest req, User user) {
+        if(user.getStatus() == UserStatus.STUDENT) {
+            req.getSession().setAttribute("userStatus", STUDENT);
+        }
+        if(user.getStatus() == UserStatus.ADMIN) {
+            req.getSession().setAttribute("userStatus", ADMIN);
+        }
     }
 
     private void sendEmailToConfirmRegistration(String password, String login) {

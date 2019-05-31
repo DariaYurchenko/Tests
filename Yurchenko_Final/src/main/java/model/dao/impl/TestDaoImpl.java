@@ -20,9 +20,21 @@ import java.util.Optional;
 public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     private static final Logger LOGGER = Logger.getLogger(TestDaoImpl.class);
 
-    public TestDaoImpl(Connector connector) {
-        super(connector);
-    }
+    private static final String INSERT_TEST = "INSERT INTO tests(test_user_Id, test_theme_Id, test_number_of_points, test_max_number_of_points, " +
+            "date, test_status) VALUES(?, ?, ?, ?, ?, ?);";
+    private static final String FIND_TEST_BY_ID = "SELECT * FROM tests WHERE test_id = ?;";
+    private static final String SELECT_ALL_TESTS = "SELECT * FROM tests;";
+    private static final String DELETE_TEST = "DELETE FROM users WHERE test_user_id = ?;";
+    private static final String DELETE_ALL_TESTS = "DELETE FROM tests;";
+    private static final String FIND_TEST_BY_PARAMETER = "SELECT * FROM tests WHERE %s = ?;";
+
+    private static final String TEST_ID = "test_id";
+    private static final String USER_ID = "test_user_id";
+    private static final String THEME_ID = "theme_id";
+    private static final String MAX_POINTS = "test_max_number_of_points";
+    private static final String USER_POINTS = "test_number_of_points";
+    private static final String DATE = "date";
+    private static final String TEST_STATUS = "test_status";
 
     @Override
     public String createQueryToSave() {

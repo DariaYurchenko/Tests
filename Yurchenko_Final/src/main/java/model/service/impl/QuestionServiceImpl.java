@@ -3,6 +3,8 @@ package model.service.impl;
 import exception.ServiceException;
 import model.dao.QuestionDao;
 import model.dao.connector.Connector;
+import model.dao.factory.DaoFactory;
+import model.dao.factory.DbNames;
 import model.dao.impl.QuestionDaoImpl;
 import model.entity.Question;
 import model.service.QuestionService;
@@ -15,7 +17,7 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionDao questionDao;
 
     public QuestionServiceImpl() {
-        this.questionDao = new QuestionDaoImpl(new Connector());
+        this.questionDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getQuestionDao();
     }
 
     @Override

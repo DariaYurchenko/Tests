@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/tests"})
+@WebServlet(urlPatterns = "/tests")
 public class TestServlet extends HttpServlet {
 
     @Override
@@ -26,21 +26,25 @@ public class TestServlet extends HttpServlet {
     }
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String page = req.getParameter("page");
+        if(page != null) {
+            req.getRequestDispatcher("jsp/" + page+".jsp").forward(req, resp);
+        }
+
         String command = req.getParameter("command");
-        CommandsFactory factory = new CommandsFactory();
+        CommandsFactory factory = CommandsFactory.getInstance();
         CommandResult result = factory.makeCommand(command).execute(req, resp);
 
         if(checkIfLeadsToAnotherCommand(result)) {
             Command chainCommand = result.getChainCommand();
             result = chainCommand.execute(req, resp);
         }
-
         chooseRedirectType(req, resp, result);
-
     }
 
     private void chooseRedirectType(HttpServletRequest req, HttpServletResponse resp, CommandResult result) throws IOException, ServletException {
         String page = result.getPage();
+
         if (result.isRedirect()) {
             resp.sendRedirect(page);
         } else {
@@ -51,4 +55,5 @@ public class TestServlet extends HttpServlet {
     private boolean checkIfLeadsToAnotherCommand(CommandResult result) {
         return result.getChainCommand() != null;
     }
+
 }

@@ -14,15 +14,13 @@ public final class Pagination {
         this.currentPage = currentPage;
     }
 
-    //TODO: >max amount af pages
-    public  int calculateStart() {
-         if (currentPage < 1) {
+    public  int calculateStart(int noOfPages) {
+         if (currentPage < 1 || currentPage > noOfPages) {
             return 0;
          }
         return currentPage * recordsPerPage - recordsPerPage;
     }
 
-    //TODO: on 1 page more!!!
     public int calculateNumOfPages(int rows) {
         if (recordsPerPage==0) {
             LOGGER.warn("Records per page = 0 while pagination.");
@@ -30,7 +28,7 @@ public final class Pagination {
         }
         int nOfPages = rows / recordsPerPage;
 
-        if (nOfPages % recordsPerPage > 0) {
+        if (rows % recordsPerPage > 0) {
             nOfPages++;
         }
         return nOfPages;

@@ -19,13 +19,33 @@ import java.util.Optional;
 public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInfoDao {
     private static final Logger LOGGER = Logger.getLogger(TestInfoDaoImpl.class);
 
+    private static final String FIND_TEST_INFO_BY_PARAMETER = "SELECT name, lastname, login, user_number_of_points, " +
+            "user_max_number_of_points, theme_name, test_number_of_points, test_max_number_of_points," +
+            " date, test_status FROM tests t JOIN users u ON t.test_user_id=u.user_id JOIN themes th ON " +
+            "t.test_theme_id=th.theme_id WHERE %s = ?;";
+    private static final String FIND_TESTS_FOR_PAGINATION = "SELECT name, lastname, login, user_number_of_points, " +
+            "user_max_number_of_points, theme_name, test_number_of_points, test_max_number_of_points," +
+            " date, test_status FROM tests t JOIN users u ON t.test_user_id=u.user_id JOIN themes th ON " +
+            "t.test_theme_id=th.theme_id LIMIT ?, ?;";
+    private static final String FIND_USER_TESTS_FOR_PAGINATION = "SELECT name, lastname, login, user_number_of_points, " +
+            "user_max_number_of_points, theme_name, test_number_of_points, test_max_number_of_points," +
+            " date, test_status FROM tests t JOIN users u ON t.test_user_id=u.user_id JOIN themes th ON " +
+            "t.test_theme_id=th.theme_id WHERE test_user_id = ? LIMIT ?, ?;";
+
+    private static final String USER_NAME = "name";
+    private static final String USER_LASTNAME = "lastname";
+    private static final String USER_LOGIN = "login";
+    private static final String THEME = "theme_name";
+    private static final String TEST_POINTS = "test_number_of_points";
+    private static final String TEST_MAX_POINTS = "test_max_number_of_points";
+    private static final String DATE = "date";
+
     private UserDao userDao;
     private TestDao testDao;
 
-    public TestInfoDaoImpl(Connector connector) {
-        super(connector);
-        this.userDao = new UserDaoImpl(connector);
-        this.testDao = new TestDaoImpl(connector);
+    public TestInfoDaoImpl() {
+        this.userDao = new UserDaoImpl();
+        this.testDao = new TestDaoImpl();
     }
 
     @Override

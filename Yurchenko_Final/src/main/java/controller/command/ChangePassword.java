@@ -13,12 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 public class ChangePassword extends Command implements CommandPages {
+    private static final String DID_FORGET = "forgot";
+    private static final String TRUE = "TRUE";
+
     private UserServiceImpl userServiceImpl;
     private LanguageManager languageManager;
 
     public ChangePassword() {
         this.userServiceImpl = new UserServiceImpl();
-        this.languageManager =  LanguageManager.INSTANCE;
+        this.languageManager =  LanguageManager.getInstance();
     }
 
     public ChangePassword(UserServiceImpl userServiceImpl) {
@@ -34,7 +37,7 @@ public class ChangePassword extends Command implements CommandPages {
         languageManager.setLanguage(language);
 
         if(!validatePassword(req, newPassword)) {
-            req.setAttribute("forgot", "TRUE");
+            req.setAttribute(DID_FORGET, TRUE);
             return CommandResult.forward(LOGIN_PAGE);
         }
 

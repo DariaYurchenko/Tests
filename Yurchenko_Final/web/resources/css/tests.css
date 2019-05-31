@@ -1,0 +1,187 @@
+@font-face{
+    font-family: "Cookie Regular";
+    src: url("../fonts/shumi.otf")
+}
+body{
+    background: #F2F2F2;
+    font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"
+}
+div.row{
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0
+}
+header.header{
+    padding-left: 0;
+    padding-right: 0;
+    position: sticky;
+    top: 0;
+    z-index: 11
+}
+.navbar-dark {
+    background: #2F2F64 !important
+}
+.navbar-dark .navbar-brand{
+    font: 30px "Cookie Regular";
+    color: #ffa500;
+}
+#navbarSupportedContent{
+    justify-content: flex-end;
+    flex-grow: 0;
+
+}
+ul.navbar-nav{
+    margin-right: 0 !important;
+}
+.nav-item{
+    margin: 0 5px;
+    font-size: 20px
+}
+.navbar-dark .navbar-nav .nav-link{
+    text-align: right;
+    color: white
+}
+.signUp{
+    flex-grow: 1;
+    text-align: right;
+    font: 22px bold;
+    margin-right: 15px;
+}
+.signUp ul{
+    vertical-align: middle
+}
+.signUp li > a, .signUp a.btn-primary{
+    font-size: 20px;
+    font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+.signUp > button{
+    border: none;
+    vertical-align: top
+}
+div.languages{
+    margin-left: 15px
+}
+div.languages > form img{
+    width: 30px;
+    height: 15px
+}
+div.languages > form{
+    margin-bottom: 0
+}
+div.languages > form > button{
+    padding: 0;
+    border: none;
+    display: inline-block;
+    width: auto
+}
+form[name="logout-form"]{
+    margin-bottom: 0;
+    padding: 8px
+}
+form[name="logout-form"] button[type="submit"]{
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    color: white
+}
+form[name="logout-form"] button[type="submit"]:hover{
+    color: #CBCBCE;
+    cursor: pointer
+}
+div.container{
+    width: 100%
+}
+section.work-section{
+    background: white;
+    padding: 15px;
+    margin: 15px auto;
+    border-radius: 15px
+}
+section.work-section > div > pre{
+    background: #F2F2F2;
+    padding: 7px
+}
+div.progress{
+    width: 80%;
+    margin: 10px auto
+}
+section > div.course-img-container{
+    width: 100px;
+    height: 100px;
+    padding: 30px;
+    margin: 10px auto;
+    border-radius: 50px;
+    background: #ffa500
+}
+section > div.course-img-container > img{
+    width: 40px
+}
+aside > section{
+    background: white;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 15px auto
+}
+aside > section > h2{
+    font-size: 27px
+}
+section.stats > #chartContainer{
+    background: #F2F2F2;
+}
+section.stats > #chartContainer a.canvasjs-chart-credit{
+    display: none
+}
+.custom-radio .custom-control-input:checked~.custom-control-label::before, .custom-control-input:checked~.custom-control-label::before{
+    background: #2F2F64
+}
+div.answers{
+    background: #D3D3D3;
+    padding: 5px
+}
+div.answers form div.custom-radio{
+    background: white;
+    padding: 7px;
+    padding-left: 24px;
+    margin: 5px
+}
+div.answers form div.custom-radio input[type="text"]{
+    border: none;
+    border-bottom: 1px solid;
+    outline: none
+}
+div.answers form{
+    position: relative
+}
+div.answers form div.button-div{
+    margin-top: 10px
+}
+div.answers form div.button-div button{
+    background: #ffa500;
+    padding: 5px 20px;
+    transition: transform 1s;
+    color: white
+}
+div.answers form div.button-div button:hover{
+    transform: scale(1.1);
+    transition: transform 1s
+}
+div.answers .custom-control-label::before, .custom-radio .custom-control-input:checked~.custom-control-label::after{
+    left: 5px;
+    top: 11px;
+}
+div.result{
+    position: relative
+}
+div.result p{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -120px
+}
+div.success{
+    background: #97CFB6 !important
+}
+div.danger{
+    background: #FBE3E4 !important
+}
