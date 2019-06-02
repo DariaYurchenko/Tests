@@ -108,7 +108,7 @@
                 <form method="get" action="tests">
                     <input type="hidden" name="currentPage" value="1">
                     <input type="hidden" name="act" value="SHOW_BY_THEME">
-                    <input type="hidden" name="command" value="SHOW_QUESTIONS_BY_THEME">
+                    <input type="hidden" name="command" value="SHOW_THEME_QUESTIONS">
                     <button class="btn" type="submit"><fmt:message key="admin_show_theme_questions"/></button>
                 </form>
             </div>
@@ -159,6 +159,9 @@
                             <c:set var="counter" value="${counter+1}"/>
 
                         </c:forEach>
+                        <c:if test="${questionsSize == 0}">
+                            <p>This user didn't pass tests yet.</p>
+                        </c:if>
 
                     </table>
                     <ul class="pagination justify-content-center">

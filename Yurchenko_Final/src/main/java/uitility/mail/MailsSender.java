@@ -29,12 +29,11 @@ public final class MailsSender {
 
     private static LanguageManager languageManager = LanguageManager.getInstance();
 
-
-
     public static void sendTestResults(TestInfo testInfo) {
         try {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
+            //Todo:properties
             Properties props = System.getProperties();
             setProperties(props);
 
@@ -74,12 +73,15 @@ public final class MailsSender {
         }
     }
 
+    //Todo: constatnts
     private static String convertLocalDateToString(TestInfo testInfo) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
         LocalDate localDate = testInfo.getDate();
         return localDate.format(formatter);
     }
 
+
+    //TODO: Runtime exception
     public static void sendEmailToConfirmRegistration(String login, String magicKey) {
         try {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());

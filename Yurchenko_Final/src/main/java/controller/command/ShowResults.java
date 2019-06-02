@@ -1,5 +1,6 @@
 package controller.command;
 
+import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Answer;
 import model.entity.Test;

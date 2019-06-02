@@ -137,9 +137,19 @@
             </div>
         </div>
         <div class="decorative-img col-lg-3 col-md-3 col-sm-5"><img src="../resources/images/fox.jpg"></div>
-
     </section>
-
+    <c:if test="${submitWindow == 'TRUE'}">
+    <div class="alert-window">
+        <p class="text-center text-white col-lg-4 col-md-6 col-sm-8"><strong><fmt:message key="email_was_sent"/><span class="cross bg-white">&#10006;</span></strong></p>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $("div.alert-window p strong span").on('click', function(){
+                $("div.alert-window").remove();
+            });
+        });
+    </script>
+    </c:if>
 </div>
 </body>
 </html>

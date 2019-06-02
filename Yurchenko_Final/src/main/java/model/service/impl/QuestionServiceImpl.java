@@ -103,6 +103,7 @@ public class QuestionServiceImpl implements QuestionService {
         return question.getQuestionType().getType();
     }
 
+    //TODO: the same methods
     @Override
     public List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage) {
         return questionDao.findForPagination(startRecord, recordsPerPage);

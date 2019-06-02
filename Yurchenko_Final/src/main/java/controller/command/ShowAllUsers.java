@@ -1,5 +1,6 @@
 package controller.command;
 
+import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.User;
 import model.service.impl.UserServiceImpl;
@@ -15,10 +16,6 @@ public class ShowAllUsers extends Command implements CommandPages {
 
     private UserServiceImpl userServiceImpl;
 
-    public ShowAllUsers(UserServiceImpl userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
-    }
-
     public ShowAllUsers() {
         this.userServiceImpl = new UserServiceImpl();
     }
@@ -26,7 +23,14 @@ public class ShowAllUsers extends Command implements CommandPages {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
 
-        int currentPage = Integer.parseInt(req.getParameter("currentPage"));
+        String requestCurrentPage = req.getParameter("currentPage");
+        Integer currentPage;
+        //Integer currentPage = Integer.parseInt(req.getParameter("currentPage"));
+        if(requestCurrentPage == null) {
+            currentPage = 1;
+        }else {
+            currentPage = Integer.parseInt(requestCurrentPage);
+        }
 
         String act = req.getParameter("act");
         if("DELETE_USER_BY_ID".equals(act)) {
@@ -45,19 +49,28 @@ public class ShowAllUsers extends Command implements CommandPages {
             req.getSession().setAttribute("act", "REGISTER_ADMIN");
         }
 
+        String requestRecordsPerPage =  req.getParameter("recordsPerPage");
+        Integer recordsPerPage;
+        if(requestRecordsPerPage == null) {
+            recordsPerPage = 5;
+        }
+        else {
+            recordsPerPage = Integer.parseInt(requestRecordsPerPage);
+        }
+        req.getSession().setAttribute("recordsPerPage", recordsPerPage);
 
-        int recordsPerPage = 5;
-        Pagination pagination = new Pagination(5, currentPage);
+        Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
         int rows = userServiceImpl.findAll().size();
         List<User> users = userServiceImpl.findUsersForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
-
+        int usersSize = users.size();
 
         req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
         req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
         req.getSession().setAttribute("recordsPerPage", pagination.getRecordsPerPage());
         req.getSession().setAttribute("showUsers", "The list of users: ");
         req.getSession().setAttribute("users", users);
+        req.getSession().setAttribute("usersSize", usersSize);
         return CommandResult.forward(SHOW_USERS);
     }
 }

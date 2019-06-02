@@ -118,9 +118,7 @@
             });
 
             function checkName(name){
-                return name.split('').every(function(item){
-                    return item.search(/[а-яa-zё\s\'-]/i) === 0;
-                });
+                return name.search(/^[а-яa-zё\s\'-]+$/i);
             }
             function addErrorMessage(input, message){
                 input.after('<small class="text-error text-danger for-login">' + message + '</small>');
@@ -129,25 +127,25 @@
             function validateForm() {
                 $(".text-error").remove();
 
-                // Проверка логина
+                // Проверка имени и фамилии
                 var name = $("#name");
-                if ( !checkName(name.val()) ) {
+                if ( name.val().length === 0 ) {
                     var v_name = true;
-                    addErrorMessage(name, 'Имя может содержать лишь буквы, пробелы, знаки "-" и "\'"');
-                } else if ( name.val().length === 0 ) {
+                    addErrorMessage(name, '<fmt:message key="need_to_put_in"/>');
+                } else if ( checkName(name.val()) ) {
                     var v_name = true;
-                    addErrorMessage(name, 'Это поле обязательно для заполнения');
+                    addErrorMessage(name, '<fmt:message key="incorrect_name_js"/>');
                 }
                 $("#name").toggleClass('error', v_name );
 
 
                 var lastname    = $("#lastname");
-                if ( !checkName(lastname.val()) ) {
+                if ( lastname.val().length === 0 ) {
                     var v_lastname = true;
-                    addErrorMessage(lastname, 'Имя может содержать лишь буквы, пробелы, знаки "-" и "\'"');
-                } else if ( lastname.val().length === 0 ) {
+                    addErrorMessage(lastname, '<fmt:message key="need_to_put_in"/>');
+                } else if ( checkName(lastname.val()) ) {
                     var v_lastname = true;
-                    addErrorMessage(lastname, 'Это поле обязательно для заполнения');
+                    addErrorMessage(lastname, '<fmt:message key="incorrect_lastname_js"/>');
                 }
                 $("#lastname").toggleClass('error', v_lastname );
                 // Проверка e-mail
@@ -157,10 +155,10 @@
                 var v_email = email.val()?false:true;
 
                 if ( v_email ) {
-                    addErrorMessage(email, 'Это поле обязательно для заполнения');
+                    addErrorMessage(email, '<fmt:message key="need_to_put_in"/>');
                 } else if ( !reg.test( email.val() ) ) {
                     v_email = true;
-                    addErrorMessage(email, 'Вы указали недопустимый e-mail');
+                    addErrorMessage(email, '<fmt:message key="incorrect_login"/>');
                 }
                 $("#email").toggleClass('error', v_email );
 
@@ -172,10 +170,10 @@
 
                 if ( v_pass ) {
                     var v_pass = true;
-                    addErrorMessage(password, 'Это поле обязательно для заполнения');
-                } else if ( password.val().length < 8 ) {
+                    addErrorMessage(password, '<fmt:message key="need_to_put_in"/>');
+                } else if ( password.val().length < 5 ) {
                     var v_pass = true;
-                    addErrorMessage(password, 'Пароль должен содержать не менее 8 символов');
+                    addErrorMessage(password, '<fmt:message key="incorrect_password"/>');
                 }
 
                 $("#password").toggleClass('error', v_pass );
@@ -187,9 +185,6 @@
     <section class="img-section">
         <div class="img-div text-center"><img src="../resources/images/reg_fox.jpg"></div>
     </section>
-    <div class="alert-window">
-        <p class="text-center text-white col-lg-4 col-md-6 col-sm-8"><strong>The email was sent.<span class="cross bg-white">&#10006;</span></strong></p>
-    </div>
 
 </div>
 </body>

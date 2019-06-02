@@ -43,4 +43,12 @@ public class Theme {
     public int hashCode() {
         return Objects.hash(themeId, themeName);
     }
+
+    @Override
+    public String toString() {
+        return "Theme{" +
+                "themeId=" + themeId +
+                ", themeName='" + themeName + '\'' +
+                '}';
+    }
 }

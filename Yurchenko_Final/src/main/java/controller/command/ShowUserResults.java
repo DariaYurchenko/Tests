@@ -1,5 +1,6 @@
 package controller.command;
 
+import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.TestInfo;
 import model.service.impl.TestInfoServiceImpl;
@@ -15,10 +16,30 @@ public class ShowUserResults extends Command implements CommandPages {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         Long userId = Long.parseLong(req.getParameter("radio"));
-        int currentPage = 1;
+       /* int currentPage = 1;
 
         int recordsPerPage = 5;
-        Pagination pagination = new Pagination(5, currentPage);
+        Pagination pagination = new Pagination(5, currentPage);*/
+
+        //TODO: paginator counts itself
+        String requestCurrentPage = req.getParameter("currentPage");
+        Integer currentPage;
+        if(requestCurrentPage == null) {
+            currentPage = 1;
+        }else {
+            currentPage = Integer.parseInt(requestCurrentPage);
+        }
+
+        String requestRecordsPerPage =  req.getParameter("recordsPerPage");
+        Integer recordsPerPage;
+        if(requestRecordsPerPage == null) {
+            recordsPerPage = 5;
+        }
+        else {
+            recordsPerPage = Integer.parseInt(requestRecordsPerPage);
+        }
+        req.getSession().setAttribute("recordsPerPage", recordsPerPage);
+        Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
         int rows = testInfoServiceImpl.findTestsByParameter("test_user_id", userId).size();
         List<TestInfo> testInfoList = testInfoServiceImpl.findUserTestsForPagination(userId, pagination.calculateStart(pagination.calculateNumOfPages(rows)),

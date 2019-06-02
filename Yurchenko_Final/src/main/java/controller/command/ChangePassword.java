@@ -1,16 +1,14 @@
 package controller.command;
 
+import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
-import model.entity.User;
 import model.service.impl.UserServiceImpl;
-import org.apache.log4j.Logger;
 import uitility.encryption.EncryptorBuilder;
 import uitility.language.LanguageManager;
 import uitility.validator.PasswordValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 public class ChangePassword extends Command implements CommandPages {
     private static final String DID_FORGET = "forgot";
@@ -22,10 +20,6 @@ public class ChangePassword extends Command implements CommandPages {
     public ChangePassword() {
         this.userServiceImpl = new UserServiceImpl();
         this.languageManager =  LanguageManager.getInstance();
-    }
-
-    public ChangePassword(UserServiceImpl userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
     }
 
     @Override

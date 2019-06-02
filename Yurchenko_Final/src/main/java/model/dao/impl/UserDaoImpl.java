@@ -176,6 +176,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         }
     }
 
+    //Todo: database
     @Override
     public Map<String, Integer> getUserPointsFromDb(String login) {
         Map<String, Integer> rank = new HashMap<>();

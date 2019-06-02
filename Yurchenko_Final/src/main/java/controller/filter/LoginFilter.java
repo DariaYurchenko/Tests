@@ -28,7 +28,6 @@ public class LoginFilter implements Filter {
     private static final String NOT_SUBMIT_EMAIL_PAGE = "not_submit_email";
     private static final String LOGIN_PAGE_REDIRECT = "jsp/login_page.jsp";
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException { }
 
@@ -40,6 +39,7 @@ public class LoginFilter implements Filter {
 
         String page = req.getParameter("page");
 
+        //TODO: method
         if(session.getAttribute("user")!= null || isDoFilterForCommand(req) || isDoFilterForPage(page)) {
             filterChain.doFilter(req, resp);
         }
@@ -49,6 +49,7 @@ public class LoginFilter implements Filter {
         }
     }
 
+    //TODO:constants
     private boolean isDoFilterForCommand(HttpServletRequest req) {
         String command = req.getParameter("command");
         List<String> pagesNotToFilter = new ArrayList<>(Arrays.asList(REGISTER, LOGIN, CHANGE_PASSWORD,

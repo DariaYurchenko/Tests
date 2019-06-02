@@ -89,6 +89,9 @@ form[name="logout-form"] button[type="submit"]:hover{
     color: #CBCBCE;
     cursor: pointer
 }
+div.d-flex{
+    width: 100%
+}
 aside > div{
     padding: 15px 5px;
     margin-top: 10px;

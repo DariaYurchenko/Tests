@@ -109,7 +109,7 @@
             <form method="get" action="tests">
                 <input type="hidden" name="currentPage" value="1">
                 <input type="hidden" name="act" value="SHOW_BY_THEME">
-                <input type="hidden" name="command" value="SHOW_QUESTIONS_BY_THEME">
+                <input type="hidden" name="command" value="SHOW_THEMES">
                 <button class="btn" type="submit"><fmt:message key="admin_show_theme_questions"/></button>
             </form>
         </div>
@@ -128,6 +128,18 @@
         <div class="img-div text-center"><img src="../resources/images/reg_fox.jpg"></div>
     </section>
 </div>
+    <c:if test="${submitWindow == 'TRUE'}">
+        <div class="alert-window">
+            <p class="text-center text-white col-lg-4 col-md-6 col-sm-8"><strong><fmt:message key="email_was_sent"/><span class="cross bg-white">&#10006;</span></strong></p>
+        </div>
+        <script>
+            $(document).ready(function(){
+                $("div.alert-window p strong span").on('click', function(){
+                    $("div.alert-window").remove();
+                });
+            });
+        </script>
+    </c:if>
 </div>
 
 </body>

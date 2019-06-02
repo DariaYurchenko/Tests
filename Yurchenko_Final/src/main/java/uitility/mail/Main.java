@@ -4,7 +4,9 @@ import model.dao.connector.Connector;
 import model.dao.impl.TestInfoDaoImpl;
 import model.entity.TestInfo;
 import model.entity.Theme;
+import model.service.ThemeService;
 import model.service.impl.ThemeServiceImpl;
+import uitility.pagination.Pagination;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -12,37 +14,19 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException, MessagingException {
-        /*Connector connector = new Connector();
-        QuestionDao questionDao = new QuestionDaoImpl(connector);
-        Question question = new Question.Builder()
-                .withQuestion("1")
-                .withQuestionType(new QuestionType("radio"))
-                .withTheme(new Theme("operators"))
-                .withIncorrectOption1("12")
-                .withIncorrectOption2("345")
-                .withIncorrectOption3("32")
-                .withCorrectOption1("123")
-                .build();
-        QuestionServiceImpl questionService = new QuestionServiceImpl();*/
-        Connector connector = new Connector();
-        TestInfoDaoImpl testInfoDao = new TestInfoDaoImpl();
-        List<TestInfo> list = testInfoDao.findByParameter("test_id", 2L);
+        String NAME_OR_LASTNAME = "^[a-zA-Zа-яА-ЯёЁ]{1,30}$";
+        //System.out.println("Рома".matches(NAME_OR_LASTNAME));
 
-
-        ThemeServiceImpl themeServiceImpl = new ThemeServiceImpl();
-        List<Theme> themes = themeServiceImpl.findThemesForPagination(1, 5);
+        ThemeService themeServiceImpl = new ThemeServiceImpl();
+        List<Theme> list = themeServiceImpl.findAll();
+        int rows = list.size();
+        //System.out.println(list);
+        int recordsPerPage = 5;
+        int currentPage = 2;
+        Pagination pagination = new Pagination(recordsPerPage, currentPage);
+        List<Theme> themes = themeServiceImpl.findThemesForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
         System.out.println(themes);
-
-
-
-
-
-
-
-
-
-
-
+        System.out.println(pagination.calculateNumOfPages(rows));
 
     }
 

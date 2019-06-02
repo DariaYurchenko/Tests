@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
         userDao.changePassword(hash, salt, login);
     }
 
+    //TODO:db
     @Override
     public void setRank(String login, Integer plusPoints, Integer plusMaxPoints) {
         Map<String, Integer> startRank = userDao.getUserPointsFromDb(login);

@@ -125,17 +125,14 @@
                 }
                 function validateForm() {
                     $(".text-error").remove();
-
-                    // Проверка e-mail
-
                     var reg     = /^\w+([\.-]?\w+)*@(((([a-z0-9]{1,})|([a-z0-9][-][a-z0-9]+))[\.][a-z0-9])|([a-z0-9]+[-]?))+[a-z0-9]{0,}\.([a-z]{2}|(com|net|org|edu|int|mil|gov|arpa|biz|aero|name|coop|info|pro|museum))$/i;
                     var email    = $("#login");
                     var v_email = email.val()?false:true;
                     if ( v_email ) {
-                        addErrorMessage(email, 'Это поле обязательно для заполнения');
+                        addErrorMessage(email, '<fmt:message key="need_to_put_in"/>');
                     } else if ( !reg.test( email.val() ) ) {
                         v_email = true;
-                        addErrorMessage(email, 'Вы указали недопустимый e-mail');
+                        addErrorMessage(email, '<fmt:message key="incorrect_login"/>');
                     }
                     $("#login").toggleClass('error', v_email );
                     // Проверка паролей
@@ -145,10 +142,10 @@
                         var v_pass = password.val()?false:true;
                         if ( v_pass ) {
                             var v_pass = true;
-                            addErrorMessage(password, 'Это поле обязательно для заполнения');
-                        } else if ( password.val().length < 8 ) {
+                            addErrorMessage(password, '<fmt:message key="need_to_put_in"/>');
+                        } else if ( password.val().length < 5 ) {
                             var v_pass = true;
-                            addErrorMessage(password, 'Пароль должен содержать не менее 8 символов');
+                            addErrorMessage(password, '<fmt:message key="incorrect_password"/>');
                         }
                         $("#password").toggleClass('error', v_pass );
                         return ( v_email || v_pass );
@@ -158,10 +155,10 @@
                         var v_newPass = newPassword.val()?false:true;
                         if ( v_newPass ) {
                             var v_newPass = true;
-                            addErrorMessage(newPassword, 'Это поле обязательно для заполнения');
+                            addErrorMessage(newPassword, '<fmt:message key="need_to_put_in"/>');
                         } else if ( newPassword.val().length < 8 ) {
                             var v_newPass = true;
-                            addErrorMessage(newPassword, 'Пароль должен содержать не менее 8 символов');
+                            addErrorMessage(newPassword, '<fmt:message key="incorrect_password"/>');
                         }
                         $("#newPassword").toggleClass('error', v_newPass );
                         return ( v_email || v_newPass );

@@ -1,8 +1,8 @@
 package controller;
 
 import controller.command.Command;
-import controller.command.CommandResult;
-import controller.command.CommandsFactory;
+import controller.command.result.CommandResult;
+import controller.command.factory.CommandsFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,26 +27,29 @@ public class TestServlet extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String page = req.getParameter("page");
+        String command = req.getParameter("command");
         if(page != null) {
             req.getRequestDispatcher("jsp/" + page+".jsp").forward(req, resp);
         }
+       else {
 
-        String command = req.getParameter("command");
-        CommandsFactory factory = CommandsFactory.getInstance();
-        CommandResult result = factory.makeCommand(command).execute(req, resp);
+            CommandsFactory factory = CommandsFactory.getInstance();
+            CommandResult result = factory.makeCommand(command).execute(req, resp);
 
-        if(checkIfLeadsToAnotherCommand(result)) {
-            Command chainCommand = result.getChainCommand();
-            result = chainCommand.execute(req, resp);
+            if (checkIfLeadsToAnotherCommand(result)) {
+                Command chainCommand = result.getChainCommand();
+                result = chainCommand.execute(req, resp);
+            }
+            chooseRedirectType(req, resp, result);
         }
-        chooseRedirectType(req, resp, result);
     }
 
     private void chooseRedirectType(HttpServletRequest req, HttpServletResponse resp, CommandResult result) throws IOException, ServletException {
         String page = result.getPage();
 
+        //TODO: kill redirect
         if (result.isRedirect()) {
-            resp.sendRedirect(page);
+            req.getRequestDispatcher(page).forward(req, resp);
         } else {
             req.getRequestDispatcher(page).forward(req, resp);
         }

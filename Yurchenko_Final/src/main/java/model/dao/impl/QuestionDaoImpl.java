@@ -53,6 +53,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     private static final String QUESTION_TYPE = "type";
     private static final String THEME_NAME = "theme_name";
 
+    //Todo:static
     private Map<String, Integer> questionTypeMap = new HashMap<>();
     private Map<String, Integer> questionThemeMap = new HashMap<>();
 
@@ -218,7 +219,6 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
             LOGGER.warn("SQLException with updating question's answers: " + e.getMessage());
             throw new DaoException(e);
         }
-
     }
 
     @Override

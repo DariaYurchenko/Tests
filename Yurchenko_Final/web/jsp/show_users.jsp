@@ -108,7 +108,7 @@
             <form method="get" action="tests">
                 <input type="hidden" name="currentPage" value="1">
                 <input type="hidden" name="act" value="SHOW_BY_THEME">
-                <input type="hidden" name="command" value="SHOW_QUESTIONS_BY_THEME">
+                <input type="hidden" name="command" value="SHOW_THEMES">
                 <button class="btn" type="submit"><fmt:message key="admin_show_theme_questions"/></button>
             </form>
         </div>
@@ -124,7 +124,16 @@
     </aside>
     <section class="col-lg-9">
         <c:if test="${act != 'REGISTER_ADMIN'}">
+            <ul>
+            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=5"/>">5</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=10"/>">10</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=50"/>">50</a>
+            </li>
+            </ul>
             <h1 class="text-center"><fmt:message key="admin_all_users"/></h1>
+
             <form method="get" action="tests">
                 <c:if test="${showUsers != null}">
 
@@ -151,10 +160,11 @@
                                     <td><input type="radio" id="id${counter}" name="radio" value="${students.userId}"></td>
                                 </c:if>
                             </tr>
-                            <c:set
-                                    var="counter" value="${counter+1}"/>
-
+                            <c:set var="counter" value="${counter+1}"/>
                         </c:forEach>
+                        <c:if test="${usersSize == 0}">
+                            <p>There are no users yet.</p>
+                        </c:if>
                     </table>
                 </c:if>
                 <ul class="pagination justify-content-center">
@@ -251,6 +261,74 @@
             <section class="img-section">
                 <div class="img-div text-center"><img src="../resources/images/reg_fox.jpg"></div>
             </section>
+            <script>
+                jQuery(function($) {
+                    $('form[name="sign-up-form"]').on('submit', function(event) {
+                        if(validateForm()) {
+                            event.preventDefault();
+                        }
+                    });
+
+                    function checkName(name){
+                        return name.search(/^[а-яa-zё\s\'-]+$/i);
+                    }
+                    function addErrorMessage(input, message){
+                        input.after('<small class="text-error text-danger for-login">' + message + '</small>');
+                        $(".for-login").css({top: input.position().top + input.outerHeight() + 2});
+                    }
+                    function validateForm() {
+                        $(".text-error").remove();
+
+                        var name = $("#name");
+                        if ( name.val().length === 0 ) {
+                            var v_name = true;
+                            addErrorMessage(name, '<fmt:message key="need_to_put_in"/>');
+                        } else if ( checkName(name.val()) ) {
+                            var v_name = true;
+                            addErrorMessage(name, '<fmt:message key="incorrect_name_js"/>');
+                        }
+                        $("#name").toggleClass('error', v_name );
+
+                        var lastname    = $("#lastname");
+                        if ( lastname.val().length === 0 ) {
+                            var v_lastname = true;
+                            addErrorMessage(lastname, '<fmt:message key="need_to_put_in"/>');
+                        } else if ( checkName(lastname.val()) ) {
+                            var v_lastname = true;
+                            addErrorMessage(lastname, '<fmt:message key="incorrect_lastname_js"/>');
+                        }
+                        $("#lastname").toggleClass('error', v_lastname );
+
+                        var reg     = /^\w+([\.-]?\w+)*@(((([a-z0-9]{1,})|([a-z0-9][-][a-z0-9]+))[\.][a-z0-9])|([a-z0-9]+[-]?))+[a-z0-9]{0,}\.([a-z]{2}|(com|net|org|edu|int|mil|gov|arpa|biz|aero|name|coop|info|pro|museum))$/i;
+                        var email    = $("#email");
+                        var v_email = email.val()?false:true;
+
+                        if ( v_email ) {
+                            addErrorMessage(email, '<fmt:message key="need_to_put_in"/>');
+                        } else if ( !reg.test( email.val() ) ) {
+                            v_email = true;
+                            addErrorMessage(email, '<fmt:message key="incorrect_login"/>');
+                        }
+                        $("#email").toggleClass('error', v_email );
+
+                        var password    = $("#password");
+
+                        var v_pass = password.val()?false:true;
+
+                        if ( v_pass ) {
+                            var v_pass = true;
+                            addErrorMessage(password, '<fmt:message key="need_to_put_in"/>');
+                        } else if ( password.val().length < 5 ) {
+                            var v_pass = true;
+                            addErrorMessage(password, '<fmt:message key="incorrect_password"/>');
+                        }
+
+                        $("#password").toggleClass('error', v_pass );
+                        return ( v_name || v_lastname || v_email || v_pass );
+                    }
+
+                });
+            </script>
         </c:if>
     </section>
 </div>

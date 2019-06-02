@@ -8,17 +8,22 @@
         <welcome-file>jsp/start_page.jsp</welcome-file>
     </welcome-file-list>
 
-    <!--<error-page>
+  <!--<error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/jsp/error_page.jsp</location>
+    </error-page>
+
+   <error-page>
+        <error-code>404</error-code>
+        <location>/jsp/404_error_page.jsp</location>
     </error-page>-->
 
-   <!-- <error-page>
-        <error-code>404</error-code>
-        <location>/jsp/error_page.jsp</location>
-    </error-page>
--->
-  <filter-mapping>
+    <filter-mapping>
+        <filter-name>encoding</filter-name>
+        <url-pattern>/tests</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
         <filter-name>login</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
@@ -32,7 +37,5 @@
         <filter-name>security</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
-
-
 
 </web-app>

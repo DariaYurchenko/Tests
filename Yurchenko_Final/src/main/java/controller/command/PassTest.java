@@ -1,5 +1,6 @@
 package controller.command;
 
+import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Answer;
 import model.entity.Question;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 public class PassTest extends Command implements CommandPages {
     private QuestionServiceImpl questionServiceImpl;
@@ -58,9 +61,9 @@ public class PassTest extends Command implements CommandPages {
                 String[] correctAnswers  = makeListOfCorrectAnswers(question);
                 String[] userAnswers = req.getParameterValues("checkbox");
 
-                if(userAnswers  == null) {
+                /*if(userAnswers  == null) {
                     userAnswers = new String[] {"NULL"};
-                }
+                }*/
 
                 createMultipleAnswerAndAddItToList(req, userAnswers, correctAnswers, questionPoints);
 
@@ -84,14 +87,14 @@ public class PassTest extends Command implements CommandPages {
         }
         if(getQuestionType(question).equalsIgnoreCase("Checkbox")) {
             if (question.getCorrectOption3() == null) {
-                return new ArrayList<>(Arrays.asList(question.getIncorrectOption1(),
-                        question.getIncorrectOption2(), question.getCorrectOption2(), question.getCorrectOption1()));
+                return Arrays.asList(question.getIncorrectOption1(),
+                        question.getIncorrectOption2(), question.getCorrectOption2(), question.getCorrectOption1());
             }
-            return new ArrayList<>(Arrays.asList(question.getIncorrectOption1(),
-                    question.getCorrectOption3(), question.getCorrectOption2(), question.getCorrectOption1()));
+            return Arrays.asList(question.getIncorrectOption1(),
+                    question.getCorrectOption3(), question.getCorrectOption2(), question.getCorrectOption1());
         }
         else {
-            return new ArrayList<>(Collections.singletonList(question.getCorrectOption1()));
+            return singletonList(question.getCorrectOption1());
         }
     }
 

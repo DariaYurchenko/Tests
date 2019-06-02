@@ -1,5 +1,6 @@
 package controller.command;
 
+import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.User;
 import model.entity.status.UserStatus;
@@ -40,7 +41,7 @@ public class UserRegistration extends Command implements CommandPages {
         languageManager.setLanguage(language);
         req.getSession().setAttribute("appLocale", language);
 
-        User newUser = null;
+        User newUser;
         Optional<User> userOptional = userServiceImpl.findUserByLogin(login);
         if(userOptional.isPresent()) {
             LOGGER.warn("Unknown user attempted to register by existing email - " + login);
@@ -58,6 +59,7 @@ public class UserRegistration extends Command implements CommandPages {
             return CommandResult.forward(REGISTRATION_PAGE);
         }
 
+        req.setAttribute("submitWindow", "TRUE");
 
         if(ADMIN.equals(req.getParameter(USER_TYPE_FOR_REGISTRATION))) {
             newUser = buildAdmin(req, name, lastname, login, password);
@@ -98,6 +100,11 @@ public class UserRegistration extends Command implements CommandPages {
     private boolean validateParameters(HttpServletRequest req, String name, String lastName, String login, String password) {
         if(!LoginValidator.validateLogin(login)) {
             req.setAttribute("errLogin", languageManager.getMessage("incorrect_login"));
+            return false;
+        }
+        if(!NameLastnameValidator.validateNameLastname(name) && !NameLastnameValidator.validateNameLastname(lastName)) {
+            req.setAttribute("errLastname", languageManager.getMessage("incorrect_lastname"));
+            req.setAttribute("errName", languageManager.getMessage("incorrect_name"));
             return false;
         }
         if(!NameLastnameValidator.validateNameLastname(name)) {
