@@ -84,10 +84,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addKey(String magicKey, String login ) {
+    public void addMagicKey(String magicKey, String login ) {
         userDao.addMagicKey(magicKey, login);
     }
 
+    //TODO:!!!
     @Override
     public String findMagicKey(String login) {
         return userDao.findMagicKey(login).orElseThrow(ServiceException::new);

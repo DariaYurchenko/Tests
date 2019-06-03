@@ -124,19 +124,19 @@
     </aside>
     <section class="col-lg-9">
         <c:if test="${act != 'REGISTER_ADMIN'}">
-            <ul>
-            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=5"/>">5</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=10"/>">10</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=50"/>">50</a>
-            </li>
+            <div class="text-center"><fmt:message key="records_per_page"/></div>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=5"/>">5</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=10"/>">10</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=50"/>">50</a>
+                </li>
             </ul>
             <h1 class="text-center"><fmt:message key="admin_all_users"/></h1>
-
-            <form method="get" action="tests">
+            <form class="main-form" method="get" action="tests">
                 <c:if test="${showUsers != null}">
-
+                    <div class="table-div">
                     <table class="text-center table table-striped">
                         <c:set var="counter" value="1"/>
                         <tr>
@@ -146,11 +146,13 @@
                             <th scope="col"><fmt:message key="name_u"/></th>
                             <th scope="col"><fmt:message key="lastname_u"/></th>
                             <th scope="col"><fmt:message key="rank_u"/></th>
+                    <c:if test="${act == 'DELETE_USER_BY_ID' || act == 'SHOW_USER_RESULTS'}">
                             <th scope="col"></th>
+                    </c:if>
                         </tr>
                         <c:forEach items="${users}" var="students">
                             <tr>
-                                <th scope="row"><c:out value="${counter}"/></th>
+                                <th scope="row"><c:out value="${counter}"/>1</th>
                                 <td><c:out value="${students.userId}"/></td>
                                 <td><c:out value="${students.login}"/></td>
                                 <td><c:out value="${students.name}"/></td>
@@ -160,12 +162,15 @@
                                     <td><input type="radio" id="id${counter}" name="radio" value="${students.userId}"></td>
                                 </c:if>
                             </tr>
-                            <c:set var="counter" value="${counter+1}"/>
+                            <c:set
+                                    var="counter" value="${counter+1}"/>
+
                         </c:forEach>
-                        <c:if test="${usersSize == 0}">
-                            <p>There are no users yet.</p>
-                        </c:if>
                     </table>
+                    <c:if test="${usersSize == 0}">
+                        <p class="text-center"><fmt:message key="no_user"/></p>
+                    </c:if>
+                    </div>
                 </c:if>
                 <ul class="pagination justify-content-center">
                     <c:if test="${currentPage != 1}">
@@ -200,21 +205,22 @@
                         </div>
                     </c:if>
                     <c:if test="${act == 'DELETE_USER_BY_ID'}">
-                    <input type="hidden" name="command" value="DELETE_USER_BY_ID">
-                    <input type="hidden" name="currentPage" value="${currentPage}">
-                    <div class="button-div form-group col-md-12 text-center">
-                        <button class="btn" type="submit"><fmt:message key="admin_delete_u_id"/></button>
-                    </div>
-                </c:if>
+                        <input type="hidden" name="command" value="DELETE_USER_BY_ID">
+                        <input type="hidden" name="currentPage" value="${currentPage}">
+                        <div class="button-div form-group col-md-12 text-center">
+                            <button class="btn" type="submit"><fmt:message key="admin_delete_u_id"/></button>
+                        </div>
+                    </c:if>
                     <c:if test="${act == 'SHOW_USER_RESULTS'}">
                         <input type="hidden" name="command" value="SHOW_USER_RESULTS">
-                        <input type="hidden" name="currentPage" value="${currentPage}">
+                        <input type="hidden" name="currentPage" value="1">
                         <div class="button-div form-group col-md-12 text-center">
                             <button class="btn" type="submit"><fmt:message key="admin_show_results"/></button>
                         </div>
                     </c:if>
                 </div>
             </form>
+            </div>
         </c:if>
 
         <c:if test="${act == 'REGISTER_ADMIN'}">

@@ -146,3 +146,6 @@ section.img-section > div.img-div > img{
     min-width: 130px;
     max-width: 220px
 }
+div.table-div{
+    overflow: auto
+}

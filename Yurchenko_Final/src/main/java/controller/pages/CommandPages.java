@@ -4,6 +4,7 @@ public interface CommandPages {
     String REGISTRATION_PAGE = "jsp/register_page.jsp";
     String START_PAGE = "jsp/start_page.jsp";
     String LOGIN_PAGE = "jsp/login_page.jsp";
+    String ERROR_PAGE = "jsp/error_page.jsp";
     String ERROR_404_PAGE = "jsp/404_error_page.jsp";
     String ADMIN_PAGE = "jsp/admin_page.jsp";
     String TESTS = "jsp/tests_to_pass.jsp";

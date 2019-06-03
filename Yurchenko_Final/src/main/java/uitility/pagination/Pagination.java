@@ -14,7 +14,7 @@ public final class Pagination {
         this.currentPage = currentPage;
     }
 
-    public  int calculateStart(int noOfPages) {
+    public int calculateStart(int noOfPages) {
          if (currentPage < 1 || currentPage > noOfPages) {
             return 0;
          }
@@ -22,7 +22,7 @@ public final class Pagination {
     }
 
     public int calculateNumOfPages(int rows) {
-        if (recordsPerPage==0) {
+        if (recordsPerPage <= 0) {
             LOGGER.warn("Records per page = 0 while pagination.");
             throw new PaginationException();
         }

@@ -11,7 +11,7 @@ public interface QuestionDao extends GenericDao<Question> {
 
     void changeAmountOfAnswersInDb(Long id, Integer plusPoints, Integer plusMaxPoints);
 
-    List<Question> findThemeQuestions(Long id);
+    List<Question> findThemeQuestions(Long themeId);
 
     List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Long id);
 

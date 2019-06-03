@@ -37,4 +37,12 @@ public class Answer {
     public int hashCode() {
         return Objects.hash(maxPoints, answerStatus);
     }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "maxPoints=" + maxPoints +
+                ", answerStatus=" + answerStatus +
+                '}';
+    }
 }

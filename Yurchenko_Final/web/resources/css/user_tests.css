@@ -123,3 +123,7 @@ div.button-div button.btn:hover, div.button-div input.btn:hover{
     transform: scale(1.1);
     transition: transform 1s
 }
+div.table-div{
+    overflow: auto
+}
+

@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class AnswerServiceImpl implements AnswerService {
 
     @Override
-    public Answer makeAnswer(int questionPoints, String userAnswer, String correctAnswer) {
+    public Answer makeSingleChoiceAnswer(int questionPoints, String userAnswer, String correctAnswer) {
         return checkIfUserAnswerCorrect(questionPoints, userAnswer, correctAnswer);
     }
 

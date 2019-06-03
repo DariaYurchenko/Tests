@@ -11,8 +11,11 @@ import model.service.QuestionService;
 
 import java.util.List;
 import java.util.Map;
-
+//TODO: rewrite OPTIONAL. in tests also
 public class QuestionServiceImpl implements QuestionService {
+    private static final int RADIO_POINTS = 1;
+    private static final int CHECKBOX_POINTS = 2;
+    private static final int TEXT_POINTS = 3;
 
     private QuestionDao questionDao;
 
@@ -56,8 +59,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> findQuestionsByTheme(Long questionId) {
-        return questionDao.findThemeQuestions(questionId);
+    public List<Question> findQuestionsByTheme(Long themeId) {
+        return questionDao.findThemeQuestions(themeId);
     }
 
     @Override

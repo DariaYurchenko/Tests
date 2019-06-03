@@ -68,7 +68,7 @@
             </div>
         </nav>
     </header>
-    <div class="d-flex">
+    <div class="d-flex col-lg-12">
         <aside class="col-lg-3">
             <div class="bg-white text-center">
                 <h2><fmt:message key="admin_users"/></h2>
@@ -108,7 +108,7 @@
                 <form method="get" action="tests">
                     <input type="hidden" name="currentPage" value="1">
                     <input type="hidden" name="act" value="SHOW_BY_THEME">
-                    <input type="hidden" name="command" value="SHOW_THEME_QUESTIONS">
+                    <input type="hidden" name="command" value="SHOW_THEMES">
                     <button class="btn" type="submit"><fmt:message key="admin_show_theme_questions"/></button>
                 </form>
             </div>
@@ -122,11 +122,19 @@
                 </form>
             </div>
         </aside>
-        <section>
-            <c:if test="${testInfoList != null}">
+        <section class="col-lg-9">
+            <div class="text-center"><fmt:message key="records_per_page"/></div>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=5"/>">5</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=10"/>">10</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=50"/>">50</a>
+                </li>
+            </ul>
                 <h1 class="text-center"><fmt:message key="admin_u_tests"/></h1>
-                <form action="tests" method="get">
-                    <table class="text-center table table-striped">
+                <div class="table-div">
+                <table class="text-center table table-striped">
                         <c:set var="counter" value="1"/>
                         <tr>
                             <th scope="col">#</th>
@@ -159,15 +167,17 @@
                             <c:set var="counter" value="${counter+1}"/>
 
                         </c:forEach>
-                        <c:if test="${questionsSize == 0}">
-                            <p>This user didn't pass tests yet.</p>
-                        </c:if>
+
 
                     </table>
+                    <c:if test="${testsSize == 0}">
+                        <p class="text-center"><fmt:message key="didnot_pass_tests"/></p>
+                    </c:if>
+                </div>
                     <ul class="pagination justify-content-center">
                         <c:if test="${currentPage != 1}">
                             <li class="page-item"><a class="page-link"
-                                                     href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage-1}"/>"><fmt:message key="prev_ad"/></a>
+                                                     href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage-1}"/>"><fmt:message key="prev_ad"/></a>
                             </li>
                         </c:if>
                         <c:forEach begin="1" end="${noOfPages}" var="i">
@@ -178,21 +188,20 @@
                                     </li>
                                 </c:when>
                                 <c:otherwise>
-                                    <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=${recordsPerPage}&currentPage=${i}"/>">${i}</a>
+                                    <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=${recordsPerPage}&currentPage=${i}"/>">${i}</a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
 
                         <c:if test="${currentPage lt noOfPages}">
-                            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_USERS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage+1}"/>"><fmt:message key="next"/></a>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage+1}"/>"><fmt:message key="next"/></a>
                             </li>
                         </c:if>
                     </ul>
-                </form>
-            </c:if>
         </section>
     </div>
+</div>
 
 </body>
 </html>

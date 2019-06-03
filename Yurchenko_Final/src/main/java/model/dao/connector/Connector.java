@@ -1,8 +1,5 @@
 package model.dao.connector;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import exception.ConnectorException;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;

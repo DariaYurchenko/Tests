@@ -180,7 +180,7 @@ public class UserRegistration extends Command implements CommandPages {
     private String generateMagicKey(String password, String login) {
         EncryptorBuilder builder = new EncryptorBuilder(password);
         String magicKey = builder.getHash();
-        userServiceImpl.addKey(magicKey, login);
+        userServiceImpl.addMagicKey(magicKey, login);
         return magicKey;
     }
 

@@ -28,7 +28,7 @@ public interface UserService {
 
     List<User> findUsersForPagination(int currentPage, int recordsPerPage);
 
-    void addKey(String magicKey, String login );
+    void addMagicKey(String magicKey, String login );
 
     String findMagicKey(String login);
 

@@ -125,7 +125,8 @@
     </aside>
     <section class="col-lg-9">
         <c:if test="${act != 'SHOW_BY_THEME' && act != 'SHOW_BY_THEME_ID'}">
-            <ul>
+            <div class="text-center"><fmt:message key="records_per_page"/></div>
+            <ul class="pagination justify-content-center">
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_QUESTIONS&recordsPerPage=5"/>">5</a>
                 </li>
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_QUESTIONS&recordsPerPage=10"/>">10</a>
@@ -134,7 +135,8 @@
                 </li>
             </ul>
             <h1 class="text-center"><fmt:message key="admin_questions"/></h1>
-            <form action="tests" method="get">
+            <form class="main-form" action="tests" method="get">
+                <div class="table-div">
                 <table class="text-center table table-striped">
                     <c:set var="counter" value="1"/>
                     <tr>
@@ -149,11 +151,10 @@
                         <th scope="col"><fmt:message key="admin_cor_3"/></th>
                         <th scope="col"><fmt:message key="admin_q_type"/></th>
                         <th scope="col"><fmt:message key="admin_theme"/></th>
-                        <th scope="col"></th>
                     </tr>
                     <c:forEach items="${questions}" var="questions">
                         <tr>
-                            <th scope="row"><c:out value="${counter}"/></th>
+                            <th scope="row"><c:out value="${counter}"/>1</th>
                             <td><c:out value="${questions.question}"/></td>
                             <td><c:out value="${questions.percentOfRightAnswers}"/></td>
                             <td><c:out value="${questions.incorrectOption1}"/></td>
@@ -168,10 +169,11 @@
                         <c:set var="counter" value="${counter+1}"/>
 
                     </c:forEach>
-                    <c:if test="${questionsSize == 0}">
-                        <p>There are no questions yet.</p>
-                    </c:if>
                 </table>
+                <c:if test="${questionsSize == 0}">
+                    <p class="text-center"><fmt:message key="no_questions"/></p>
+                </c:if>
+            </div>
                 <ul class="pagination justify-content-center">
                     <c:if test="${currentPage != 1}">
                         <li class="page-item"><a class="page-link"
@@ -186,7 +188,8 @@
                                 </li>
                             </c:when>
                             <c:otherwise>
-                                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_ALL_QUESTIONS&recordsPerPage=${recordsPerPage}&currentPage=${i}"/>">${i}</a>
+                                <li class="page-item"><a class="page-link" href="
+<c:url value="/tests?command=SHOW_ALL_QUESTIONS&recordsPerPage=${recordsPerPage}&currentPage=${i}"/>">${i}</a>
                                 </li>
                             </c:otherwise>
                         </c:choose>
@@ -201,7 +204,8 @@
         </c:if>
 
         <c:if test="${act == 'SHOW_BY_THEME'}">
-            <ul>
+            <div class="text-center"><fmt:message key="records_per_page"/></div>
+            <ul class="pagination justify-content-center">
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEMES&recordsPerPage=5"/>">5</a>
                 </li>
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEMES&recordsPerPage=10"/>">10</a>
@@ -209,13 +213,13 @@
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEMES&recordsPerPage=50"/>">50</a>
                 </li>
             </ul>
-            <h1 class="text-center"><fmt:message key="admin_theme"/></h1>
-            <form action="tests" method="get">
+            <h1 class="text-center"><fmt:message key="admin_themes"/></h1>
+            <form class="main-form" action="tests" method="get">
                 <table class="text-center table table-striped">
                     <c:set var="counter" value="1"/>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col"><fmt:message key="admin_themes"/></th>
+                        <th scope="col"><fmt:message key="admin_theme"/></th>
                         <th scope="col"></th>
                     </tr>
                     <c:forEach items="${themes}" var="themes">
@@ -226,11 +230,10 @@
                         </tr>
                         <c:set var="counter" value="${counter+1}"/>
                     </c:forEach>
-                    <c:if test="${themesSize == 0}">
-                        <p>There are no themes yet.</p>
-                    </c:if>
                 </table>
-
+                <c:if test="${themesSize == 0}">
+                    <p class="text-center"><fmt:message key="no_themes"/></p>
+                </c:if>
                 <ul class="pagination justify-content-center">
                     <c:if test="${currentPage != 1}">
                         <li class="page-item"><a class="page-link"
@@ -259,14 +262,16 @@
                 <div>
                     <input type="hidden" name="command" value="SHOW_THEME_QUESTIONS">
                     <input type="hidden" name="currentPage" value="1">
-                    <div class="button-div form-group col-md-12 text-center">
+                    <div
+                            class="button-div form-group col-md-12 text-center">
                         <button class="btn" type="submit"><fmt:message key="admin_show_q_t"/></button>
                     </div>
                 </div>
             </form>
         </c:if>
         <c:if test="${act == 'SHOW_BY_THEME_ID'}">
-            <ul>
+            <div class="text-center"><fmt:message key="records_per_page"/></div>
+            <ul class="pagination justify-content-center">
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=5"/>">5</a>
                 </li>
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=10"/>">10</a>
@@ -274,6 +279,7 @@
                 <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=50"/>">50</a>
                 </li>
             </ul>
+            <div class="table-div">
             <table class="text-center table table-striped">
                 <c:set var="counter" value="1"/>
                 <tr>
@@ -306,11 +312,11 @@
                     <c:set var="counter" value="${counter+1}"/>
 
                 </c:forEach>
-                <c:if test="${questionsSize == 0}">
-                    <p>There are no questions yet.</p>
-                </c:if>
             </table>
-
+            </div>
+            <c:if test="${questionsSize == 0}">
+                <p class="text-center"><fmt:message key="no_questions"/></p>
+            </c:if>
             <ul class="pagination justify-content-center">
                 <c:if test="${currentPage != 1}">
                     <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage-1}"/>">Previous</a>
@@ -329,7 +335,6 @@
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-
                 <c:if test="${currentPage lt noOfPages}">
                     <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage+1}"/>">Next</a>
                     </li>

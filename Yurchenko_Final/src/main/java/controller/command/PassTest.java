@@ -141,7 +141,7 @@ public class PassTest extends Command implements CommandPages {
     }
 
     private Answer createSingleAnswer(int questionPoints, String userAnswer, Question question) {
-        return answerServiceImpl.makeAnswer(questionPoints, userAnswer, question.getCorrectOption1());
+        return answerServiceImpl.makeSingleChoiceAnswer(questionPoints, userAnswer, question.getCorrectOption1());
     }
 
     private Answer createMultipleAnswer(int questionPoints, String[] userAnswers, String[] correctAnswers) {

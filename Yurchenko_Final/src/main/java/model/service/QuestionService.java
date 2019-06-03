@@ -4,9 +4,6 @@ import model.entity.Question;
 import java.util.List;
 
 public interface QuestionService {
-    int RADIO_POINTS = 1;
-    int CHECKBOX_POINTS = 2;
-    int TEXT_POINTS = 3;
 
     List<Question> findAll();
 

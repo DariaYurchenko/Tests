@@ -22,6 +22,7 @@ public class TestInfoServiceImpl implements TestInfoService {
         return testInfoDao.findByParameter(column, value);
     }
 
+    //TODO: similar methods
     @Override
     public List<TestInfo> findUserTestsForPagination(Long userId, int currentPage, int recordsPerPage) {
         return testInfoDao.findUserTestsForPagination(userId, currentPage, recordsPerPage);
