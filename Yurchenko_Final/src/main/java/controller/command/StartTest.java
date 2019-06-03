@@ -30,9 +30,18 @@ public class StartTest extends Command implements CommandPages {
         String themeId = req.getParameter(THEME);
         List<Question> questions = questionServiceImpl.findQuestionsByTheme(Long.parseLong(themeId));
         List<Answer> answers = new ArrayList<>();
+
         Collections.shuffle(questions);
 
+        List<Question> questionsRus = new ArrayList<>();
+        for(Question question : questions) {
+            Long id = question.getQuestionId();
+            questionsRus.add(questionServiceImpl.getRus(Long.parseLong(themeId), id));
+        }
+
         req.getSession().setAttribute(QUESTIONS_LIST, questions);
+        req.getSession().setAttribute("rusQuestions", questionsRus);
+        req.getSession().setAttribute("forward", null);
 
         int counter = Integer.parseInt(req.getParameter(COUNTER));
 

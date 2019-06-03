@@ -23,7 +23,7 @@
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
 
-    <filter-mapping>
+    <!--<filter-mapping>
         <filter-name>login</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
@@ -36,6 +36,6 @@
     <filter-mapping>
         <filter-name>security</filter-name>
         <url-pattern>/tests</url-pattern>
-    </filter-mapping>
+    </filter-mapping>-->
 
 </web-app>

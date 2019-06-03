@@ -12,12 +12,15 @@ public class ChangeLanguage extends Command {
         String language = req.getParameter("lang");
         String address = req.getParameter("address");
 
+        //TODO: change places
         if(language.equalsIgnoreCase("eng")) {
             req.getSession().setAttribute("appLocale", "en_UK");
         }
         else {
             req.getSession().setAttribute("appLocale", "ru_RU");
         }
+
+
         return CommandResult.forward(address);
     }
 }

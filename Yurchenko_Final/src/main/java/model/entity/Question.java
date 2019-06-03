@@ -74,6 +74,23 @@ public class Question {
         return theme;
     }
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                "questionId=" + questionId +
+                ", question='" + question + '\'' +
+                ", percentOfRightAnswers=" + percentOfRightAnswers +
+                ", incorrectOption1='" + incorrectOption1 + '\'' +
+                ", incorrectOption2='" + incorrectOption2 + '\'' +
+                ", incorrectOption3='" + incorrectOption3 + '\'' +
+                ", correctOption1='" + correctOption1 + '\'' +
+                ", correctOption2='" + correctOption2 + '\'' +
+                ", correctOption3='" + correctOption3 + '\'' +
+                ", questionType=" + questionType +
+                ", theme=" + theme +
+                '}';
+    }
+
     public static class Builder {
         private Long id;
         private String question;

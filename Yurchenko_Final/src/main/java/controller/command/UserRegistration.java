@@ -39,6 +39,7 @@ public class UserRegistration extends Command implements CommandPages {
         String language = String.valueOf(req.getSession().getAttribute("appLocale"));
 
         languageManager.setLanguage(language);
+        //TODO:???
         req.getSession().setAttribute("appLocale", language);
 
         User newUser;

@@ -30,9 +30,9 @@ public class PassTest extends Command implements CommandPages {
         req.getSession().setAttribute("length", questions.size());
 
         int counter = Integer.parseInt(req.getParameter("counter"));
-        req.setAttribute("progress", countProgressOfTest(req, questions, counter));
+        req.getSession().setAttribute("progress", countProgressOfTest(req, questions, counter));
 
-        if(req.getParameter("forward") == null || req.getParameter("forward").equals("FALSE")) {
+        if(req.getParameter("forward") == null || req.getSession().getAttribute("forward") == null || req.getParameter("forward").equals("FALSE")) {
             Question question = questions.get(counter);
             List<String> options = makeListOfOptions(question);
             Collections.shuffle(options);
@@ -54,16 +54,16 @@ public class PassTest extends Command implements CommandPages {
 
                 setPointsForSingleChoiceQuestion(question, userAnswer);
 
-                req.setAttribute("userAnswer", userAnswer);
+                req.getSession().setAttribute("userAnswer", userAnswer);
             }
 
             if(getQuestionType(question).equalsIgnoreCase("checkbox")) {
                 String[] correctAnswers  = makeListOfCorrectAnswers(question);
                 String[] userAnswers = req.getParameterValues("checkbox");
 
-                /*if(userAnswers  == null) {
+                if(userAnswers  == null) {
                     userAnswers = new String[] {"NULL"};
-                }*/
+                }
 
                 createMultipleAnswerAndAddItToList(req, userAnswers, correctAnswers, questionPoints);
 
@@ -72,10 +72,10 @@ public class PassTest extends Command implements CommandPages {
                 sendUserAnswersRequest(req, userAnswers);
 
                 sendCounterForwardRequest(req);
-                }
+            }
             changeQuestionRightAnswersPercent(req, question);
             sendCounterForwardRequest(req);
-            }
+        }
 
         return CommandResult.forward(PASS_TESTS);
     }
@@ -121,7 +121,7 @@ public class PassTest extends Command implements CommandPages {
 
     private void changeQuestionRightAnswersPercent(HttpServletRequest req, Question question) {
         String answerPercent = String.valueOf(questionServiceImpl.findCurrentAnswers(question.getQuestionId()));
-        req.setAttribute("answerPercent", answerPercent);
+        req.getSession().setAttribute("answerPercent", answerPercent);
     }
 
     private void createSingleAnswerAndAddItToList(HttpServletRequest req, Question question, String userAnswer, int questionPoints) {
@@ -159,32 +159,32 @@ public class PassTest extends Command implements CommandPages {
 
     private void sendUserAnswersRequest(HttpServletRequest req, String[] userAnswers) {
         if(userAnswers.length == 1) {
-            req.setAttribute("userAnswer1", userAnswers[0]);
+            req.getSession().setAttribute("userAnswer1", userAnswers[0]);
         }
         if (userAnswers.length == 2) {
-            req.setAttribute("userAnswer1", userAnswers[0]);
+            req.getSession().setAttribute("userAnswer1", userAnswers[0]);
             req.setAttribute("userAnswer2", userAnswers[1]);
         }
         if(userAnswers.length == 3) {
-            req.setAttribute("userAnswer1", userAnswers[0]);
-            req.setAttribute("userAnswer2", userAnswers[1]);
-            req.setAttribute("userAnswer3", userAnswers[2]);
+            req.getSession().setAttribute("userAnswer1", userAnswers[0]);
+            req.getSession().setAttribute("userAnswer2", userAnswers[1]);
+            req.getSession().setAttribute("userAnswer3", userAnswers[2]);
         }
         if(userAnswers.length == 4){
-            req.setAttribute("userAnswer1", userAnswers[0]);
-            req.setAttribute("userAnswer2", userAnswers[1]);
-            req.setAttribute("userAnswer3", userAnswers[2]);
-            req.setAttribute("userAnswer4", userAnswers[3]);
+            req.getSession().setAttribute("userAnswer1", userAnswers[0]);
+            req.getSession().setAttribute("userAnswer2", userAnswers[1]);
+            req.getSession().setAttribute("userAnswer3", userAnswers[2]);
+            req.getSession().setAttribute("userAnswer4", userAnswers[3]);
         }
     }
 
     private void sendCounterForwardRequest(HttpServletRequest req) {
         int counter = Integer.parseInt(req.getParameter("counter"));
-        req.setAttribute("forward", "FALSE");
+        req.getSession().setAttribute("forward", null);
         req.getSession().setAttribute("counter", counter + 1);
     }
-     private String countProgressOfTest(HttpServletRequest req, List<Question> questions, int counter) {
+    private String countProgressOfTest(HttpServletRequest req, List<Question> questions, int counter) {
         return String.valueOf(Math.round(counter * 100.0/questions.size()));
-     }
+    }
 
 }

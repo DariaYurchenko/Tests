@@ -30,6 +30,9 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
             "answers = ? WHERE question_id = ?;";
     private static final String FIND_QUESTIONS_OF_THEME = "SELECT * FROM questions q JOIN question_type qt" +
             " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE t.theme_id = ?";
+    private static final String FIND_QUESTIONS_OF_THEME_RUS = "SELECT * FROM questions q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE" +
+            " t.theme_id = ? AND q.question_id = ?";
     private static final String FIND_QUESTION_BY_PARAMETER = "SELECT * FROM questions q JOIN question_type qt" +
             " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE %s = ?;";
     private static final String UPDATE_QUESTION = "UPDATE questions SET %s = ? WHERE question_id = ?;";
@@ -43,6 +46,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     private static final String RIGHT_ANSWERS = "right_answers";
     private static final String ANSWERS = "answers";
     private static final String QUESTION = "question";
+    private static final String QUESTION_RUS = "question_rus";
     private static final String INCORRECT_OPTION_1 = "incorrect_option1";
     private static final String INCORRECT_OPTION_2 = "incorrect_option2";
     private static final String INCORRECT_OPTION_3 = "incorrect_option3";
@@ -162,6 +166,23 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
                 .build();
     }
 
+    private Question buildQuestionRus(ResultSet rs) throws SQLException {
+        return new Question.Builder()
+                .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
+                .withId(rs.getLong(QUESTION_ID))
+                .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
+                .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
+                .withQuestion(rs.getString(QUESTION_RUS))
+                .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
+                .withIncorrectOption2(rs.getString(INCORRECT_OPTION_2))
+                .withIncorrectOption3(rs.getString(INCORRECT_OPTION_3))
+                .withCorrectOption1(rs.getString(CORRECT_OPTION_1))
+                .withCorrectOption2(rs.getString(CORRECT_OPTION_2))
+                .withCorrectOption3(rs.getString(CORRECT_OPTION_3))
+                .build();
+    }
+
+
     private Double setPercentOfRightAnswers(ResultSet rs) {
         try {
             int rightAnswers = rs.getInt(RIGHT_ANSWERS);
@@ -231,6 +252,23 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
                 themeQuestions.add(buildQuestion(rs));
             }
             return themeQuestions;
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with getting questions of the course: " + e.getMessage());
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public Optional<Question> findThemeQuestionsRus(Long themeId, Long questionId) {
+        Optional<Question> question = null;
+        try (PreparedStatement ps = connector.getConnection().prepareStatement(FIND_QUESTIONS_OF_THEME_RUS)) {
+            ps.setLong(1, themeId);
+            ps.setLong(2, questionId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                question = Optional.ofNullable(buildQuestionRus(rs));
+            }
+            return question;
         } catch (SQLException e) {
             LOGGER.warn("SQLException with getting questions of the course: " + e.getMessage());
             throw new DaoException(e);

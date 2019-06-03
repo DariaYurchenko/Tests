@@ -117,5 +117,10 @@ public class QuestionServiceImpl implements QuestionService {
         return questionDao.findQuestionsOfThemeForPagination(startRecord, recordsPerPage, questionId);
     }
 
+    @Override
+    public Question getRus(Long themeId, Long questionId) {
+        return questionDao.findThemeQuestionsRus(themeId, questionId).orElseThrow(ServiceException::new);
+    }
+
 
 }

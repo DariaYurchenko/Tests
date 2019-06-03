@@ -30,4 +30,6 @@ public interface QuestionService {
     Double findCurrentAnswers(Long questionId);
 
     List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage, Long questionId);
+
+    Question getRus(Long themeId, Long questionId);
 }
