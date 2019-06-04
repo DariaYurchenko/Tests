@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <fmt:setLocale value="${appLocale}" scope="session"/>
 <fmt:setBundle basename="languages/messages"/>
 <html>
@@ -77,7 +78,13 @@
                     <input type="hidden" value="1" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
-                    <button type="submit">Collections</button>
+                    <c:if test="${fn:contains(userThemes, 1)}">
+                        <button type="submit" disabled>Collections</button>
+                    </c:if>
+                    <c:if test="${not fn:contains(userThemes, 1)}">
+                        <button type="submit">Collections</button>
+                    </c:if>
+                    <%--<button type="submit">Collections</button>--%>
                 </form>
             </div>
         </div>
@@ -88,7 +95,13 @@
                     <input type="hidden" value="2" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
-                    <button type="submit">If else, switch and loops</button>
+                    <c:if test="${fn:contains(userThemes, 2)}">
+                        <button type="submit" disabled>If else, switch and loopss</button>
+                    </c:if>
+                    <c:if test="${not fn:contains(userThemes, 2)}">
+                        <button type="submit">If else, switch and loops</button>
+                    </c:if>
+                    <%--<button type="submit">If else, switch and loops</button>--%>
                 </form>
             </div>
         </div>
@@ -99,7 +112,13 @@
                     <input type="hidden" value="3" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
-                    <button type="submit">Inheritance and polymorphism</button>
+                    <c:if test="${fn:contains(userThemes, 3)}">
+                        <button type="submit" disabled>Inheritance and polymorphism</button>
+                    </c:if>
+                    <c:if test="${not fn:contains(userThemes, 3)}">
+                        <button type="submit">Inheritance and polymorphism</button>
+                    </c:if>
+                    <%--<button type="submit">Inheritance and polymorphism</button>--%>
                 </form>
             </div>
         </div>
@@ -110,7 +129,13 @@
                     <input type="hidden" value="4" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
-                    <button type="submit">Threads, concurrency</button>
+                    <c:if test="${fn:contains(userThemes, 4)}">
+                        <button type="submit" disabled>Threads, concurrency</button>
+                    </c:if>
+                    <c:if test="${not fn:contains(userThemes, 4)}">
+                        <button type="submit">Threads, concurrency</button>
+                    </c:if>
+                    <%--<button type="submit">Threads, concurrency</button>--%>
                 </form>
             </div>
         </div>
@@ -121,7 +146,13 @@
                     <input type="hidden" value="5" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
-                    <button type="submit">Primitive type conversions</button>
+                    <c:if test="${fn:contains(userThemes, 5)}">
+                        <button type="submit" disabled>Primitive type conversions</button>
+                    </c:if>
+                    <c:if test="${not fn:contains(userThemes, 5)}">
+                        <button type="submit">Primitive type conversions</button>
+                    </c:if>
+                    <%--<button type="submit">Primitive type conversions</button>--%>
                 </form>
             </div>
         </div>
@@ -132,7 +163,13 @@
                     <input type="hidden" value="6" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
-                    <button type="submit">Operators</button>
+                    <c:if test="${fn:contains(userThemes, 6)}">
+                        <button type="submit" disabled>Operators</button>
+                    </c:if>
+                    <c:if test="${not fn:contains(userThemes, 6)}">
+                        <button type="submit">Operators</button>
+                    </c:if>
+                    <%--<button type="submit">Operators</button>--%>
                 </form>
             </div>
         </div>

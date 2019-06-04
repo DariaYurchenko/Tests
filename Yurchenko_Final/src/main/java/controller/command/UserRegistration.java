@@ -4,6 +4,8 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.User;
 import model.entity.status.UserStatus;
+import model.service.UserService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.language.LanguageManager;
@@ -22,11 +24,11 @@ public class UserRegistration extends Command implements CommandPages {
     private static final String ADMIN = "Admin";
     private static final String USER_TYPE_FOR_REGISTRATION = "userType";
 
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
     private LanguageManager languageManager;
 
     public UserRegistration() {
-        this.userServiceImpl = new UserServiceImpl();
+        this.userService = ServiceFactory.getInstance().getUserService();
         this.languageManager =  LanguageManager.getInstance();
     }
 
@@ -43,7 +45,7 @@ public class UserRegistration extends Command implements CommandPages {
         req.getSession().setAttribute("appLocale", language);
 
         User newUser;
-        Optional<User> userOptional = userServiceImpl.findUserByLogin(login);
+        Optional<User> userOptional = userService.findUserByLogin(login);
         if(userOptional.isPresent()) {
             LOGGER.warn("Unknown user attempted to register by existing email - " + login);
             req.setAttribute("user_exists", languageManager.getMessage("user_exists"));
@@ -75,7 +77,7 @@ public class UserRegistration extends Command implements CommandPages {
 
        /* User newUser = buildStudent(req, name, lastname, login, password);
 
-        userServiceImpl.registerUser(newUser);
+        userService.registerUser(newUser);
 
         sendEmailToConfirmRegistration(password, login);
 
@@ -91,8 +93,8 @@ public class UserRegistration extends Command implements CommandPages {
     }
 
     private void finishUserRegistration(HttpServletRequest req, User user, String login, String password) {
-        userServiceImpl.registerUser(user);
-        sendEmailToConfirmRegistration(password, login);
+        userService.registerUser(user);
+        sendEmailToConfirmRegistration(req, password, login);
         req.getSession().setAttribute("user", user);
 
         setUserStatus(req, user);
@@ -173,15 +175,16 @@ public class UserRegistration extends Command implements CommandPages {
         }
     }
 
-    private void sendEmailToConfirmRegistration(String password, String login) {
+    private void sendEmailToConfirmRegistration(HttpServletRequest req, String password, String login) {
         String magicKey = generateMagicKey(password, login);
-        MailsSender.sendEmailToConfirmRegistration(login, magicKey);
+        String language = (String) req.getSession().getAttribute("appLocale");
+        MailsSender.sendEmailToConfirmRegistration(login, magicKey, language);
     }
 
     private String generateMagicKey(String password, String login) {
         EncryptorBuilder builder = new EncryptorBuilder(password);
         String magicKey = builder.getHash();
-        userServiceImpl.addMagicKey(magicKey, login);
+        userService.addMagicKey(magicKey, login);
         return magicKey;
     }
 

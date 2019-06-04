@@ -7,8 +7,10 @@ import model.entity.Test;
 import model.entity.User;
 import model.entity.status.AnswerStatus;
 import model.entity.status.TestStatus;
+import model.service.TestService;
+import model.service.UserService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.TestServiceImpl;
-import model.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowResults extends Command implements CommandPages {
-    private UserServiceImpl userServiceImpl;
-    private TestServiceImpl testServiceImpl;
+    private UserService userService;
+    private TestService testService;
 
     public ShowResults() {
-        this.userServiceImpl = new UserServiceImpl();
-        this.testServiceImpl = new TestServiceImpl();
+        this.userService = ServiceFactory.getInstance().getUserService();
+        this.testService = ServiceFactory.getInstance().getTestService();
     }
 
     @Override
@@ -70,7 +72,7 @@ public class ShowResults extends Command implements CommandPages {
     }
 
     private void changeUserRankInDb(User user, int userPoints, int maxPoints) {
-        userServiceImpl.setRank(user.getLogin(), userPoints, maxPoints);
+        userService.setRank(user.getLogin(), userPoints, maxPoints);
     }
 
     private void saveTestInDb(HttpServletRequest req, User user, int userPoints, int maxPoints, double percentOfRightAnswers) {
@@ -85,7 +87,7 @@ public class ShowResults extends Command implements CommandPages {
                 .withRightAnswersPercent(percentOfRightAnswers)
                 .withDate(LocalDate.now())
                 .build();
-        testServiceImpl.addTestToDatabase(test);
+        testService.addTestToDatabase(test);
     }
 
     private TestStatus setStatus(double percent) {

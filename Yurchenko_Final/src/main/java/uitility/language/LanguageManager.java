@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public final class LanguageManager {
+public class LanguageManager {
     private static final String RESOURCE_NAME = "languages/messages";
 
     private static volatile LanguageManager instance;

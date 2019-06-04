@@ -3,6 +3,8 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.User;
+import model.service.UserService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.pagination.Pagination;
@@ -10,14 +12,15 @@ import uitility.pagination.Pagination;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 
 public class ShowAllUsers extends Command implements CommandPages {
     private static final Logger LOGGER = Logger.getLogger(UserLogin.class);
 
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
 
     public ShowAllUsers() {
-        this.userServiceImpl = new UserServiceImpl();
+        this.userService = ServiceFactory.getInstance().getUserService();
     }
 
     @Override
@@ -61,8 +64,8 @@ public class ShowAllUsers extends Command implements CommandPages {
 
         Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
-        int rows = userServiceImpl.findAll().size();
-        List<User> users = userServiceImpl.findUsersForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
+        int rows = userService.findAll().size();
+        List<User> users = userService.findUsersForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
         int usersSize = users.size();
 
         req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
@@ -72,5 +75,16 @@ public class ShowAllUsers extends Command implements CommandPages {
         req.getSession().setAttribute("users", users);
         req.getSession().setAttribute("usersSize", usersSize);
         return CommandResult.forward(SHOW_USERS);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.getClass() == o.getClass()) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userService);
     }
 }

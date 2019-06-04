@@ -4,6 +4,8 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Answer;
 import model.entity.Question;
+import model.service.QuestionService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.QuestionServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,17 +20,18 @@ public class StartTest extends Command implements CommandPages {
     private static final String QUESTIONS_LIST = "questions";
     private static final String ANSWERS_LIST = "userAnswers";
 
-    private QuestionServiceImpl questionServiceImpl;
+    private QuestionService questionService;
 
     public StartTest() {
-        this.questionServiceImpl = new QuestionServiceImpl();
+        this.questionService = ServiceFactory.getInstance().getQuestionService();
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
 
         String themeId = req.getParameter(THEME);
-        List<Question> questions = questionServiceImpl.findQuestionsByTheme(Long.parseLong(themeId));
+        List<Question> questions = questionService.findQuestionsByTheme(Long.parseLong(themeId));
+
         List<Answer> answers = new ArrayList<>();
 
         Collections.shuffle(questions);
@@ -36,7 +39,7 @@ public class StartTest extends Command implements CommandPages {
         List<Question> questionsRus = new ArrayList<>();
         for(Question question : questions) {
             Long id = question.getQuestionId();
-            questionsRus.add(questionServiceImpl.getRus(Long.parseLong(themeId), id));
+            questionsRus.add(questionService.getRus(Long.parseLong(themeId), id));
         }
 
         req.getSession().setAttribute(QUESTIONS_LIST, questions);

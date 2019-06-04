@@ -3,6 +3,8 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Question;
+import model.service.QuestionService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.QuestionServiceImpl;
 import uitility.pagination.Pagination;
 
@@ -11,7 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class ShowAllQuestions extends Command implements CommandPages {
-    private QuestionServiceImpl questionServiceImpl = new QuestionServiceImpl();
+    private QuestionService questionService;
+
+    public ShowAllQuestions() {
+        this.questionService = ServiceFactory.getInstance().getQuestionService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
@@ -55,8 +61,8 @@ public class ShowAllQuestions extends Command implements CommandPages {
         req.getSession().setAttribute("recordsPerPage", recordsPerPage);
         Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
-        int rows = questionServiceImpl.findAll().size();
-        List<Question> questions = questionServiceImpl.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
+        int rows = questionService.findAll().size();
+        List<Question> questions = questionService.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
         int questionsSize = questions.size();
 
         req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateStart(pagination.calculateNumOfPages(rows))));
@@ -67,4 +73,11 @@ public class ShowAllQuestions extends Command implements CommandPages {
         req.getSession().setAttribute("questionsSize", questionsSize);
         return CommandResult.forward(SHOW_QUESTIONS);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this.getClass() == o.getClass()) return true;
+        else return false;
+    }
+
 }

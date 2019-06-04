@@ -3,6 +3,8 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Theme;
+import model.service.ThemeService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.ThemeServiceImpl;
 import uitility.pagination.Pagination;
 
@@ -11,7 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class ShowThemes extends Command implements CommandPages {
-    private ThemeServiceImpl themeServiceImpl = new ThemeServiceImpl();
+    private ThemeService themeService;
+
+    public ShowThemes() {
+        this.themeService = ServiceFactory.getInstance().getThemeService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
@@ -38,8 +44,8 @@ public class ShowThemes extends Command implements CommandPages {
         req.getSession().setAttribute("recordsPerPage", recordsPerPage);
         Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
-        int rows = themeServiceImpl.findAll().size();
-        List<Theme> themes = themeServiceImpl.findThemesForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
+        int rows = themeService.findAll().size();
+        List<Theme> themes = themeService.findThemesForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
         int themesSize = themes.size();
 
         req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateNumOfPages(rows)));

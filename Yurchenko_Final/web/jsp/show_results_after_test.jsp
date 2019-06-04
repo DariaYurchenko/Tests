@@ -61,7 +61,7 @@
         <div class="languages">
             <form action="tests" method="GET">
                 <input type="hidden" value="CHANGE_LANGUAGE" name="command">
-                <input type="hidden" value="jsp/show_results.jsp" name="address">
+                <input type="hidden" value="jsp/show_results_after_test.jsp" name="address">
                 <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="../resources/images/uk_flag.jpg"></button>
                 <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="../resources/images/rus_flag.jpg"></button>
             </form>

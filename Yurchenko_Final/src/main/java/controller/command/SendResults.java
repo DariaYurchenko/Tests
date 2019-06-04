@@ -4,6 +4,8 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.TestInfo;
 import model.entity.User;
+import model.service.TestInfoService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.TestInfoServiceImpl;
 import uitility.mail.MailsSender;
 
@@ -16,10 +18,10 @@ import java.util.List;
 public class SendResults extends Command implements CommandPages {
     private static final String USER_ID = "test_user_id";
 
-    private TestInfoServiceImpl testInfoServiceImpl;
+    private TestInfoService testInfoService;
 
     public SendResults() {
-        this.testInfoServiceImpl = new TestInfoServiceImpl();
+        this.testInfoService = ServiceFactory.getInstance().getTestInfoService();
     }
 
 
@@ -27,15 +29,16 @@ public class SendResults extends Command implements CommandPages {
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         //TODO: when user that alredy registrated - optional amd classcastexception
         User user = (User) req.getSession().getAttribute("user");
-        Long userId = user.getUserId();
+        String login = user.getLogin();
+        String language = (String) req.getSession().getAttribute("appLocale");
 
-        List<TestInfo> userTests = testInfoServiceImpl.findTestsByParameter(USER_ID, userId);
+        List<TestInfo> userTests = testInfoService.findTestsByParameter("login", login);
 
         TestInfo testInfo = userTests.get(userTests.size() - 1);
 
         req.getSession().setAttribute("sent", "TRUE");
 
-        MailsSender.sendTestResults(testInfo);
+        MailsSender.sendTestResults(testInfo, language);
 
         return CommandResult.forward(SHOW_RESULTS);
     }

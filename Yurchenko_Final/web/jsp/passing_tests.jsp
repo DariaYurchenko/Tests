@@ -75,7 +75,12 @@
                     <div class="progress-bar" role="progressbar" style="width:${sessionScope.progress}%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <div>
+                    <c:if test="${appLocale == 'en_UK'}">
                     <pre><c:out value="${question.question}"/></pre>
+                    </c:if>
+                    <c:if test="${appLocale != 'en_UK'}">
+                        <pre><c:out value="${rusQuestion.question}"/></pre>
+                    </c:if>
                     <div class="answers">
                         <c:if test="${question.questionType.type eq 'RADIO'}">
                         <form action="tests" method="get">

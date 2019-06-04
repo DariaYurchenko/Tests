@@ -26,15 +26,20 @@
     <!--<filter-mapping>
         <filter-name>login</filter-name>
         <url-pattern>/tests</url-pattern>
-    </filter-mapping>
+    </filter-mapping>-->
 
    <filter-mapping>
         <filter-name>submit</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
 
-    <filter-mapping>
+    <!--<filter-mapping>
         <filter-name>security</filter-name>
+        <url-pattern>/tests</url-pattern>
+    </filter-mapping>-->
+
+    <!--<filter-mapping>
+        <filter-name>testsPassed</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>-->
 

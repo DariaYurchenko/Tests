@@ -30,7 +30,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
 
     private static final String TEST_ID = "test_id";
     private static final String USER_ID = "test_user_id";
-    private static final String THEME_ID = "theme_id";
+    private static final String THEME_ID = "test_theme_id";
     private static final String MAX_POINTS = "test_max_number_of_points";
     private static final String USER_POINTS = "test_number_of_points";
     private static final String DATE = "date";
@@ -104,7 +104,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
             }
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of tests: " + e.getMessage());
-            throw new DaoException();
+            throw new DaoException(e);
         }
         return tests;
     }

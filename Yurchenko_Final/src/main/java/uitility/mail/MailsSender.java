@@ -29,13 +29,14 @@ public final class MailsSender {
 
     private static LanguageManager languageManager = LanguageManager.getInstance();
 
-    public static void sendTestResults(TestInfo testInfo) {
+    public static void sendTestResults(TestInfo testInfo, String language) {
         try {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
             //Todo:properties
             Properties props = System.getProperties();
             setProperties(props);
+            languageManager.setLanguage(language);
 
             Session session = Session.getInstance(props, null);
 
@@ -82,12 +83,13 @@ public final class MailsSender {
 
 
     //TODO: Runtime exception
-    public static void sendEmailToConfirmRegistration(String login, String magicKey) {
+    public static void sendEmailToConfirmRegistration(String login, String magicKey, String language) {
         try {
             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
             Properties props = System.getProperties();
             setProperties(props);
+            languageManager.setLanguage(language);
 
             Session session = Session.getInstance(props, null);
 

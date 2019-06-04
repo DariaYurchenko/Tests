@@ -4,6 +4,9 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Answer;
 import model.entity.Question;
+import model.service.AnswerService;
+import model.service.QuestionService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.AnswerServiceImpl;
 import model.service.impl.QuestionServiceImpl;
 import javax.servlet.http.HttpServletRequest;
@@ -16,35 +19,40 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 
 public class PassTest extends Command implements CommandPages {
-    private QuestionServiceImpl questionServiceImpl;
-    private AnswerServiceImpl answerServiceImpl;
+    private QuestionService questionService;
+    private AnswerService answerService;
 
     public PassTest() {
-        this.questionServiceImpl = new QuestionServiceImpl();
-        this.answerServiceImpl = new AnswerServiceImpl();
+        this.questionService = ServiceFactory.getInstance().getQuestionService();
+        this.answerService = ServiceFactory.getInstance().getAnswerService();
     }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         List<Question> questions = (ArrayList) req.getSession().getAttribute("questions");
+        List<Question> rusQuestions = (ArrayList) req.getSession().getAttribute("rusQuestions");
         req.getSession().setAttribute("length", questions.size());
 
         int counter = Integer.parseInt(req.getParameter("counter"));
         req.getSession().setAttribute("progress", countProgressOfTest(req, questions, counter));
 
         if(req.getParameter("forward") == null || req.getSession().getAttribute("forward") == null || req.getParameter("forward").equals("FALSE")) {
+
             Question question = questions.get(counter);
+            Question rusQuestion = rusQuestions.get(counter);
+
             List<String> options = makeListOfOptions(question);
             Collections.shuffle(options);
 
             req.getSession().setAttribute("options", options);
             req.getSession().setAttribute("question", question);
+            req.getSession().setAttribute("rusQuestion", rusQuestion);
             req.getSession().setAttribute("length", questions.size());
             req.getSession().setAttribute("forward", "TRUE");
         }
         else {
             Question question = (Question) req.getSession().getAttribute("question");
-            int questionPoints = questionServiceImpl.setQuestionPoints(question);
+            int questionPoints = questionService.setQuestionPoints(question);
 
             if(getQuestionType(question).equalsIgnoreCase("Radio") ||
                     getQuestionType(question).equalsIgnoreCase("Text")) {
@@ -104,23 +112,23 @@ public class PassTest extends Command implements CommandPages {
 
     private void setPointsForSingleChoiceQuestion(Question question, String userAnswer) {
         if(userAnswer.equals(question.getCorrectOption1())) {
-            questionServiceImpl.setAnswers(question.getQuestionId(), 1, 1);
+            questionService.setAnswers(question.getQuestionId(), 1, 1);
         }
         else {
-            questionServiceImpl.setAnswers(question.getQuestionId(), 0, 1);
+            questionService.setAnswers(question.getQuestionId(), 0, 1);
         }
     }
 
     private void setPointsForMultipleChoiceQuestion(Question question, String[] userAnswers, String[] correctAnswers) {
         if (Arrays.equals(userAnswers, correctAnswers)) {
-            questionServiceImpl.setAnswers(question.getQuestionId(), 1, 1);
+            questionService.setAnswers(question.getQuestionId(), 1, 1);
         } else {
-            questionServiceImpl.setAnswers(question.getQuestionId(), 0, 1);
+            questionService.setAnswers(question.getQuestionId(), 0, 1);
         }
     }
 
     private void changeQuestionRightAnswersPercent(HttpServletRequest req, Question question) {
-        String answerPercent = String.valueOf(questionServiceImpl.findCurrentAnswers(question.getQuestionId()));
+        String answerPercent = String.valueOf(questionService.findCurrentAnswers(question.getQuestionId()));
         req.getSession().setAttribute("answerPercent", answerPercent);
     }
 
@@ -141,11 +149,11 @@ public class PassTest extends Command implements CommandPages {
     }
 
     private Answer createSingleAnswer(int questionPoints, String userAnswer, Question question) {
-        return answerServiceImpl.makeSingleChoiceAnswer(questionPoints, userAnswer, question.getCorrectOption1());
+        return answerService.makeSingleChoiceAnswer(questionPoints, userAnswer, question.getCorrectOption1());
     }
 
     private Answer createMultipleAnswer(int questionPoints, String[] userAnswers, String[] correctAnswers) {
-        return answerServiceImpl.makeMultipleChoiceAnswer(questionPoints, userAnswers, correctAnswers);
+        return answerService.makeMultipleChoiceAnswer(questionPoints, userAnswers, correctAnswers);
     }
 
     private String[] makeListOfCorrectAnswers(Question question) {
@@ -163,7 +171,7 @@ public class PassTest extends Command implements CommandPages {
         }
         if (userAnswers.length == 2) {
             req.getSession().setAttribute("userAnswer1", userAnswers[0]);
-            req.setAttribute("userAnswer2", userAnswers[1]);
+            req.getSession().setAttribute("userAnswer2", userAnswers[1]);
         }
         if(userAnswers.length == 3) {
             req.getSession().setAttribute("userAnswer1", userAnswers[0]);

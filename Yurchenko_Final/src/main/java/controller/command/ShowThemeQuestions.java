@@ -3,7 +3,8 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Question;
-import model.service.impl.QuestionServiceImpl;
+import model.service.QuestionService;
+import model.service.factory.ServiceFactory;
 import uitility.pagination.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ShowThemeQuestions extends Command implements CommandPages {
-    private QuestionServiceImpl questionServiceImpl = new QuestionServiceImpl();
+    private QuestionService questionService;
+
+    public ShowThemeQuestions() {
+        this.questionService = ServiceFactory.getInstance().getQuestionService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
@@ -39,12 +44,12 @@ public class ShowThemeQuestions extends Command implements CommandPages {
         req.getSession().setAttribute("recordsPerPage", recordsPerPage);
         Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
-        int rows = questionServiceImpl.findAll().size();
+        int rows = questionService.findAll().size();
 
         Optional<String> optId = Optional.ofNullable(req.getParameter("radio"));
         if(optId.isPresent()) {
             Long themeId = Long.parseLong(req.getParameter("radio"));
-            List<Question> questionList = questionServiceImpl.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
+            List<Question> questionList = questionService.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
                     recordsPerPage, themeId);
             int questionsSize = questionList.size();
 
@@ -58,7 +63,7 @@ public class ShowThemeQuestions extends Command implements CommandPages {
             return CommandResult.forward(SHOW_QUESTIONS);
         }
        /* Long themeId = Long.parseLong(req.getParameter("radio"));
-        List<Question> questionList = questionServiceImpl.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
+        List<Question> questionList = questionService.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
                 recordsPerPage, themeId);
 
         req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateNumOfPages(rows)));

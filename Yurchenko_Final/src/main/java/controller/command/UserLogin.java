@@ -2,8 +2,13 @@ package controller.command;
 
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
+import model.entity.Test;
 import model.entity.User;
 import model.entity.status.UserStatus;
+import model.service.TestService;
+import model.service.UserService;
+import model.service.factory.ServiceFactory;
+import model.service.impl.TestServiceImpl;
 import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.encryption.Encryptor;
@@ -12,6 +17,8 @@ import uitility.validator.LoginValidator;
 import uitility.validator.PasswordValidator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserLogin extends Command implements CommandPages {
@@ -23,11 +30,13 @@ public class UserLogin extends Command implements CommandPages {
     private static final String USER_STATUS = "userStatus";
     private static final String LOGIN_MESSAGE = "loginMessage";
 
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
+    private TestService testService;
     private LanguageManager languageManager;
 
     public UserLogin() {
-        this.userServiceImpl = new UserServiceImpl();
+        this.userService = ServiceFactory.getInstance().getUserService();
+        this.testService = ServiceFactory.getInstance().getTestService();
         this.languageManager =  LanguageManager.getInstance();
     }
 
@@ -49,7 +58,7 @@ public class UserLogin extends Command implements CommandPages {
             return CommandResult.forward(LOGIN_PAGE);
         }
 
-        Optional<User> userLogging = userServiceImpl.findUserByLogin(login);
+        Optional<User> userLogging = userService.findUserByLogin(login);
 
         if (!userLogging.isPresent()) {
             LOGGER.warn("Someone tries to login without registration.");
@@ -59,6 +68,17 @@ public class UserLogin extends Command implements CommandPages {
 
         User user = userLogging.get();
         setUserStatus(req, user);
+        /////////////////////////////////////////////////
+        List<Test> tests = testService.findTestsByParameter("test_user_id", user.getUserId());
+        List<Long> themesId = new ArrayList<>();
+        for(Test test : tests) {
+            themesId.add(test.getThemeId());
+        }
+        req.getSession().setAttribute("userThemes", themesId);
+
+
+        ////////////////////////////////////////////////
+
         return checkUserStatus(req, user, password);
     }
 

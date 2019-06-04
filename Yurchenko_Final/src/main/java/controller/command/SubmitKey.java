@@ -3,6 +3,7 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.service.UserService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.language.LanguageManager;
@@ -23,7 +24,7 @@ public class SubmitKey extends Command implements CommandPages {
     private LanguageManager languageManager;
 
     public SubmitKey() {
-        this.userService = new UserServiceImpl();
+        this.userService = ServiceFactory.getInstance().getUserService();
         this.languageManager =  LanguageManager.getInstance();
     }
 

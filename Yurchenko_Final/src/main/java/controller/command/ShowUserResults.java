@@ -3,6 +3,8 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.TestInfo;
+import model.service.TestInfoService;
+import model.service.factory.ServiceFactory;
 import model.service.impl.TestInfoServiceImpl;
 import uitility.pagination.Pagination;
 
@@ -12,7 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ShowUserResults extends Command implements CommandPages {
-    private TestInfoServiceImpl testInfoServiceImpl = new TestInfoServiceImpl();
+    private TestInfoService testInfoService;
+
+    public ShowUserResults() {
+        this.testInfoService = ServiceFactory.getInstance().getTestInfoService();
+    }
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
@@ -41,8 +47,8 @@ public class ShowUserResults extends Command implements CommandPages {
         Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
         if(userId != null) {
-        int rows = testInfoServiceImpl.findTestsByParameter("test_user_id", userId).size();
-        List<TestInfo> testInfoList = testInfoServiceImpl.findUserTestsForPagination(userId, pagination.calculateStart(pagination.calculateNumOfPages(rows)),
+        int rows = testInfoService.findTestsByParameter("test_user_id", userId).size();
+        List<TestInfo> testInfoList = testInfoService.findUserTestsForPagination(userId, pagination.calculateStart(pagination.calculateNumOfPages(rows)),
                 recordsPerPage);
         int testsSize = testInfoList.size();
             req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateNumOfPages(rows)));
