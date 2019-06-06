@@ -7,14 +7,14 @@ import java.util.Optional;
 
 public interface QuestionDao extends GenericDao<Question> {
 
-    Map<String, Integer> getCurrentAnswersForQuestionFromDb(Long id);
+    Map<String, Integer> getCurrentAnswersForQuestionFromDb(Integer questionId);
 
-    void changeAmountOfAnswersInDb(Long id, Integer plusPoints, Integer plusMaxPoints);
+    void changeAmountOfAnswersInDb(Integer questionId, int plusPoints, int plusMaxPoints);
 
-    List<Question> findThemeQuestions(Long themeId);
+    List<Question> findThemeQuestions(Integer themeId);
 
-    Optional<Question> findTranslatedThemeQuestion(Long themeId, Long questionId);
+    Optional<Question> findTranslatedThemeQuestion(Integer themeId, Integer questionId);
 
-    List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Long themeId);
+    List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Integer themeId);
 
 }

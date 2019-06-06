@@ -26,12 +26,12 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Optional<Test> findTestById(Long testId) {
-        return testDao.findById(testId);
+    public Optional<Test> findTestById(Integer testId) {
+        return testDao.findUserById(testId);
     }
 
     @Override
-    public void deleteTestById(Long testId) {
+    public void deleteTestById(Integer testId) {
         testDao.deleteById(testId);
     }
 

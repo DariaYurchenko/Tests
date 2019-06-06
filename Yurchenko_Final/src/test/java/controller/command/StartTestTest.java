@@ -33,17 +33,17 @@ public class StartTestTest {
     @InjectMocks
     StartTest startTestCommand;
 
-   /* @Test
+    @Test
     public void shouldStartTest() {
         List<Question> questions = new ArrayList<>(Arrays.asList(new Question.Builder().build(), new Question.Builder().build()));
 
         when(request.getParameter(anyString())).thenReturn("1");
         when(request.getSession()).thenReturn(session);
-        when(questionService.findQuestionsByTheme(anyLong())).thenReturn(questions);
+        when(questionService.findQuestionsByTheme(anyInt())).thenReturn(questions);
         doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = startTestCommand.execute(request, response);
-        assertEquals(PassTest.class, commandResult.getChainCommand().getClass());
-    }*/
+        assertEquals(ShowQuestion.class, commandResult.getChainCommand().getClass());
+    }
 
 }

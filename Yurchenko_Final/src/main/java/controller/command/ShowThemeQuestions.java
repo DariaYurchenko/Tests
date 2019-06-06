@@ -33,7 +33,7 @@ public class ShowThemeQuestions extends Command implements CommandPages {
         Optional<String> optId = Optional.ofNullable(req.getParameter("radio"));
 
         if(optId.isPresent()) {
-            Long themeId = Long.parseLong(req.getParameter("radio"));
+            Integer themeId = Integer.parseInt(req.getParameter("radio"));
 
             List<Question> questionList = findThemeQuestions(pagination, recordsPerPage, rows, themeId);
             int questionsSize = questionList.size();
@@ -62,7 +62,7 @@ public class ShowThemeQuestions extends Command implements CommandPages {
         return questionService.findAllQuestions().size();
     }
 
-    private List<Question> findThemeQuestions(Pagination pagination, int recordsPerPage, int rows, Long themeId) {
+    private List<Question> findThemeQuestions(Pagination pagination, int recordsPerPage, int rows, Integer themeId) {
         return questionService.findThemeQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
                 recordsPerPage, themeId);
     }

@@ -63,7 +63,7 @@ public class UserRegistration extends Command implements CommandPages {
         if(ADMIN.equals(req.getParameter("userType"))) {
             newUser = buildAdmin(name, lastname, login, password);
             finishUserRegistration(req, newUser, login, password);
-            return CommandResult.forward(START_PAGE);
+            return CommandResult.forward(ADMIN_PAGE);
         }
         else {
             newUser = buildStudent(name, lastname, login, password);

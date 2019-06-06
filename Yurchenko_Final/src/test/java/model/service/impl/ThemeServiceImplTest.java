@@ -39,7 +39,7 @@ public class ThemeServiceImplTest {
 
     @Test
     public void shouldDeleteById() {
-        Long themeId = 1L;
+        Integer themeId = 1;
         Mockito.doNothing().when(themeDao).deleteById(themeId);
         themeService.deleteThemeById(themeId);
         verify(themeDao).deleteById(themeId);
@@ -65,19 +65,19 @@ public class ThemeServiceImplTest {
     public void shouldUpdateTheme() {
         String column = "name";
         String themeName = "theme1";
-        Long themeId = 1L;
+        Integer themeId = 1;
         Mockito.doNothing().when(themeDao).update(column, themeName, themeId);
         themeService.updateTheme(column, themeName, themeId);
         verify(themeDao).update(column, themeName, themeId);
     }
 
-    /*@Test
+    @Test
     public void shouldFindThemeById() {
-        Long themeId = 1L;
-        when(themeDao.findById(themeId)).thenReturn(Optional.of(new Theme("theme1")));
-        Theme actual = themeService.findThemeById(themeId);
+        Integer themeId = 1;
+        when(themeDao.findUserById(themeId)).thenReturn(Optional.of(new Theme("theme1")));
+        Theme actual = themeService.findThemeById(themeId).get();
         assertNotNull(actual);
-    }*/
+    }
 
     @Test
     public void shouldFindThemesForPagination() {

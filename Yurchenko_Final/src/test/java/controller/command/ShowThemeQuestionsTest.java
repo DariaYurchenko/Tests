@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -41,10 +40,13 @@ public class ShowThemeQuestionsTest {
     @Test
     public void shouldShowAllThemeQuestions() {
         List<Question> questions = new ArrayList<>(Arrays.asList(new Question.Builder().build(), new Question.Builder().build()));
+
         when(request.getSession()).thenReturn(session);
-        when(request.getParameter(anyString())).thenReturn(null);
+        when(request.getParameter("radio")).thenReturn("1");
+        when(request.getParameter("currentPage")).thenReturn("1");
+        when(request.getParameter("recordsPerPage")).thenReturn("5");
         when(questionService.findAllQuestions()).thenReturn(questions);
-        when(questionService.findQuestionsForPagination(anyInt(), anyInt())).thenReturn(questions);
+        when(questionService.findThemeQuestionsForPagination(1, 5, 1)).thenReturn(questions);
         doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = showThemeQuestionsCommand.execute(request, response);

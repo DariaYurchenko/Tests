@@ -6,15 +6,15 @@ import java.util.Optional;
 
 public interface UserService {
 
-    List<User> findAllUsers();
+    List<User> findAll();
 
-    User findById(Long id);
+    User findUserById(Integer id);
 
-    List<User> findByParameter(String column, Object value);
+    List<User> findUserByParameter(String column, Object value);
 
     void registerUser(User user);
 
-    void deleteUserById(Long id);
+    void deleteUserById(Integer id);
 
     void deleteAllUsers();
 

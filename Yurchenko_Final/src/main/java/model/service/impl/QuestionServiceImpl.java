@@ -13,6 +13,8 @@ public class QuestionServiceImpl implements QuestionService {
     private static final int RADIO_POINTS = 1;
     private static final int CHECKBOX_POINTS = 2;
     private static final int TEXT_POINTS = 3;
+    private static final String RADIO = "Radio";
+    private static final String CHECKBOX = "Checkbox";
 
     private QuestionDao questionDao;
 
@@ -31,7 +33,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void deleteQuestionById(Long questionId) {
+    public void deleteQuestionById(Integer questionId) {
         questionDao.deleteById(questionId);
     }
 
@@ -46,52 +48,40 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void updateQuestion(String column, Object value, Long questionId) {
+    public void updateQuestion(String column, Object value, Integer questionId) {
         questionDao.update(column, value, questionId);
     }
 
     @Override
-    public Optional<Question> findQuestionById(Long questionId) {
-        return questionDao.findById(questionId);
+    public Optional<Question> findQuestionById(Integer questionId) {
+        return questionDao.findUserById(questionId);
     }
 
     @Override
-    public List<Question> findQuestionsByTheme(Long themeId) {
+    public List<Question> findQuestionsByTheme(Integer themeId) {
         return questionDao.findThemeQuestions(themeId);
     }
 
     @Override
-    public void setAnswers(Long questionId, Integer plusRightAnswers, Integer plusAllAnswers) {
+    public void setAnswers(Integer questionId, int plusRightAnswers, int plusAllAnswers) {
         Map<String, Integer> startAnswers = questionDao.getCurrentAnswersForQuestionFromDb(questionId);
 
-        Integer newRightAnswers = changeQuestionAnswers(startAnswers.get("rightAnswers"), plusRightAnswers);
-        Integer newAllAnswers = changeQuestionAnswers(startAnswers.get("AllAnswers"), plusAllAnswers);
+        int newRightAnswers = changeQuestionAnswers(startAnswers.get("rightAnswers"), plusRightAnswers);
+        int newAllAnswers = changeQuestionAnswers(startAnswers.get("AllAnswers"), plusAllAnswers);
 
         questionDao.changeAmountOfAnswersInDb(questionId, newRightAnswers, newAllAnswers);
     }
 
-    private Integer changeQuestionAnswers(Integer startAnswersAmount, Integer plusAnswersAmount) {
+    private int changeQuestionAnswers(Integer startAnswersAmount, Integer plusAnswersAmount) {
         return startAnswersAmount + plusAnswersAmount;
-    }
-
-    /*@Override
-    public Double findRightAnswersPercent(Long questionId) {
-        Map<String, Integer> answers = questionDao.getCurrentAnswersForQuestionFromDb(questionId);
-        int rightAnswers = answers.get("rightAnswers");
-        int allAnswers = answers.get("AllAnswers");
-        return countPercentOfRightAnswers(rightAnswers, allAnswers);
-    }*/
-
-    private Double countPercentOfRightAnswers(int rightAnswers, int allAnswers) {
-        return Math.round((rightAnswers * 1.0 / allAnswers) * 100) / 1.0;
     }
 
     @Override
     public int setQuestionPoints(Question question) {
-        if(getQuestionType(question).equalsIgnoreCase("Radio")) {
+        if(RADIO.equalsIgnoreCase(getQuestionType(question))) {
             return RADIO_POINTS;
         }
-        if(getQuestionType(question).equalsIgnoreCase("Checkbox")) {
+        if(CHECKBOX.equalsIgnoreCase(getQuestionType(question))) {
             return CHECKBOX_POINTS;
         }
         else {
@@ -109,12 +99,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> findThemeQuestionsForPagination(int startRecord, int recordsPerPage, Long themeId) {
+    public List<Question> findThemeQuestionsForPagination(int startRecord, int recordsPerPage, Integer themeId) {
         return questionDao.findQuestionsOfThemeForPagination(startRecord, recordsPerPage, themeId);
     }
 
     @Override
-    public Optional<Question> findTranslatedQuestion(Long themeId, Long questionId) {
+    public Optional<Question> findTranslatedQuestion(Integer themeId, Integer questionId) {
         return questionDao.findTranslatedThemeQuestion(themeId, questionId);
     }
 

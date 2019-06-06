@@ -111,7 +111,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     public void prepareStatementToSave(PreparedStatement ps, Question question) {
         try {
             ps.setInt(1, mapTypeToTable(question));
-            ps.setLong(2, mapThemeToTable(question));
+            ps.setInt(2, mapThemeToTable(question));
             ps.setString(3, question.getQuestion());
             ps.setString(4, question.getIncorrectOption1());
             ps.setString(5, question.getIncorrectOption2());
@@ -132,7 +132,7 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
         return QUESTION_TYPE_MAP.get(question.getQuestionType().getType().toLowerCase());
     }
 
-    private long mapThemeToTable(Question question) {
+    private int mapThemeToTable(Question question) {
         QUESTION_THEME_MAP.put("collections", 1);
         QUESTION_THEME_MAP.put("if else, switch and loops", 2);
         QUESTION_THEME_MAP.put("inheritance and polymorphism", 3);
@@ -159,8 +159,8 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     private Question buildQuestion(ResultSet rs) throws SQLException {
         return new Question.Builder()
                 .withQuestionType(new QuestionType(rs.getInt(QUESTION_TYPE_ID), rs.getString(QUESTION_TYPE)))
-                .withId(rs.getLong(QUESTION_ID))
-                .withTheme(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)))
+                .withId(rs.getInt(QUESTION_ID))
+                .withTheme(new Theme(rs.getInt(THEME_ID), rs.getString(THEME_NAME)))
                 .withPercentOfRightAnswers(setPercentOfRightAnswers(rs))
                 .withQuestion(rs.getString(QUESTION))
                 .withIncorrectOption1(rs.getString(INCORRECT_OPTION_1))
@@ -198,12 +198,12 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public Map<String, Integer> getCurrentAnswersForQuestionFromDb(Long questionId) {
+    public Map<String, Integer> getCurrentAnswersForQuestionFromDb(Integer questionId) {
         Map<String, Integer> answers = new HashMap<>();
         int rightAnswers = 0;
         int allAnswers = 0;
         try (PreparedStatement ps = connection.prepareStatement(FIND_QUESTION_BY_ID)) {
-            ps.setLong(1, questionId);
+            ps.setInt(1, questionId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 rightAnswers = rs.getInt(RIGHT_ANSWERS);
@@ -219,11 +219,11 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public void changeAmountOfAnswersInDb(Long questionId, Integer plusRightAnswers, Integer plusAnswers) {
+    public void changeAmountOfAnswersInDb(Integer questionId, int plusRightAnswers, int plusAnswers) {
         try (PreparedStatement ps = connection.prepareStatement(UPDATE_QUESTION_ANSWERS)) {
             ps.setInt(1, plusRightAnswers);
             ps.setInt(2, plusAnswers);
-            ps.setLong(3, questionId);
+            ps.setInt(3, questionId);
             ps.executeUpdate();
         } catch (SQLException e) {
             LOGGER.warn("SQLException with updating question's answers: " + e.getMessage());
@@ -232,10 +232,10 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public List<Question> findThemeQuestions(Long themeId) {
+    public List<Question> findThemeQuestions(Integer themeId) {
         List<Question> themeQuestions = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(FIND_QUESTIONS_OF_THEME)) {
-            ps.setLong(1, themeId);
+            ps.setInt(1, themeId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 themeQuestions.add(buildQuestion(rs));
@@ -248,11 +248,11 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public Optional<Question> findTranslatedThemeQuestion(Long themeId, Long questionId) {
+    public Optional<Question> findTranslatedThemeQuestion(Integer themeId, Integer questionId) {
         Question question = null;
         try (PreparedStatement ps = connection.prepareStatement(FIND_TRANSLATED_QUESTION_OF_THEME)) {
-            ps.setLong(1, themeId);
-            ps.setLong(2, questionId);
+            ps.setInt(1, themeId);
+            ps.setInt(2, questionId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                  question = buildQuestion(rs);
@@ -265,10 +265,10 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     }
 
     @Override
-    public List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Long themeId) {
+    public List<Question> findQuestionsOfThemeForPagination(int startRecord, int recordsPerPage, Integer themeId) {
         List<Question> questions = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(FIND_QUESTIONS_FOR_PAGINATION_ID)) {
-            ps.setLong(1, themeId);
+            ps.setInt(1, themeId);
             ps.setInt(2, startRecord);
             ps.setInt(3, recordsPerPage);
             ResultSet rs = ps.executeQuery();

@@ -21,7 +21,7 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void updateTheme(String column, Object value, Long themeId) {
+    public void updateTheme(String column, Object value, Integer themeId) {
         themeDao.update(column, value, themeId);
     }
 
@@ -36,8 +36,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Optional<Theme> findThemeById(Long themeId) {
-        return themeDao.findById(themeId);
+    public Optional<Theme> findThemeById(Integer themeId) {
+        return themeDao.findUserById(themeId);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void deleteThemeById(Long themeId) {
+    public void deleteThemeById(Integer themeId) {
         themeDao.deleteById(themeId);
     }
 

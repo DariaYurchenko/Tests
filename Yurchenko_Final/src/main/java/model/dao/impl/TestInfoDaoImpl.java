@@ -131,10 +131,10 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
                 .build();
     }
 
-    public List<TestInfo> findUserTestsForPagination(Long userId, int currentPage, int recordsPerPage) {
+    public List<TestInfo> findUserTestsForPagination(Integer userId, int currentPage, int recordsPerPage) {
         List<TestInfo> testsInfoList = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_TESTS_FOR_PAGINATION)) {
-            preparedStatement.setLong(1, userId);
+            preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, currentPage);
             preparedStatement.setInt(3, recordsPerPage);
             ResultSet rs = preparedStatement.executeQuery();

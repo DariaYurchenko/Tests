@@ -53,19 +53,18 @@ public class SecurityFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
-        String page = req.getParameter("page");
 
-        if(isFilter(req, session, page)) {
+        if(isFilter(req, session)) {
             filterChain.doFilter(req, resp);
         }
         else {
-            resp.sendRedirect(LOGIN_PAGE_REDIRECT);
+            req.getRequestDispatcher(LOGIN_PAGE_REDIRECT).forward(req, resp);
         }
     }
 
-    private boolean isFilter(HttpServletRequest req, HttpSession session, String page) {
+    private boolean isFilter(HttpServletRequest req, HttpSession session) {
         return session.getAttribute("user") != null && ADMIN.equals(session.getAttribute("userStatus")) ||
-                isDoFilterForCommand(req) || !isDoFilterForPage(page);
+                isDoFilterForCommand(req) || !isDoFilterForPage(req);
     }
 
     private boolean isDoFilterForCommand(HttpServletRequest req) {
@@ -76,7 +75,8 @@ public class SecurityFilter implements Filter {
         return COMMANDS_TO_SKIP.contains(command);
     }
 
-    private boolean isDoFilterForPage(String page) {
+    private boolean isDoFilterForPage(HttpServletRequest req) {
+        String page = req.getParameter("page");
         PAGES_TO_SKIP.addAll(Arrays.asList(ADMIN_PAGE, SHOW_USERS_PAGE, SHOW_QUESTIONS_PAGE,
                 THEMES, USERS_TESTS));
 

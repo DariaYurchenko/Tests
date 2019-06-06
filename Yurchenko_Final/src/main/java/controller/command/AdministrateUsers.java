@@ -79,7 +79,7 @@ public class AdministrateUsers extends Command implements CommandPages {
     }
 
     private int setRows() {
-        return userService.findAllUsers().size();
+        return userService.findAll().size();
     }
 
     private List<User> findUsers(Pagination pagination, int recordsPerPage, int rows) {

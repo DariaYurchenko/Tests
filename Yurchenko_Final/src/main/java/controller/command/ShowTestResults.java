@@ -79,7 +79,7 @@ public class ShowTestResults extends Command implements CommandPages {
     }
 
     private void saveTestInDb(HttpServletRequest req, User user, int userPoints, int maxPoints, double percentOfRightAnswers) {
-        Long themeId = Long.parseLong(String.valueOf(req.getSession().getAttribute("theme_id")));
+        Integer themeId = Integer.parseInt(String.valueOf(req.getSession().getAttribute("theme_id")));
 
         Test test = new Test.Builder()
                 .withUserId(user.getUserId())

@@ -28,7 +28,7 @@ public class StartTest extends Command implements CommandPages {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
 
-        Long themeId = Long.parseLong(Optional.ofNullable(req.getParameter("theme_id")).orElse("0"));
+        Integer themeId = Integer.parseInt(Optional.ofNullable(req.getParameter("theme_id")).orElse("0"));
 
         List<Question> questions = questionService.findQuestionsByTheme(themeId);
 
@@ -57,7 +57,7 @@ public class StartTest extends Command implements CommandPages {
      * with saving all parameters and states including
      * the order of questions
      */
-    private List<Question> makeCopyOfQuestionListInRussian(List<Question> questions, Long themeId) {
+    private List<Question> makeCopyOfQuestionListInRussian(List<Question> questions, Integer themeId) {
         return questions.stream()
                 .map(Question::getQuestionId)
                 .map(questionId -> questionService.findTranslatedQuestion(themeId, questionId))

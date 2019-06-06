@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class User implements Serializable {
-    private Long userId;
+    private Integer userId;
     private String login;
     private String name;
     private String lastName;
@@ -31,7 +31,7 @@ public class User implements Serializable {
         this.userStatus = builder.userStatus;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
@@ -68,7 +68,7 @@ public class User implements Serializable {
     }
 
     public static class Builder {
-        private Long id;
+        private Integer id;
         private String login;
         private String name;
         private String lastName;
@@ -77,7 +77,7 @@ public class User implements Serializable {
         byte[] salt;
         private UserStatus userStatus;
 
-        public Builder withId(Long id) {
+        public Builder withId(Integer id) {
             this.id = id;
             return this;
         }

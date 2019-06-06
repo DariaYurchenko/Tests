@@ -29,7 +29,7 @@ public class ShowUserResults extends Command implements CommandPages {
 
         Optional<String> optId = Optional.ofNullable(req.getParameter("radio"));
         if(optId.isPresent()) {
-            Long userId = Long.parseLong(req.getParameter("radio"));
+            Integer userId = Integer.parseInt(req.getParameter("radio"));
 
             int rows = setRows(userId);
 
@@ -62,11 +62,11 @@ public class ShowUserResults extends Command implements CommandPages {
         return requestRecordsPerPage == null ? 5 : Integer.parseInt(requestRecordsPerPage);
     }
 
-    private int setRows(Long userId) {
+    private int setRows(Integer userId) {
         return testInfoService.findTestsInfoByParameter("test_user_id", userId).size();
     }
 
-    private List<TestInfo> findTestInfos(Pagination pagination, int recordsPerPage, int rows, Long userId) {
+    private List<TestInfo> findTestInfos(Pagination pagination, int recordsPerPage, int rows, Integer userId) {
         return testInfoService.findUserTestInfoForPagination(userId, pagination.calculateStart(pagination.calculateNumOfPages(rows)),
                 recordsPerPage);
     }

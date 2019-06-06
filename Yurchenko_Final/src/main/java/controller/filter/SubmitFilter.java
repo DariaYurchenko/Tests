@@ -41,6 +41,7 @@ public class SubmitFilter implements Filter {
     private static final String START_PAGE = "start_page";
     private static final String TESTS_TO_PASS_PAGE = "tests_to_pass";
     private static final String REGISTER_PAGE = "register_page";
+    private static final String ERROR_404_PAGE = "404_error_page";
     private static final String NOT_SUBMIT_EMAIL_PAGE = "not_submit_email";
     private static final String ERROR_PAGE = "error_page";
 
@@ -60,7 +61,6 @@ public class SubmitFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
-        String page = req.getParameter("page");
 
         /**
          * user's submit email status in db
@@ -73,7 +73,7 @@ public class SubmitFilter implements Filter {
             ifSubmit = userService.findIfSubmit(userLogin).orElse(0);
         }
 
-        if(isFilter(ifSubmit, page, req)) {
+        if(isFilter(ifSubmit, req)) {
            filterChain.doFilter(req, resp);
         }
         else {
@@ -81,8 +81,8 @@ public class SubmitFilter implements Filter {
         }
     }
 
-    private boolean isFilter(int ifSubmit, String page, HttpServletRequest req) {
-        return ifSubmit == SUBMITTED_USER || isDoFilterForCommand(req) || isDoFilterForPage(page);
+    private boolean isFilter(int ifSubmit, HttpServletRequest req) {
+        return ifSubmit == SUBMITTED_USER || isDoFilterForCommand(req) || isDoFilterForPage(req);
     }
 
     private boolean isDoFilterForCommand(HttpServletRequest req) {
@@ -92,9 +92,10 @@ public class SubmitFilter implements Filter {
         return COMMANDS_TO_SKIP.contains(command);
     }
 
-    private boolean isDoFilterForPage(String page) {
+    private boolean isDoFilterForPage(HttpServletRequest req) {
+        String page = req.getParameter("page");
         PAGES_TO_SKIP.addAll(Arrays.asList(NOT_SUBMIT_EMAIL_PAGE, REGISTER_PAGE, LOGIN_PAGE,
-                TESTS_TO_PASS_PAGE, START_PAGE, ERROR_PAGE));
+                TESTS_TO_PASS_PAGE, START_PAGE, ERROR_PAGE, ERROR_404_PAGE));
         return PAGES_TO_SKIP.contains(page);
     }
 

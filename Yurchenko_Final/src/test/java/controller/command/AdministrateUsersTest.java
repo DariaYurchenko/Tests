@@ -9,15 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -43,7 +40,7 @@ public class AdministrateUsersTest {
         List<User> users = new ArrayList<>(Arrays.asList(new User.Builder().build(), new User.Builder().build()));
         when(request.getSession()).thenReturn(session);
         when(request.getParameter(anyString())).thenReturn(null);
-        when(userService.findAllUsers()).thenReturn(users);
+        when(userService.findAll()).thenReturn(users);
         when(userService.findUsersForPagination(anyInt(), anyInt())).thenReturn(users);
         doNothing().when(request).setAttribute(any(), anyString());
 

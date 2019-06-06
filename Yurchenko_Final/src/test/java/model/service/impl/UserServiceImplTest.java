@@ -8,9 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.*;
-
+import java.util.List;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +28,7 @@ public class UserServiceImplTest {
     @Test
     public void shouldFindAllUsers() {
         when(userDao.findAll()).thenReturn(Arrays.asList(new User.Builder().build(), new User.Builder().build()));
-        List<User> users = userService.findAllUsers();
+        List<User> users = userService.findAll();
         assertNotNull(users);
     }
 
@@ -39,7 +41,7 @@ public class UserServiceImplTest {
 
     @Test
     public void shouldDeleteById() {
-        Long userId = 1L;
+        Integer userId = 1;
         Mockito.doNothing().when(userDao).deleteById(userId);
         userService.deleteUserById(userId);
         verify(userDao).deleteById(userId);
@@ -57,7 +59,7 @@ public class UserServiceImplTest {
         String column = "name";
         String name = "Alex";
         when(userDao.findByParameter(column, name)).thenReturn(Arrays.asList(new User.Builder().build(), new User.Builder().build()));
-        List<User> users = userService.findByParameter(column, name);
+        List<User> users = userService.findUserByParameter(column, name);
         assertNotNull(users);
     }
 
@@ -73,9 +75,9 @@ public class UserServiceImplTest {
 
     @Test
     public void shouldFindUserById() {
-        Long userId = 1L;
-        when(userDao.findById(userId)).thenReturn(Optional.ofNullable(new User.Builder().build()));
-        User actual = userService.findById(userId);
+        Integer userId = 1;
+        when(userDao.findUserById(userId)).thenReturn(Optional.ofNullable(new User.Builder().build()));
+        User actual = userService.findUserById(userId);
         assertNotNull(actual);
     }
 
@@ -106,8 +108,8 @@ public class UserServiceImplTest {
         String userLogin = "alex@gmail.com";
         int plusUserPoints = 1;
         int plusMaxPoints = 2;
-        Integer newUserPoints = 2;
-        Integer newMaxPoints = 4;
+        int newUserPoints = 2;
+        int newMaxPoints = 4;
 
         when(userDao.getUserPointsFromDb(userLogin)).thenReturn(startUserPoints);
         Mockito.doNothing().when(userDao).changeUserRankInDb(userLogin, newUserPoints, newMaxPoints);
@@ -148,7 +150,6 @@ public class UserServiceImplTest {
         verify(userDao).changeSubmitKeyStatus(userLogin);
     }
 
-    /*//TODO: exception?
     @Test
     public void shouldFindMagicKey() {
         String userLogin = "alex@gmail.com";
@@ -156,11 +157,10 @@ public class UserServiceImplTest {
         when(userDao.findMagicKey(userLogin)).thenReturn(Optional.ofNullable("qqqqqq"));
 
         String expected = "qqqqqq";
-        String actual = userService.findMagicKey(userLogin);
+        String actual = userService.findMagicKey(userLogin).get();
         assertEquals(expected, actual);
-    }*/
+    }
 
-    //TODO: get()
     @Test
     public void shouldFindIfSubmit() {
         String userLogin = "alex@gmail.com";
@@ -173,4 +173,3 @@ public class UserServiceImplTest {
     }
 
 }
-

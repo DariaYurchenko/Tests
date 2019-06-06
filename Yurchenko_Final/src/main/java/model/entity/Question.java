@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Question  implements Serializable {
-    private Long questionId;
+    private Integer questionId;
     private String question;
     /**
      * percentOfRightAnswers - relation
@@ -36,7 +36,7 @@ public class Question  implements Serializable {
 
     }
 
-    public Long getQuestionId() {
+    public Integer getQuestionId() {
         return questionId;
     }
 
@@ -81,7 +81,7 @@ public class Question  implements Serializable {
     }
 
     public static class Builder {
-        private Long id;
+        private Integer id;
         private String question;
         private Double percentOfRightAnswers;
         private String incorrectOption1;
@@ -93,7 +93,7 @@ public class Question  implements Serializable {
         private QuestionType questionType;
         private Theme theme;
 
-        public Builder withId(Long id) {
+        public Builder withId(Integer id) {
             this.id = id;
             return this;
         }

@@ -10,27 +10,25 @@ public interface QuestionService {
 
     void addQuestion(Question question);
 
-    void deleteQuestionById(Long questionId);
+    void deleteQuestionById(Integer questionId);
 
     void deleteAllQuestions();
 
     List<Question> findByQuestionParameter(String column, Object value);
 
-    void updateQuestion(String column, Object value, Long questionId);
+    void updateQuestion(String column, Object value, Integer questionId);
 
-    Optional<Question> findQuestionById(Long questionId);
+    Optional<Question> findQuestionById(Integer questionId);
 
-    List<Question> findQuestionsByTheme(Long questionId);
+    List<Question> findQuestionsByTheme(Integer questionId);
 
-    void setAnswers(Long questionId, Integer plusRightAnswers, Integer plusAllAnswers);
+    void setAnswers(Integer questionId, int plusRightAnswers, int plusAllAnswers);
 
     int setQuestionPoints(Question question);
 
     List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage);
 
-    //Double findRightAnswersPercent(Long questionId);
+    List<Question> findThemeQuestionsForPagination(int startRecord, int recordsPerPage, Integer themeId);
 
-    List<Question> findThemeQuestionsForPagination(int startRecord, int recordsPerPage, Long themeId);
-
-    Optional<Question> findTranslatedQuestion(Long themeId, Long questionId);
+    Optional<Question> findTranslatedQuestion(Integer themeId, Integer questionId);
 }

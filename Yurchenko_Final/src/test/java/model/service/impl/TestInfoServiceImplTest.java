@@ -7,10 +7,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import java.util.Arrays;
 import java.util.List;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +43,7 @@ public class TestInfoServiceImplTest {
     public void shouldFindTestsInfoOfUserForPagination() {
         int recordsPerPage = 5;
         int startRecords = 1;
-        Long userId = 1L;
+        Integer userId = 1;
 
         when(testInfoService.findUserTestInfoForPagination( userId, startRecords, recordsPerPage)).thenReturn(Arrays.asList(new TestInfo.Builder().build(), new TestInfo.Builder().build()));
         List<TestInfo> questions = testInfoService.findUserTestInfoForPagination(userId, startRecords, recordsPerPage);

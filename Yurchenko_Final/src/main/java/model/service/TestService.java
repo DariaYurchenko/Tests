@@ -10,9 +10,9 @@ public interface TestService {
 
     List<Test> findAllTests();
 
-    Optional<Test> findTestById(Long testId);
+    Optional<Test> findTestById(Integer testId);
 
-    void deleteTestById(Long testId);
+    void deleteTestById(Integer testId);
 
     void deleteAllTests();
 

@@ -6,9 +6,9 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Test implements Serializable {
-    private Long testId;
-    private Long userId;
-    private Long themeId;
+    private Integer testId;
+    private Integer userId;
+    private Integer themeId;
     private Integer userPoints;
     private Integer maxPossiblePoints;
     private Double rightAnswersPercent;
@@ -26,15 +26,15 @@ public class Test implements Serializable {
         this.testStatus = builder.testStatus;
     }
 
-    public Long getTestId() {
+    public Integer getTestId() {
         return testId;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public Long getThemeId() {
+    public Integer getThemeId() {
         return themeId;
     }
 
@@ -59,26 +59,26 @@ public class Test implements Serializable {
     }
 
     public static class Builder {
-        private Long testId;
-        private Long userId;
-        private Long themeId;
+        private Integer testId;
+        private Integer userId;
+        private Integer themeId;
         private Integer userPoints;
         private Integer maxPossiblePoints;
         private double rightAnswersPercent;
         private LocalDate date;
         private TestStatus testStatus;
 
-        public Builder withId(Long testId) {
+        public Builder withId(Integer testId) {
             this.testId = testId;
             return this;
         }
 
-        public Builder withUserId(Long userId) {
+        public Builder withUserId(Integer userId) {
             this.userId = userId;
             return this;
         }
 
-        public Builder withThemeId(Long themeId) {
+        public Builder withThemeId(Integer themeId) {
             this.themeId = themeId;
             return this;
         }

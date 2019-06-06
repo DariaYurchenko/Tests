@@ -20,7 +20,7 @@ public class TestInfoServiceImpl implements TestInfoService {
     }
 
     @Override
-    public List<TestInfo> findUserTestInfoForPagination(Long userId, int currentPage, int recordsPerPage) {
+    public List<TestInfo> findUserTestInfoForPagination(Integer userId, int currentPage, int recordsPerPage) {
         return testInfoDao.findUserTestsForPagination(userId, currentPage, recordsPerPage);
     }
 

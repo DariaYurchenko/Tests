@@ -85,7 +85,7 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
         List<Theme> themes = new ArrayList<>();
         try {
             while(rs.next()) {
-                themes.add(new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME)));
+                themes.add(new Theme(rs.getInt(THEME_ID), rs.getString(THEME_NAME)));
             }
             return themes;
         } catch (SQLException e) {
@@ -97,7 +97,7 @@ public class ThemeDaoImpl extends GenericDaoImpl<Theme> implements ThemeDao {
     @Override
     public Theme parseResultSetToFindById(ResultSet rs) {
         try {
-            return new Theme(rs.getLong(THEME_ID), rs.getString(THEME_NAME));
+            return new Theme(rs.getInt(THEME_ID), rs.getString(THEME_NAME));
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of theme while finding by id: " + e.getMessage());
             throw new DaoRuntimeException(e);

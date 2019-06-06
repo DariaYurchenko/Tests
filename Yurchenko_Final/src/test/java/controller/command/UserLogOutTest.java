@@ -6,11 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import static controller.pages.CommandPages.LOGIN_PAGE;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

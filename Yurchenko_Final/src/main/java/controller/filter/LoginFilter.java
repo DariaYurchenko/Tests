@@ -33,6 +33,7 @@ public class LoginFilter implements Filter {
     private static final String TESTS_TO_PASS_PAGE = "tests_to_pass";
     private static final String REGISTER_PAGE = "register_page";
     private static final String ERROR_PAGE = "error_page";
+    private static final String ERROR_404_PAGE = "404_error_page";
     private static final String NOT_SUBMIT_EMAIL_PAGE = "not_submit_email";
 
     private static final String LOGIN_PAGE_REDIRECT = "jsp/login_page.jsp";
@@ -46,9 +47,7 @@ public class LoginFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
-        String page = req.getParameter("page");
-
-        if(isFilter(req, session, page)) {
+        if(isFilter(req, session)) {
             filterChain.doFilter(req, resp);
         }
         else {
@@ -56,8 +55,8 @@ public class LoginFilter implements Filter {
         }
     }
 
-    private boolean isFilter(HttpServletRequest req, HttpSession session, String page) {
-        return session.getAttribute("user")!= null || isDoFilterForCommand(req) || isDoFilterForPage(page);
+    private boolean isFilter(HttpServletRequest req, HttpSession session) {
+        return session.getAttribute("user")!= null || isDoFilterForCommand(req) || isDoFilterForPage(req);
     }
 
     private boolean isDoFilterForCommand(HttpServletRequest req) {
@@ -68,9 +67,10 @@ public class LoginFilter implements Filter {
         return COMMANDS_TO_SKIP.contains(command);
     }
 
-    private boolean isDoFilterForPage(String page) {
+    private boolean isDoFilterForPage(HttpServletRequest req) {
+        String page = req.getParameter("page");
         PAGES_TO_SKIP.addAll(Arrays.asList(NOT_SUBMIT_EMAIL_PAGE, REGISTER_PAGE, LOGIN_PAGE,
-                TESTS_TO_PASS_PAGE, START_PAGE, ERROR_PAGE));
+                TESTS_TO_PASS_PAGE, START_PAGE, ERROR_PAGE, ERROR_404_PAGE));
 
         return PAGES_TO_SKIP.contains(page);
     }

@@ -9,15 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -41,10 +38,13 @@ public class ShowThemesTest {
     @Test
     public void shouldShowThemes() {
         List<Theme> themes = new ArrayList<>(Arrays.asList(new Theme("Collections"), new Theme("Collections")));
-        when(request.getParameter(anyString())).thenReturn(null);
+
         when(request.getSession()).thenReturn(session);
+        when(request.getParameter("radio")).thenReturn("1");
+        when(request.getParameter("currentPage")).thenReturn("1");
+        when(request.getParameter("recordsPerPage")).thenReturn("5");
         when(themeService.findAll()).thenReturn(themes);
-        when(themeService.findThemesForPagination(anyInt(), anyInt())).thenReturn(themes);
+        when(themeService.findThemesForPagination(1, 5)).thenReturn(themes);
         doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = showThemes.execute(request, response);

@@ -13,7 +13,7 @@ public interface UserDao extends GenericDao<User> {
 
     Optional<User> findUserByLogin(String login);
 
-    void changeUserRankInDb(String login, Integer plusPoints, Integer plusMaxPoints);
+    void changeUserRankInDb(String login, int plusPoints, int plusMaxPoints);
 
     void updateUserByLogin (String column, Object value, String login);
 

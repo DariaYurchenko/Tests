@@ -55,10 +55,10 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         String command = createQueryToDelete();
         try(PreparedStatement ps = connection.prepareStatement(command)) {
-            ps.setLong(1, id);
+            ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             LOGGER.warn("SQLException with deleting object: " + e.getMessage());
@@ -90,11 +90,11 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     @Override
-    public Optional<T> findById(Long id) {
+    public Optional<T> findUserById(Integer id) {
         T object = null;
         String command = createQueryToFindById();
         try(PreparedStatement ps = connection.prepareStatement(command)) {
-            ps.setLong(1, id);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 object = parseResultSetToFindById(rs);
@@ -135,11 +135,11 @@ public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     }
 
     @Override
-    public void update(String column, Object value, Long id) {
+    public void update(String column, Object value, Integer id) {
         String command = createQueryToUpdate(column);
         try(PreparedStatement ps = connection.prepareStatement(command)) {
             ps.setObject(1, value);
-            ps.setLong(2, id);
+            ps.setInt(2, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             LOGGER.warn("SQLException with updating object: " + e.getMessage());

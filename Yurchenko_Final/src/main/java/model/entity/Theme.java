@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Theme implements Serializable {
-    private Long themeId;
+    private Integer themeId;
     private String themeName;
 
-    public Theme(Long themeId, String themeName) {
+    public Theme(Integer themeId, String themeName) {
         this.themeId = themeId;
         this.themeName = themeName;
     }
@@ -16,7 +16,7 @@ public class Theme implements Serializable {
         this.themeName = themeName;
     }
 
-    public Long getThemeId() {
+    public Integer getThemeId() {
         return themeId;
     }
 

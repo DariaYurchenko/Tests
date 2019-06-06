@@ -7,11 +7,11 @@ public interface GenericDao<T> {
 
     void add(T object);
 
-    void deleteById(Long id);
+    void deleteById(Integer id);
 
     void deleteAll();
 
-    void update(String column, Object value, Long id);
+    void update(String column, Object value, Integer id);
 
     List<T> findAll();
 
@@ -19,5 +19,5 @@ public interface GenericDao<T> {
 
     List<T> findByParameter(String column, Object value);
 
-    Optional<T> findById(Long id);
+    Optional<T> findUserById(Integer id);
 }

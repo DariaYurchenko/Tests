@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +38,7 @@ public class TestServiceImplTest {
 
     @Test
     public void shouldDeleteTestById() {
-        Long testId = 1L;
+        Integer testId = 1;
         Mockito.doNothing().when(testDao).deleteById(testId);
         testService.deleteTestById(testId);
         verify(testDao).deleteById(testId);
@@ -60,12 +60,12 @@ public class TestServiceImplTest {
         assertNotNull(tests);
     }
 
-   /* @Test
+   @Test
     public void shouldFindQuestionById() {
-        Long testId = 1L;
-        when(testDao.findById(testId)).thenReturn(Optional.ofNullable(new model.entity.Test.Builder().build()));
-        model.entity.Test actual = testService.findTestById(testId);
+        Integer testId = 1;
+        when(testDao.findUserById(testId)).thenReturn(Optional.ofNullable(new model.entity.Test.Builder().build()));
+        model.entity.Test actual = testService.findTestById(testId).get();
         assertNotNull(actual);
-    }*/
+    }
 
 }

@@ -204,7 +204,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public void changeUserRankInDb(String login, Integer plusPoints, Integer plusMaxPoints) {
+    public void changeUserRankInDb(String login, int plusPoints, int plusMaxPoints) {
         try (PreparedStatement ps = connection.prepareStatement(UPDATE_USER_POINTS)) {
             ps.setInt(1, plusPoints);
             ps.setInt(2, plusMaxPoints);
@@ -281,7 +281,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
 
     private User buildUser(ResultSet rs) throws SQLException {
         return new User.Builder()
-                .withId(rs.getLong(USER_ID))
+                .withId(rs.getInt(USER_ID))
                 .withUserType(setUserRole(rs))
                 .withLogin(rs.getString(USER_LOGIN))
                 .withName(rs.getString(USER_NAME))

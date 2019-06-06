@@ -18,17 +18,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         return userDao.findAll();
     }
 
     @Override
-    public User findById(Long userId) {
-        return userDao.findById(userId).orElseThrow(ServiceRuntimeException::new);
+    public User findUserById(Integer userId) {
+        return userDao.findUserById(userId).orElseThrow(ServiceRuntimeException::new);
     }
 
     @Override
-    public List<User> findByParameter(String column, Object value) {
+    public List<User> findUserByParameter(String column, Object value) {
         return userDao.findByParameter(column, value);
     }
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(Long userId) {
+    public void deleteUserById(Integer userId) {
         userDao.deleteById(userId);
     }
 
@@ -66,8 +66,8 @@ public class UserServiceImpl implements UserService {
     public void setRank(String login, int plusPoints, int plusMaxPoints) {
         Map<String, Integer> startRank = userDao.getUserPointsFromDb(login);
 
-        Integer newPoints = changeUserPoints(startRank.get("currentPoints"), plusPoints);
-        Integer newMaxPoints = changeUserPoints(startRank.get("maxPossiblePoints"), plusMaxPoints);
+        int newPoints = changeUserPoints(startRank.get("currentPoints"), plusPoints);
+        int newMaxPoints = changeUserPoints(startRank.get("maxPossiblePoints"), plusMaxPoints);
 
         userDao.changeUserRankInDb(login, newPoints, newMaxPoints);
     }

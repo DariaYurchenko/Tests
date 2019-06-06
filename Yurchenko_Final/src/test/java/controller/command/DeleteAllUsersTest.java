@@ -14,11 +14,13 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeleteAllUsersTest {
-    private HttpServletRequest request;
-    private HttpServletResponse response;
 
     @Mock
     UserService userService;
+    @Mock
+    HttpServletResponse response;
+    @Mock
+    HttpServletRequest request;
     @InjectMocks
     DeleteAllUsers deleteAllUsersCommand;
 
@@ -26,7 +28,7 @@ public class DeleteAllUsersTest {
     public void shouldDeleteAllUsers() {
         CommandResult commandResult = deleteAllUsersCommand.execute(request, response);
 
-        assertEquals(new AdministrateUsers(), commandResult.getChainCommand());
+        assertEquals(AdministrateUsers.class, commandResult.getChainCommand().getClass());
         verify(userService).deleteAllUsers();
     }
 

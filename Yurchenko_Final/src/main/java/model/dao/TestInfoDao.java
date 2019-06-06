@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface TestInfoDao extends GenericDao<TestInfo> {
 
-    List<TestInfo> findUserTestsForPagination(Long userId, int currentPage, int recordsPerPage);
+    List<TestInfo> findUserTestsForPagination(Integer userId, int currentPage, int recordsPerPage);
 }

@@ -24,7 +24,7 @@ public class DeleteUserById  extends Command implements CommandPages {
         Optional<String> optId = Optional.ofNullable(req.getParameter("radio"));
 
         if(optId.isPresent()) {
-            Long userId = Long.parseLong(req.getParameter("radio"));
+            Integer userId = Integer.parseInt(req.getParameter("radio"));
             userService.deleteUserById(userId);
         }
 

@@ -8,17 +8,17 @@ public interface ThemeService {
 
     void addTheme(Theme theme);
 
-    void updateTheme(String column, Object value, Long themeId);
+    void updateTheme(String column, Object value, Integer themeId);
 
     List<Theme> findAll();
 
     List<Theme> findThemesForPagination(int startRecord, int recordsPerPage);
 
-    Optional<Theme> findThemeById(Long themeId);
+    Optional<Theme> findThemeById(Integer themeId);
 
     List<Theme> findThemeByParameter(String column, Object value);
 
     void deleteAllThemes();
 
-    void deleteThemeById(Long themeId);
+    void deleteThemeById(Integer themeId);
 }

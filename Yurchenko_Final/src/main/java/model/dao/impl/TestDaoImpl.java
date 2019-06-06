@@ -81,8 +81,8 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     @Override
     public void prepareStatementToSave(PreparedStatement ps, Test test) {
         try {
-            ps.setLong(1, test.getUserId());
-            ps.setLong(2, test.getThemeId());
+            ps.setInt(1, test.getUserId());
+            ps.setInt(2, test.getThemeId());
             ps.setInt(3, test.getUserPoints());
             ps.setInt(4, test.getMaxPossiblePoints());
             ps.setDate(5, Date.valueOf(test.getDate()));
@@ -146,9 +146,9 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
 
     private Test buildTest(ResultSet rs) throws SQLException {
         return new Test.Builder()
-                .withId(rs.getLong(TEST_ID))
-                .withUserId(rs.getLong(USER_ID))
-                .withThemeId(rs.getLong(THEME_ID))
+                .withId(rs.getInt(TEST_ID))
+                .withUserId(rs.getInt(USER_ID))
+                .withThemeId(rs.getInt(THEME_ID))
                 .withDate(setDate(rs))
                 .withUserPoints(rs.getInt(USER_POINTS))
                 .withMaxPoints(rs.getInt(MAX_POINTS))

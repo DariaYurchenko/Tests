@@ -42,7 +42,7 @@ public class ThemesListFilter implements Filter {
 
             if (userOpt.isPresent()) {
                 List<Test> tests = testService.findTestsByParameter("test_user_id", userOpt.get().getUserId());
-                List<Long> themesId = tests.stream()
+                List<Integer> themesId = tests.stream()
                         .map(Test::getThemeId)
                         .collect(Collectors.toList());
                 req.getSession().setAttribute("userThemes", themesId);
