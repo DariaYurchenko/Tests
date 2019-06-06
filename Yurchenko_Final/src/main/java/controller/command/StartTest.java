@@ -6,20 +6,19 @@ import model.entity.Answer;
 import model.entity.Question;
 import model.service.QuestionService;
 import model.service.factory.ServiceFactory;
-import model.service.impl.QuestionServiceImpl;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+/**
+ * Called before passing test. Forms list of questions on chosen
+ * theme and shuffle it.
+ */
 public class StartTest extends Command implements CommandPages {
-    private static final String THEME = "theme_id";
-    private static final String COUNTER = "counter";
-    private static final String QUESTIONS_LIST = "questions";
-    private static final String ANSWERS_LIST = "userAnswers";
-
     private QuestionService questionService;
 
     public StartTest() {
@@ -29,29 +28,41 @@ public class StartTest extends Command implements CommandPages {
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
 
-        String themeId = req.getParameter(THEME);
-        List<Question> questions = questionService.findQuestionsByTheme(Long.parseLong(themeId));
+        Long themeId = Long.parseLong(Optional.ofNullable(req.getParameter("theme_id")).orElse("0"));
 
-        List<Answer> answers = new ArrayList<>();
+        List<Question> questions = questionService.findQuestionsByTheme(themeId);
 
         Collections.shuffle(questions);
 
-        List<Question> questionsRus = new ArrayList<>();
-        for(Question question : questions) {
-            Long id = question.getQuestionId();
-            questionsRus.add(questionService.getRus(Long.parseLong(themeId), id));
-        }
+        List<Question> questionsRus = makeCopyOfQuestionListInRussian(questions, themeId);
 
-        req.getSession().setAttribute(QUESTIONS_LIST, questions);
+        List<Answer> userAnswers = new ArrayList<>();
+
+        req.getSession().setAttribute("questions", questions);
         req.getSession().setAttribute("rusQuestions", questionsRus);
-        req.getSession().setAttribute("forward", null);
+        req.getSession().setAttribute("userAnswers", userAnswers);
+        req.getSession().setAttribute("forward", "SHOW_QUESTION");
 
-        int counter = Integer.parseInt(req.getParameter(COUNTER));
+        int counter = Integer.parseInt(req.getParameter("counter"));
 
-        req.getSession().setAttribute(COUNTER, counter);
-        req.getSession().setAttribute(ANSWERS_LIST, answers);
-        req.getSession().setAttribute(THEME, themeId);
+        req.getSession().setAttribute("counter", counter);
+        req.getSession().setAttribute("theme_id", themeId);
 
-        return CommandResult.forward(new PassTest());
+        return CommandResult.forward(new ShowQuestion());
     }
+
+    /**
+     * makes copy of shuffled list in russian
+     * in order to let user switch languages during test
+     * with saving all parameters and states including
+     * the order of questions
+     */
+    private List<Question> makeCopyOfQuestionListInRussian(List<Question> questions, Long themeId) {
+        return questions.stream()
+                .map(Question::getQuestionId)
+                .map(questionId -> questionService.findTranslatedQuestion(themeId, questionId))
+                .map(optQuestion -> optQuestion.orElse(new Question.Builder().build()))
+                .collect(Collectors.toList());
+    }
+
 }

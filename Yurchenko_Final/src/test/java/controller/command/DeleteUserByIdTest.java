@@ -32,7 +32,7 @@ public class DeleteUserByIdTest {
         when(request.getParameter("radio")).thenReturn("1");
         CommandResult commandResult = deleteUserByIdCommand.execute(request, response);
 
-        assertEquals(new ShowAllUsers(), commandResult.getChainCommand());
+        assertEquals(new AdministrateUsers(), commandResult.getChainCommand());
         verify(userService).deleteUserById(1L);
     }
 

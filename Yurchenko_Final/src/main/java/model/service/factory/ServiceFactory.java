@@ -1,7 +1,17 @@
 package model.service.factory;
 
-import model.service.*;
-import model.service.impl.*;
+import model.service.UserService;
+import model.service.QuestionService;
+import model.service.TestService;
+import model.service.TestInfoService;
+import model.service.ThemeService;
+import model.service.AnswerService;
+import model.service.impl.UserServiceImpl;
+import model.service.impl.QuestionServiceImpl;
+import model.service.impl.ThemeServiceImpl;
+import model.service.impl.TestServiceImpl;
+import model.service.impl.TestInfoServiceImpl;
+import model.service.impl.AnswerServiceImpl;
 
 public class ServiceFactory {
 
@@ -44,4 +54,5 @@ public class ServiceFactory {
     public AnswerService getAnswerService() {
         return new AnswerServiceImpl();
     }
+
 }

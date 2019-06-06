@@ -1,17 +1,14 @@
 package model.service.impl;
 
-import exception.ServiceException;
 import model.dao.QuestionDao;
-import model.dao.connector.Connector;
 import model.dao.factory.DaoFactory;
 import model.dao.factory.DbNames;
-import model.dao.impl.QuestionDaoImpl;
 import model.entity.Question;
 import model.service.QuestionService;
-
 import java.util.List;
 import java.util.Map;
-//TODO: rewrite OPTIONAL. in tests also
+import java.util.Optional;
+
 public class QuestionServiceImpl implements QuestionService {
     private static final int RADIO_POINTS = 1;
     private static final int CHECKBOX_POINTS = 2;
@@ -24,7 +21,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> findAll() {
+    public List<Question> findAllQuestions() {
         return questionDao.findAll();
     }
 
@@ -34,28 +31,28 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void deleteById(Long questionId) {
+    public void deleteQuestionById(Long questionId) {
         questionDao.deleteById(questionId);
     }
 
     @Override
-    public void deleteAll() {
+    public void deleteAllQuestions() {
         questionDao.deleteAll();
     }
 
     @Override
-    public List<Question> findByParameter(String column, Object value) {
+    public List<Question> findByQuestionParameter(String column, Object value) {
         return questionDao.findByParameter(column, value);
     }
 
     @Override
-    public void update(String column, Object value, Long questionId) {
+    public void updateQuestion(String column, Object value, Long questionId) {
         questionDao.update(column, value, questionId);
     }
 
     @Override
-    public Question findById(Long questionId) throws ServiceException {
-        return questionDao.findById(questionId).orElseThrow(ServiceException::new);
+    public Optional<Question> findQuestionById(Long questionId) {
+        return questionDao.findById(questionId);
     }
 
     @Override
@@ -65,25 +62,25 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void setAnswers(Long questionId, Integer plusRightAnswers, Integer plusAllAnswers) {
-        Map<String, Integer> startAnswers = questionDao.getCurrentAnswersOfQuestionFromDb(questionId);
+        Map<String, Integer> startAnswers = questionDao.getCurrentAnswersForQuestionFromDb(questionId);
 
-        Integer newRightAnswers = changeAnswers(startAnswers.get("rightAnswers"), plusRightAnswers);
-        Integer newAllAnswers = changeAnswers(startAnswers.get("AllAnswers"), plusAllAnswers);
+        Integer newRightAnswers = changeQuestionAnswers(startAnswers.get("rightAnswers"), plusRightAnswers);
+        Integer newAllAnswers = changeQuestionAnswers(startAnswers.get("AllAnswers"), plusAllAnswers);
 
         questionDao.changeAmountOfAnswersInDb(questionId, newRightAnswers, newAllAnswers);
     }
 
-    private Integer changeAnswers(Integer startAnswersAmount, Integer plusAnswersAmount) {
+    private Integer changeQuestionAnswers(Integer startAnswersAmount, Integer plusAnswersAmount) {
         return startAnswersAmount + plusAnswersAmount;
     }
 
-    @Override
-    public Double findCurrentAnswers(Long questionId) {
-        Map<String, Integer> answers = questionDao.getCurrentAnswersOfQuestionFromDb(questionId);
+    /*@Override
+    public Double findRightAnswersPercent(Long questionId) {
+        Map<String, Integer> answers = questionDao.getCurrentAnswersForQuestionFromDb(questionId);
         int rightAnswers = answers.get("rightAnswers");
         int allAnswers = answers.get("AllAnswers");
         return countPercentOfRightAnswers(rightAnswers, allAnswers);
-    }
+    }*/
 
     private Double countPercentOfRightAnswers(int rightAnswers, int allAnswers) {
         return Math.round((rightAnswers * 1.0 / allAnswers) * 100) / 1.0;
@@ -106,21 +103,19 @@ public class QuestionServiceImpl implements QuestionService {
         return question.getQuestionType().getType();
     }
 
-    //TODO: the same methods
     @Override
     public List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage) {
         return questionDao.findForPagination(startRecord, recordsPerPage);
     }
 
     @Override
-    public List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage, Long questionId) {
-        return questionDao.findQuestionsOfThemeForPagination(startRecord, recordsPerPage, questionId);
+    public List<Question> findThemeQuestionsForPagination(int startRecord, int recordsPerPage, Long themeId) {
+        return questionDao.findQuestionsOfThemeForPagination(startRecord, recordsPerPage, themeId);
     }
 
     @Override
-    public Question getRus(Long themeId, Long questionId) {
-        return questionDao.findThemeQuestionsRus(themeId, questionId).orElseThrow(ServiceException::new);
+    public Optional<Question> findTranslatedQuestion(Long themeId, Long questionId) {
+        return questionDao.findTranslatedThemeQuestion(themeId, questionId);
     }
-
 
 }

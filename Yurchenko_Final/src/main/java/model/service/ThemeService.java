@@ -14,11 +14,11 @@ public interface ThemeService {
 
     List<Theme> findThemesForPagination(int startRecord, int recordsPerPage);
 
-    Theme findThemeById(Long themeId);
+    Optional<Theme> findThemeById(Long themeId);
 
     List<Theme> findThemeByParameter(String column, Object value);
 
-    void deleteAll();
+    void deleteAllThemes();
 
     void deleteThemeById(Long themeId);
 }

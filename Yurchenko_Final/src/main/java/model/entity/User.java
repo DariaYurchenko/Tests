@@ -1,19 +1,24 @@
 package model.entity;
 
 import model.entity.status.UserStatus;
-import uitility.encryption.Encryptor;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
     private Long userId;
     private String login;
     private String name;
     private String lastName;
     private String hash;
     private byte[] salt;
-    private Double rank;
-    private UserStatus status;
+    /**
+     * userRank - relation of user's
+     * right answers to all his answers
+     * in all tests
+     */
+    private Double userRank;
+    private UserStatus userStatus;
 
     public User(Builder builder) {
         this.userId = builder.id;
@@ -22,8 +27,8 @@ public class User {
         this.lastName = builder.lastName;
         this.hash = builder.hash;
         this.salt = builder.salt;
-        this.rank = builder.rank;
-        this.status = builder.status;
+        this.userRank = builder.userRank;
+        this.userStatus = builder.userStatus;
     }
 
     public Long getUserId() {
@@ -46,20 +51,20 @@ public class User {
         return salt;
     }
 
-    public UserStatus getStatus() {
-        return status;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
     public String getLogin() {
         return login;
     }
 
-    public Double getRank() {
-        return rank;
+    public Double getUserRank() {
+        return userRank;
     }
 
-    public void setStatus(UserStatus status) {
-        this.status = status;
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
     public static class Builder {
@@ -68,9 +73,9 @@ public class User {
         private String name;
         private String lastName;
         private String hash;
-        private Double rank;
+        private Double userRank;
         byte[] salt;
-        private UserStatus status;
+        private UserStatus userStatus;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -92,14 +97,8 @@ public class User {
             return this;
         }
 
-        public Builder withPassword(String password) {
-            this.salt = Encryptor.getSalt();
-            this.hash = Encryptor.getSecurePassword(password, salt);
-            return this;
-        }
-
         public Builder withUserType(UserStatus type) {
-            this.status = type;
+            this.userStatus = type;
             return this;
         }
 
@@ -114,7 +113,7 @@ public class User {
         }
 
         public Builder withRank(Double rank) {
-            this.rank = rank;
+            this.userRank = rank;
             return this;
         }
 
@@ -132,21 +131,38 @@ public class User {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        User user = (User) o;
-        return Objects.equals(userId, user.userId) &&
-                Objects.equals(login, user.login) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(hash, user.hash) &&
-                Arrays.equals(salt, user.salt) &&
-                Objects.equals(rank, user.rank) &&
-                status == user.status;
+        User userToCompare = (User) o;
+        return Objects.equals(userId, userToCompare.userId) &&
+                Objects.equals(login, userToCompare.login) &&
+                Objects.equals(name, userToCompare.name) &&
+                Objects.equals(lastName, userToCompare.lastName) &&
+                Objects.equals(hash, userToCompare.hash) &&
+                Arrays.equals(salt, userToCompare.salt) &&
+                Objects.equals(userRank, userToCompare.userRank) &&
+                userStatus == userToCompare.userStatus;
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(userId, login, name, lastName, hash, rank, status);
+        int result = Objects.hash(userId, login, name, lastName, hash, userRank, userStatus);
         result = 31 * result + Arrays.hashCode(salt);
         return result;
     }
+
+    @Override
+    public String toString() {
+
+        return  new StringBuilder("{User: ")
+                .append("userId = ").append(userId)
+                .append(", login = ").append(login)
+                .append(",  name = ").append(name)
+                .append(", lastName = ").append(lastName)
+                .append(", hash = ").append(hash)
+                .append(", salt = ").append(Arrays.toString(salt))
+                .append(", userRank = ").append(userRank)
+                .append(", userStatus = ").append(userStatus)
+                .append("}")
+                .toString();
+    }
+
 }

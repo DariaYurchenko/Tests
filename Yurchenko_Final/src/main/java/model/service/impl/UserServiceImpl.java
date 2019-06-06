@@ -1,7 +1,6 @@
 package model.service.impl;
 
-import exception.DaoException;
-import exception.ServiceException;
+import exception.ServiceRuntimeException;
 import model.dao.UserDao;
 import model.dao.factory.DaoFactory;
 import model.dao.factory.DbNames;
@@ -19,17 +18,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAllUsers() {
         return userDao.findAll();
     }
 
     @Override
-    public User findUserById(Long userId) {
-        return userDao.findById(userId).orElseThrow(ServiceException::new);
+    public User findById(Long userId) {
+        return userDao.findById(userId).orElseThrow(ServiceRuntimeException::new);
     }
 
     @Override
-    public List<User> findUsersByParameter(String column, Object value) {
+    public List<User> findByParameter(String column, Object value) {
         return userDao.findByParameter(column, value);
     }
 
@@ -63,9 +62,8 @@ public class UserServiceImpl implements UserService {
         userDao.changePassword(hash, salt, login);
     }
 
-    //TODO:db
     @Override
-    public void setRank(String login, Integer plusPoints, Integer plusMaxPoints) {
+    public void setRank(String login, int plusPoints, int plusMaxPoints) {
         Map<String, Integer> startRank = userDao.getUserPointsFromDb(login);
 
         Integer newPoints = changeUserPoints(startRank.get("currentPoints"), plusPoints);
@@ -74,12 +72,12 @@ public class UserServiceImpl implements UserService {
         userDao.changeUserRankInDb(login, newPoints, newMaxPoints);
     }
 
-    private Integer changeUserPoints(Integer startPoints, Integer plusPoints) {
+    private int changeUserPoints(int startPoints, int plusPoints) {
         return startPoints + plusPoints;
     }
 
     @Override
-    public List<User> findUsersForPagination(int currentPage, int recordsPerPage) throws DaoException {
+    public List<User> findUsersForPagination(int currentPage, int recordsPerPage) {
         return userDao.findForPagination(currentPage, recordsPerPage);
     }
 
@@ -88,10 +86,9 @@ public class UserServiceImpl implements UserService {
         userDao.addMagicKey(magicKey, login);
     }
 
-    //TODO:!!!
     @Override
-    public String findMagicKey(String login) {
-        return userDao.findMagicKey(login).orElseThrow(ServiceException::new);
+    public Optional<String> findMagicKey(String login) {
+        return userDao.findMagicKey(login);
     }
 
     @Override

@@ -6,7 +6,6 @@ import model.entity.User;
 import model.entity.status.UserStatus;
 import model.service.UserService;
 import model.service.factory.ServiceFactory;
-import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.language.LanguageManager;
 import uitility.mail.MailsSender;
@@ -18,11 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+/**
+ * Register user.
+ */
 public class UserRegistration extends Command implements CommandPages {
     private static final Logger LOGGER = Logger.getLogger(UserRegistration.class);
     private static final String STUDENT = "Student";
     private static final String ADMIN = "Admin";
-    private static final String USER_TYPE_FOR_REGISTRATION = "userType";
 
     private UserService userService;
     private LanguageManager languageManager;
@@ -41,63 +42,47 @@ public class UserRegistration extends Command implements CommandPages {
         String language = String.valueOf(req.getSession().getAttribute("appLocale"));
 
         languageManager.setLanguage(language);
-        //TODO:???
-        req.getSession().setAttribute("appLocale", language);
 
-        User newUser;
         Optional<User> userOptional = userService.findUserByLogin(login);
         if(userOptional.isPresent()) {
             LOGGER.warn("Unknown user attempted to register by existing email - " + login);
             req.setAttribute("user_exists", languageManager.getMessage("user_exists"));
-            if("Admin".equals(req.getParameter("userType"))) return CommandResult.forward(SHOW_USERS);
-
-            return CommandResult.forward(REGISTRATION_PAGE);
+            return redirectAccordingToUserType(req);
         }
 
         boolean validParameters = validateParameters(req, name, lastname, login, password);
         if(!validParameters) {
-            if(ADMIN.equals(req.getParameter(USER_TYPE_FOR_REGISTRATION))) {
-                return CommandResult.forward(SHOW_USERS);
-            }
-            return CommandResult.forward(REGISTRATION_PAGE);
+            return redirectAccordingToUserType(req);
         }
 
-        req.setAttribute("submitWindow", "TRUE");
+        return registerUser(req, login, password, name, lastname);
+    }
 
-        if(ADMIN.equals(req.getParameter(USER_TYPE_FOR_REGISTRATION))) {
-            newUser = buildAdmin(req, name, lastname, login, password);
+    private CommandResult registerUser(HttpServletRequest req, String login, String password, String name, String lastname) {
+        User newUser;
+        if(ADMIN.equals(req.getParameter("userType"))) {
+            newUser = buildAdmin(name, lastname, login, password);
             finishUserRegistration(req, newUser, login, password);
-            return CommandResult.forward(ADMIN_PAGE);
+            return CommandResult.forward(START_PAGE);
         }
         else {
-            newUser = buildStudent(req, name, lastname, login, password);
+            newUser = buildStudent(name, lastname, login, password);
             finishUserRegistration(req, newUser, login, password);
             return CommandResult.forward(TESTS);
         }
-
-       /* User newUser = buildStudent(req, name, lastname, login, password);
-
-        userService.registerUser(newUser);
-
-        sendEmailToConfirmRegistration(password, login);
-
-        req.getSession().setAttribute("user", newUser);
-        req.getSession().setAttribute("appLocale", language);
-
-        setUserStatus(req, newUser);
-        *//*if("Admin".equals(req.getParameter("userType"))) {
-            return CommandResult.forward(SHOW_USERS);
-        }*//*
-
-        return CommandResult.forward(TESTS);*/
     }
 
     private void finishUserRegistration(HttpServletRequest req, User user, String login, String password) {
         userService.registerUser(user);
         sendEmailToConfirmRegistration(req, password, login);
-        req.getSession().setAttribute("user", user);
-
+        setUserInSession(req, login);
+        req.setAttribute("submitWindow", "TRUE");
         setUserStatus(req, user);
+    }
+
+    private void setUserInSession(HttpServletRequest req, String login) {
+        userService.findUserByLogin(login)
+                .ifPresent(user -> req.getSession().setAttribute("user", user));
     }
 
     private boolean validateParameters(HttpServletRequest req, String name, String lastName, String login, String password) {
@@ -125,24 +110,7 @@ public class UserRegistration extends Command implements CommandPages {
         return true;
     }
 
-    /*private User buildUser(HttpServletRequest req, String name, String lastname, String login, String password) {
-        EncryptorBuilder builder = new EncryptorBuilder(password);
-        User user = new User.Builder()
-                .withName(name)
-                .withLastName(lastname)
-                .withLogin(login)
-                .withHash(builder.getHash())
-                .withSalt(builder.getSalt())
-                .build();
-
-        switch(req.getParameter(USER_TYPE_FOR_REGISTRATION)) {
-            case ADMIN: user.setStatus(UserStatus.ADMIN);
-            case STUDENT: user.setStatus(UserStatus.STUDENT);
-        }
-        return user;
-    }*/
-
-    private User buildStudent(HttpServletRequest req, String name, String lastname, String login, String password) {
+    private User buildStudent(String name, String lastname, String login, String password) {
         EncryptorBuilder builder = new EncryptorBuilder(password);
         return new User.Builder()
                 .withName(name)
@@ -154,7 +122,7 @@ public class UserRegistration extends Command implements CommandPages {
                 .build();
     }
 
-    private User buildAdmin(HttpServletRequest req, String name, String lastname, String login, String password) {
+    private User buildAdmin(String name, String lastname, String login, String password) {
         EncryptorBuilder builder = new EncryptorBuilder(password);
         return new User.Builder()
                 .withName(name)
@@ -166,11 +134,18 @@ public class UserRegistration extends Command implements CommandPages {
                 .build();
     }
 
+    private CommandResult redirectAccordingToUserType(HttpServletRequest req) {
+        if(ADMIN.equals(req.getParameter("userType"))) {
+            return CommandResult.forward(ADMIN_USERS);
+        }
+        return CommandResult.forward(REGISTRATION_PAGE);
+    }
+
     private void setUserStatus(HttpServletRequest req, User user) {
-        if(user.getStatus() == UserStatus.STUDENT) {
+        if(user.getUserStatus() == UserStatus.STUDENT) {
             req.getSession().setAttribute("userStatus", STUDENT);
         }
-        if(user.getStatus() == UserStatus.ADMIN) {
+        if(user.getUserStatus() == UserStatus.ADMIN) {
             req.getSession().setAttribute("userStatus", ADMIN);
         }
     }
@@ -189,6 +164,3 @@ public class UserRegistration extends Command implements CommandPages {
     }
 
 }
-
-
-

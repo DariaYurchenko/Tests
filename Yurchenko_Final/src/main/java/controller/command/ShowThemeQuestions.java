@@ -6,12 +6,14 @@ import model.entity.Question;
 import model.service.QuestionService;
 import model.service.factory.ServiceFactory;
 import uitility.pagination.Pagination;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Show list of questions on chosen theme in admin page.
+ */
 public class ShowThemeQuestions extends Command implements CommandPages {
     private QuestionService questionService;
 
@@ -21,36 +23,19 @@ public class ShowThemeQuestions extends Command implements CommandPages {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        /*int currentPage = Integer.parseInt(req.getParameter("currentPage"));
 
-        int recordsPerPage = 5;
-        Pagination pagination = new Pagination(5, currentPage);*/
-        String requestCurrentPage = req.getParameter("currentPage");
-        Integer currentPage;
-        if(requestCurrentPage == null) {
-            currentPage = 1;
-        }else {
-            currentPage = Integer.parseInt(requestCurrentPage);
-        }
+        int currentPage = setCurrentPage(req);
+        int recordsPerPage = setRecordsPerPage(req);
+        int rows = setRows();
 
-        String requestRecordsPerPage =  req.getParameter("recordsPerPage");
-        Integer recordsPerPage;
-        if(requestRecordsPerPage == null) {
-            recordsPerPage = 5;
-        }
-        else {
-            recordsPerPage = Integer.parseInt(requestRecordsPerPage);
-        }
-        req.getSession().setAttribute("recordsPerPage", recordsPerPage);
         Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
-        int rows = questionService.findAll().size();
-
         Optional<String> optId = Optional.ofNullable(req.getParameter("radio"));
+
         if(optId.isPresent()) {
             Long themeId = Long.parseLong(req.getParameter("radio"));
-            List<Question> questionList = questionService.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
-                    recordsPerPage, themeId);
+
+            List<Question> questionList = findThemeQuestions(pagination, recordsPerPage, rows, themeId);
             int questionsSize = questionList.size();
 
             req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
@@ -59,22 +44,27 @@ public class ShowThemeQuestions extends Command implements CommandPages {
             req.getSession().setAttribute("questions", questionList);
             req.getSession().setAttribute("questionsSize", questionsSize);
             req.getSession().setAttribute("act", "SHOW_BY_THEME_ID");
-           //return CommandResult.forward(new ShowAllQuestions());
-            return CommandResult.forward(SHOW_QUESTIONS);
         }
-       /* Long themeId = Long.parseLong(req.getParameter("radio"));
-        List<Question> questionList = questionService.findQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
-                recordsPerPage, themeId);
-
-        req.getSession().setAttribute("start", pagination.calculateStart(pagination.calculateNumOfPages(rows)));
-        req.getSession().setAttribute("noOfPages", pagination.calculateNumOfPages(rows));
-        req.getSession().setAttribute("currentPage", pagination.getCurrentPage());
-        req.getSession().setAttribute("recordsPerPage", pagination.getRecordsPerPage());
-        req.getSession().setAttribute("questions", questionList);
-        req.getSession().setAttribute("act", "SHOW_BY_THEME_ID");*/
-
-        return CommandResult.forward(SHOW_QUESTIONS);
-
-
+        return CommandResult.forward(ADMIN_QUESTIONS);
     }
+
+    private int setCurrentPage(HttpServletRequest req) {
+        String requestCurrentPage = req.getParameter("currentPage");
+        return requestCurrentPage == null ? 1 : Integer.parseInt(requestCurrentPage);
+    }
+
+    private int setRecordsPerPage(HttpServletRequest req) {
+        String requestRecordsPerPage =  req.getParameter("recordsPerPage");
+        return requestRecordsPerPage == null ? 5 : Integer.parseInt(requestRecordsPerPage);
+    }
+
+    private int setRows() {
+        return questionService.findAllQuestions().size();
+    }
+
+    private List<Question> findThemeQuestions(Pagination pagination, int recordsPerPage, int rows, Long themeId) {
+        return questionService.findThemeQuestionsForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)),
+                recordsPerPage, themeId);
+    }
+
 }

@@ -1,13 +1,13 @@
 package uitility.pagination;
 
-import exception.PaginationException;
+import exception.PaginationRuntimeException;
 import org.apache.log4j.Logger;
 
 public final class Pagination {
     private static final Logger LOGGER = Logger.getLogger(Pagination.class);
 
-    private  int recordsPerPage;
-    private  int currentPage;
+    private int recordsPerPage;
+    private int currentPage;
 
     public Pagination(int recordsPerPage, int currentPage) {
         this.recordsPerPage = recordsPerPage;
@@ -24,7 +24,7 @@ public final class Pagination {
     public int calculateNumOfPages(int rows) {
         if (recordsPerPage <= 0) {
             LOGGER.warn("Records per page = 0 while pagination.");
-            throw new PaginationException();
+            throw new PaginationRuntimeException();
         }
         int nOfPages = rows / recordsPerPage;
 

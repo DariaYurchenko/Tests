@@ -19,28 +19,33 @@
     </error-page>-->
 
     <filter-mapping>
-        <filter-name>encoding</filter-name>
+        <filter-name>encodingFilter</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
-
-    <!--<filter-mapping>
-        <filter-name>login</filter-name>
-        <url-pattern>/tests</url-pattern>
-    </filter-mapping>-->
 
    <filter-mapping>
-        <filter-name>submit</filter-name>
+        <filter-name>loginFilter</filter-name>
         <url-pattern>/tests</url-pattern>
     </filter-mapping>
 
-    <!--<filter-mapping>
-        <filter-name>security</filter-name>
+   <filter-mapping>
+        <filter-name>submitFilter</filter-name>
         <url-pattern>/tests</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
 
-    <!--<filter-mapping>
-        <filter-name>testsPassed</filter-name>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
         <url-pattern>/tests</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
+
+   <filter-mapping>
+        <filter-name>themesListFilter</filter-name>
+        <url-pattern>/tests</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>testPassedFilter</filter-name>
+        <url-pattern>/tests</url-pattern>
+    </filter-mapping>
 
 </web-app>

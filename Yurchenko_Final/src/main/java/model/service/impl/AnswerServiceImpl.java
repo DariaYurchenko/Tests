@@ -3,7 +3,6 @@ package model.service.impl;
 import model.entity.Answer;
 import model.entity.status.AnswerStatus;
 import model.service.AnswerService;
-
 import java.util.Arrays;
 
 public class AnswerServiceImpl implements AnswerService {
@@ -30,7 +29,7 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     private Answer checkIfUserAnswerCorrect(int questionPoints, String userAnswer, String correctAnswer) {
-        return userAnswer.equalsIgnoreCase(correctAnswer) ? new Answer(questionPoints, AnswerStatus.CORRECT) :
+        return correctAnswer.equalsIgnoreCase(userAnswer) ? new Answer(questionPoints, AnswerStatus.CORRECT) :
                 new Answer(questionPoints, AnswerStatus.INCORRECT);
     }
 

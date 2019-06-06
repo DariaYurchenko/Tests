@@ -1,12 +1,15 @@
 package controller.filter;
 
-import javax.servlet.*;
+import javax.servlet.FilterConfig;
+import javax.servlet.Filter;
+import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.FilterChain;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(filterName="encoding")
+@WebFilter(filterName="encodingFilter")
 public class EncodingFilter implements Filter {
     private String encoding;
 
@@ -31,4 +34,5 @@ public class EncodingFilter implements Filter {
     public void destroy() {
 
     }
+
 }

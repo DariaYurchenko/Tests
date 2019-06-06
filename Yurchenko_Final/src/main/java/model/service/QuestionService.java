@@ -2,22 +2,23 @@ package model.service;
 
 import model.entity.Question;
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestionService {
 
-    List<Question> findAll();
+    List<Question> findAllQuestions();
 
     void addQuestion(Question question);
 
-    void deleteById(Long questionId);
+    void deleteQuestionById(Long questionId);
 
-    void deleteAll();
+    void deleteAllQuestions();
 
-    List<Question> findByParameter(String column, Object value);
+    List<Question> findByQuestionParameter(String column, Object value);
 
-    void update(String column, Object value, Long questionId);
+    void updateQuestion(String column, Object value, Long questionId);
 
-    Question findById(Long questionId);
+    Optional<Question> findQuestionById(Long questionId);
 
     List<Question> findQuestionsByTheme(Long questionId);
 
@@ -27,9 +28,9 @@ public interface QuestionService {
 
     List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage);
 
-    Double findCurrentAnswers(Long questionId);
+    //Double findRightAnswersPercent(Long questionId);
 
-    List<Question> findQuestionsForPagination(int startRecord, int recordsPerPage, Long questionId);
+    List<Question> findThemeQuestionsForPagination(int startRecord, int recordsPerPage, Long themeId);
 
-    Question getRus(Long themeId, Long questionId);
+    Optional<Question> findTranslatedQuestion(Long themeId, Long questionId);
 }

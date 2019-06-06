@@ -1,12 +1,14 @@
 package model.dao.impl;
 
-import exception.DaoException;
+import exception.DaoRuntimeException;
 import model.dao.TestDao;
 import model.dao.TestInfoDao;
 import model.dao.UserDao;
-import model.dao.connector.Connector;
+import model.dao.factory.DaoFactory;
+import model.dao.factory.DbNames;
 import model.entity.TestInfo;
 import org.apache.log4j.Logger;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,22 +16,19 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInfoDao {
     private static final Logger LOGGER = Logger.getLogger(TestInfoDaoImpl.class);
 
-    private static final String FIND_TEST_INFO_BY_PARAMETER = "SELECT name, lastname, login, user_number_of_points, " +
+    private static final String SELECT_FIELDS_FROM_TESTS_JOIN_USERS = "SELECT name, lastname, login, user_number_of_points, " +
             "user_max_number_of_points, theme_name, test_number_of_points, test_max_number_of_points," +
-            " date, test_status FROM tests t JOIN users u ON t.test_user_id=u.user_id JOIN themes th ON " +
+            " date, tests_status FROM tests t JOIN users u ON t.test_user_id=u.user_id JOIN themes th ON ";
+
+    private static final String FIND_TEST_INFO_BY_PARAMETER = SELECT_FIELDS_FROM_TESTS_JOIN_USERS +
             "t.test_theme_id=th.theme_id WHERE %s = ?;";
-    private static final String FIND_TESTS_FOR_PAGINATION = "SELECT name, lastname, login, user_number_of_points, " +
-            "user_max_number_of_points, theme_name, test_number_of_points, test_max_number_of_points," +
-            " date, test_status FROM tests t JOIN users u ON t.test_user_id=u.user_id JOIN themes th ON " +
+    private static final String FIND_TESTS_FOR_PAGINATION = SELECT_FIELDS_FROM_TESTS_JOIN_USERS +
             "t.test_theme_id=th.theme_id LIMIT ?, ?;";
-    private static final String FIND_USER_TESTS_FOR_PAGINATION = "SELECT name, lastname, login, user_number_of_points, " +
-            "user_max_number_of_points, theme_name, test_number_of_points, test_max_number_of_points," +
-            " date, test_status FROM tests t JOIN users u ON t.test_user_id=u.user_id JOIN themes th ON " +
+    private static final String FIND_USER_TESTS_FOR_PAGINATION = SELECT_FIELDS_FROM_TESTS_JOIN_USERS +
             "t.test_theme_id=th.theme_id WHERE test_user_id = ? LIMIT ?, ?;";
 
     private static final String USER_NAME = "name";
@@ -43,9 +42,10 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
     private UserDao userDao;
     private TestDao testDao;
 
-    public TestInfoDaoImpl() {
-        this.userDao = new UserDaoImpl();
-        this.testDao = new TestDaoImpl();
+    public TestInfoDaoImpl(Connection connection) {
+        super(connection);
+        this.userDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getUserDao();
+        this.testDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getTestDao();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
     }
 
     @Override
-    public Optional<TestInfo> parseResultSetToFindById(ResultSet rs) {
+    public TestInfo parseResultSetToFindById(ResultSet rs) {
         throw new UnsupportedOperationException();
     }
 
@@ -107,7 +107,7 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
             }
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of testsInfo: " + e.getMessage());
-            throw new DaoException();
+            throw new DaoRuntimeException();
         }
         return testsInfoList;
     }
@@ -133,7 +133,7 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
 
     public List<TestInfo> findUserTestsForPagination(Long userId, int currentPage, int recordsPerPage) {
         List<TestInfo> testsInfoList = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connector.getConnection().prepareStatement(FIND_USER_TESTS_FOR_PAGINATION)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_TESTS_FOR_PAGINATION)) {
             preparedStatement.setLong(1, userId);
             preparedStatement.setInt(2, currentPage);
             preparedStatement.setInt(3, recordsPerPage);
@@ -144,7 +144,8 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
             return testsInfoList;
         } catch (SQLException e) {
             LOGGER.warn("SQLException with finding for pagination: " + e.getMessage());
-            throw new DaoException(e);
+            throw new DaoRuntimeException(e);
         }
     }
+
 }

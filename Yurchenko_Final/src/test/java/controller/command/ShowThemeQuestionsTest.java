@@ -43,12 +43,12 @@ public class ShowThemeQuestionsTest {
         List<Question> questions = new ArrayList<>(Arrays.asList(new Question.Builder().build(), new Question.Builder().build()));
         when(request.getSession()).thenReturn(session);
         when(request.getParameter(anyString())).thenReturn(null);
-        when(questionService.findAll()).thenReturn(questions);
+        when(questionService.findAllQuestions()).thenReturn(questions);
         when(questionService.findQuestionsForPagination(anyInt(), anyInt())).thenReturn(questions);
         doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = showThemeQuestionsCommand.execute(request, response);
-        assertEquals(CommandPages.SHOW_QUESTIONS, commandResult.getPage());
+        assertEquals(CommandPages.ADMIN_QUESTIONS, commandResult.getPage());
     }
 
 }

@@ -1,6 +1,6 @@
 package uitility.encryption;
 
-import exception.EncryptionException;
+import exception.EncryptionRuntimeException;
 import org.apache.log4j.Logger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,7 +23,7 @@ public final class Encryptor {
             return createStringPassword(digest);
         } catch (NoSuchAlgorithmException e) {
             LOGGER.fatal("No such algorithm (getting secure password).");
-            throw new EncryptionException(e);
+            throw new EncryptionRuntimeException(e);
         }
     }
 
@@ -35,7 +35,7 @@ public final class Encryptor {
             return salt;
         } catch (NoSuchAlgorithmException e) {
             LOGGER.fatal("No such algorithm (getting salt).");
-            throw new EncryptionException(e);
+            throw new EncryptionRuntimeException(e);
         }
     }
 

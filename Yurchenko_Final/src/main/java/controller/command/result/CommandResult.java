@@ -2,14 +2,12 @@ package controller.command.result;
 
 import controller.command.Command;
 
-public class CommandResult {
+public final class CommandResult {
     private String page;
-    private boolean redirect;
     private Command chainCommand;
 
-    public CommandResult(String page, boolean redirect) {
+    public CommandResult(String page) {
         this.page = page;
-        this.redirect = redirect;
     }
 
     public CommandResult(Command chainCommand) {
@@ -17,11 +15,7 @@ public class CommandResult {
     }
 
     public static CommandResult forward(String page) {
-        return new CommandResult(page, false);
-    }
-
-    public static CommandResult redirect(String page) {
-        return new CommandResult(page, true);
+        return new CommandResult(page);
     }
 
     public static CommandResult forward(Command chainCommand) {
@@ -32,11 +26,8 @@ public class CommandResult {
         return page;
     }
 
-    public boolean isRedirect() {
-        return redirect;
-    }
-
     public Command getChainCommand() {
         return chainCommand;
     }
+
 }

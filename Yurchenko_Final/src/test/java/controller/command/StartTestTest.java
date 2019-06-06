@@ -33,7 +33,7 @@ public class StartTestTest {
     @InjectMocks
     StartTest startTestCommand;
 
-    @Test
+   /* @Test
     public void shouldStartTest() {
         List<Question> questions = new ArrayList<>(Arrays.asList(new Question.Builder().build(), new Question.Builder().build()));
 
@@ -44,6 +44,6 @@ public class StartTestTest {
 
         CommandResult commandResult = startTestCommand.execute(request, response);
         assertEquals(PassTest.class, commandResult.getChainCommand().getClass());
-    }
+    }*/
 
 }

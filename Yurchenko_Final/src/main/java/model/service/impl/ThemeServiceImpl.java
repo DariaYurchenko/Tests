@@ -1,13 +1,10 @@
 package model.service.impl;
 
 import model.dao.ThemeDao;
-import model.dao.connector.Connector;
 import model.dao.factory.DaoFactory;
 import model.dao.factory.DbNames;
-import model.dao.impl.ThemeDaoImpl;
 import model.entity.Theme;
 import model.service.ThemeService;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +36,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Theme findThemeById(Long themeId) {
-        return themeDao.findById(themeId).orElseThrow(SecurityException::new);
+    public Optional<Theme> findThemeById(Long themeId) {
+        return themeDao.findById(themeId);
     }
 
     @Override
@@ -49,7 +46,7 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void deleteAll() {
+    public void deleteAllThemes() {
        themeDao.deleteAll();
     }
 
@@ -57,6 +54,5 @@ public class ThemeServiceImpl implements ThemeService {
     public void deleteThemeById(Long themeId) {
         themeDao.deleteById(themeId);
     }
-
 
 }

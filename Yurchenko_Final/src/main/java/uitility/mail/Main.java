@@ -1,6 +1,10 @@
 package uitility.mail;
 
+import model.dao.QuestionDao;
 import model.dao.connector.Connector;
+import model.dao.factory.DaoFactory;
+import model.dao.factory.DbNames;
+import model.dao.impl.QuestionDaoImpl;
 import model.dao.impl.TestInfoDaoImpl;
 import model.entity.*;
 import model.service.TestService;
@@ -18,28 +22,21 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException, MessagingException {
-        String NAME_OR_LASTNAME = "^[a-zA-Zа-яА-ЯёЁ]{1,30}$";
+        /*String NAME_OR_LASTNAME = "^[a-zA-Zа-яА-ЯёЁ]{1,30}$";
         User user = new User.Builder().withId(168L).build();
         TestService testService = new TestServiceImpl();
-        List<Test> tests = testService.findTestsByParameter("test_user_id", user.getUserId());
+        List<Test> tests = testService.findTestsInfoByParameter("test_user_id", user.getUserId());
+        System.out.println(tests);
+        //Test test1 = testService.findTestById(1L);
+        //System.out.println(test1);
+        *//*Test test = testService.findTestById(1L);
+        System.out.println(test);*/
 
-        /*ThemeService themeServiceImpl = new ThemeServiceImpl();
-        List<Theme> list = themeServiceImpl.findAll();
-        int rows = list.size();
-        //System.out.println(list);
-        int recordsPerPage = 5;
-        int currentPage = 2;
-        Pagination pagination = new Pagination(recordsPerPage, currentPage);
-        List<Theme> themes = themeServiceImpl.findThemesForPagination(pagination.calculateStart(pagination.calculateNumOfPages(rows)), recordsPerPage);
-        System.out.println(themes);
-        System.out.println(pagination.calculateNumOfPages(rows));*/
+        QuestionDao questionDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getQuestionDao();
+        Question question = questionDao.findTranslatedThemeQuestion(1L, 1L).get();
+        System.out.println(question);
 
-
+        //MailsSender.sendEmailToConfirmRegistration("yurchenkod95@gmail.com", "fsdfsdsdf", "ru_RU");
     }
 
-
-
-
-
-    }
-
+}

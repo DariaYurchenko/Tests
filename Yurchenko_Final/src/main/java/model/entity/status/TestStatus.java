@@ -1,5 +1,7 @@
 package model.entity.status;
 
-public enum TestStatus {
+import java.io.Serializable;
+
+public enum TestStatus implements Serializable {
     PASSED, NOT_PASSED;
 }

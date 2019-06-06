@@ -7,14 +7,13 @@ import model.service.factory.ServiceFactory;
 import uitility.encryption.EncryptorBuilder;
 import uitility.language.LanguageManager;
 import uitility.validator.PasswordValidator;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Called when user confirms forgetting password on the login page.
+ */
 public class ChangePassword extends Command implements CommandPages {
-    private static final String DID_FORGET = "forgot";
-    private static final String TRUE = "TRUE";
-
     private UserService userService;
     private LanguageManager languageManager;
 
@@ -23,38 +22,32 @@ public class ChangePassword extends Command implements CommandPages {
         this.languageManager =  LanguageManager.getInstance();
     }
 
-    public ChangePassword(UserService userService) {
-        this.userService = userService;
-    }
-
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
         String login = req.getParameter("login");
         String newPassword = req.getParameter("newPassword");
-        String language = String.valueOf(req.getParameter("appLocale"));
+        String language = String.valueOf(req.getSession().getAttribute("appLocale"));
 
-        //languageManager.setLanguage(language);
+        languageManager.setLanguage(language);
 
-        if(!validatePassword(req, newPassword)) {
-            req.setAttribute(DID_FORGET, TRUE);
-            return CommandResult.forward(LOGIN_PAGE);
+        /**
+         * check if new password is valid
+         * and doesn't change it if not
+         */
+        if(!validatePassword(newPassword)) {
+            req.setAttribute("errPassword", languageManager.getMessage("incorrect_password"));
+            return CommandResult.forward(CHANGE_PASSWORD_PAGE);
         }
 
+        req.setAttribute("passwordChanged", "TRUE");
 
         changePassword(newPassword, login);
 
-        //req.setAttribute("passwordChanged",  languageManager.getMessage("password_changed"));
         return CommandResult.forward(LOGIN_PAGE);
     }
 
-    private boolean validatePassword(HttpServletRequest req, String password) {
-        if(!PasswordValidator.validatePassword(password)) {
-            //req.setAttribute("errPassword",  languageManager.getMessage("incorrect_password"));
-            return false;
-        }
-        else {
-            return true;
-        }
+    private boolean validatePassword(String password) {
+        return PasswordValidator.validatePassword(password);
     }
 
     private void changePassword(String newPassword, String login) {
@@ -63,4 +56,5 @@ public class ChangePassword extends Command implements CommandPages {
         byte[] salt = builder.getSalt();
         userService.changeUsersPassword(hash, salt, login);
     }
+
 }

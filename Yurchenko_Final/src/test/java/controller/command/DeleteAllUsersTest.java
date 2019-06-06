@@ -26,7 +26,7 @@ public class DeleteAllUsersTest {
     public void shouldDeleteAllUsers() {
         CommandResult commandResult = deleteAllUsersCommand.execute(request, response);
 
-        assertEquals(new ShowAllUsers(), commandResult.getChainCommand());
+        assertEquals(new AdministrateUsers(), commandResult.getChainCommand());
         verify(userService).deleteAllUsers();
     }
 

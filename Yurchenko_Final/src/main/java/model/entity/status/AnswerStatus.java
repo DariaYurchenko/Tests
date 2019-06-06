@@ -1,5 +1,7 @@
 package model.entity.status;
 
-public enum AnswerStatus {
+import java.io.Serializable;
+
+public enum AnswerStatus implements Serializable {
     CORRECT, INCORRECT;
 }

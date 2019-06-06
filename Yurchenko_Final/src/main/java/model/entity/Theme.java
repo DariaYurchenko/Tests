@@ -1,18 +1,17 @@
 package model.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Theme {
+public class Theme implements Serializable {
     private Long themeId;
     private String themeName;
 
-    //to take from db
     public Theme(Long themeId, String themeName) {
         this.themeId = themeId;
         this.themeName = themeName;
     }
 
-    //to add to db
     public Theme(String themeName) {
         this.themeName = themeName;
     }
@@ -25,7 +24,6 @@ public class Theme {
         return themeName;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -34,9 +32,9 @@ public class Theme {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Theme theme = (Theme) o;
-        return Objects.equals(themeId, theme.themeId) &&
-                Objects.equals(themeName, theme.themeName);
+        Theme themeToCompare = (Theme) o;
+        return Objects.equals(themeId, themeToCompare.themeId) &&
+                Objects.equals(themeName, themeToCompare.themeName);
     }
 
     @Override
@@ -46,9 +44,11 @@ public class Theme {
 
     @Override
     public String toString() {
-        return "Theme{" +
-                "themeId=" + themeId +
-                ", themeName='" + themeName + '\'' +
-                '}';
+        return new StringBuilder("{Theme: ")
+                .append("themeId = ").append(themeId)
+                .append(", themeName = ").append(themeName)
+                .append("}")
+                .toString();
     }
+
 }

@@ -1,15 +1,16 @@
 package model.entity;
 
 import model.entity.status.TestStatus;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Test {
+public class Test implements Serializable {
     private Long testId;
     private Long userId;
     private Long themeId;
     private Integer userPoints;
-    private Integer maxPoints;
+    private Integer maxPossiblePoints;
     private Double rightAnswersPercent;
     private LocalDate date;
     private TestStatus testStatus;
@@ -19,7 +20,7 @@ public class Test {
         this.userId = builder.userId;
         this.themeId = builder.themeId;
         this.userPoints = builder.userPoints;
-        this.maxPoints = builder.maxPoints;
+        this.maxPossiblePoints = builder.maxPossiblePoints;
         this.rightAnswersPercent = builder.rightAnswersPercent;
         this.date = builder.date;
         this.testStatus = builder.testStatus;
@@ -53,8 +54,8 @@ public class Test {
         return userPoints;
     }
 
-    public Integer getMaxPoints() {
-        return maxPoints;
+    public Integer getMaxPossiblePoints() {
+        return maxPossiblePoints;
     }
 
     public static class Builder {
@@ -62,7 +63,7 @@ public class Test {
         private Long userId;
         private Long themeId;
         private Integer userPoints;
-        private Integer maxPoints;
+        private Integer maxPossiblePoints;
         private double rightAnswersPercent;
         private LocalDate date;
         private TestStatus testStatus;
@@ -88,7 +89,7 @@ public class Test {
         }
 
         public Builder withMaxPoints(Integer maxPoints) {
-            this.maxPoints = maxPoints;
+            this.maxPossiblePoints = maxPoints;
             return this;
         }
 
@@ -120,20 +121,35 @@ public class Test {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Test test = (Test) o;
-        return Objects.equals(testId, test.testId) &&
-                Objects.equals(userId, test.userId) &&
-                Objects.equals(themeId, test.themeId) &&
-                Objects.equals(userPoints, test.userPoints) &&
-                Objects.equals(maxPoints, test.maxPoints) &&
-                Objects.equals(rightAnswersPercent, test.rightAnswersPercent) &&
-                Objects.equals(date, test.date) &&
-                testStatus == test.testStatus;
+        Test testToCompare = (Test) o;
+        return Objects.equals(testId, testToCompare.testId) &&
+                Objects.equals(userId, testToCompare.userId) &&
+                Objects.equals(themeId, testToCompare.themeId) &&
+                Objects.equals(userPoints, testToCompare.userPoints) &&
+                Objects.equals(maxPossiblePoints, testToCompare.maxPossiblePoints) &&
+                Objects.equals(rightAnswersPercent, testToCompare.rightAnswersPercent) &&
+                Objects.equals(date, testToCompare.date) &&
+                testStatus == testToCompare.testStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(testId, userId, themeId, userPoints, maxPoints, rightAnswersPercent, date, testStatus);
+        return Objects.hash(testId, userId, themeId, userPoints, maxPossiblePoints, rightAnswersPercent, date, testStatus);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("{Test: ")
+                .append("testId = ").append(testId)
+                .append(", userId = ").append(userId)
+                .append(",  themeId = ").append(themeId)
+                .append(", userPoints = ").append(userPoints)
+                .append(", maxPossiblePoints = ").append(maxPossiblePoints)
+                .append(", rightAnswersPercent = ").append(rightAnswersPercent)
+                .append(", date = ").append(date)
+                .append(", testStatus = ").append(testStatus)
+                .append("}")
+                .toString();
     }
 
 }

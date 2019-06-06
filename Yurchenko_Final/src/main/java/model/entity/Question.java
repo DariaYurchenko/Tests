@@ -1,10 +1,16 @@
 package model.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Question {
+public class Question  implements Serializable {
     private Long questionId;
     private String question;
+    /**
+     * percentOfRightAnswers - relation
+     * of users' right answers to this question to all
+     * users' answers
+     */
     private Double percentOfRightAnswers;
     private String incorrectOption1;
     private String incorrectOption2;
@@ -72,23 +78,6 @@ public class Question {
 
     public Theme getTheme() {
         return theme;
-    }
-
-    @Override
-    public String toString() {
-        return "Question{" +
-                "questionId=" + questionId +
-                ", question='" + question + '\'' +
-                ", percentOfRightAnswers=" + percentOfRightAnswers +
-                ", incorrectOption1='" + incorrectOption1 + '\'' +
-                ", incorrectOption2='" + incorrectOption2 + '\'' +
-                ", incorrectOption3='" + incorrectOption3 + '\'' +
-                ", correctOption1='" + correctOption1 + '\'' +
-                ", correctOption2='" + correctOption2 + '\'' +
-                ", correctOption3='" + correctOption3 + '\'' +
-                ", questionType=" + questionType +
-                ", theme=" + theme +
-                '}';
     }
 
     public static class Builder {
@@ -173,24 +162,42 @@ public class Question {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Question question1 = (Question) o;
-        return Objects.equals(questionId, question1.questionId) &&
-                Objects.equals(question, question1.question) &&
-                Objects.equals(percentOfRightAnswers, question1.percentOfRightAnswers) &&
-                Objects.equals(incorrectOption1, question1.incorrectOption1) &&
-                Objects.equals(incorrectOption2, question1.incorrectOption2) &&
-                Objects.equals(incorrectOption3, question1.incorrectOption3) &&
-                Objects.equals(correctOption1, question1.correctOption1) &&
-                Objects.equals(correctOption2, question1.correctOption2) &&
-                Objects.equals(correctOption3, question1.correctOption3) &&
-                Objects.equals(questionType, question1.questionType) &&
-                Objects.equals(theme, question1.theme);
+        Question questionToCompare = (Question) o;
+        return Objects.equals(questionId, questionToCompare.questionId) &&
+                Objects.equals(this.question, questionToCompare.question) &&
+                Objects.equals(percentOfRightAnswers, questionToCompare.percentOfRightAnswers) &&
+                Objects.equals(incorrectOption1, questionToCompare.incorrectOption1) &&
+                Objects.equals(incorrectOption2, questionToCompare.incorrectOption2) &&
+                Objects.equals(incorrectOption3, questionToCompare.incorrectOption3) &&
+                Objects.equals(correctOption1, questionToCompare.correctOption1) &&
+                Objects.equals(correctOption2, questionToCompare.correctOption2) &&
+                Objects.equals(correctOption3, questionToCompare.correctOption3) &&
+                Objects.equals(questionType, questionToCompare.questionType) &&
+                Objects.equals(theme, questionToCompare.theme);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(questionId, question, percentOfRightAnswers, incorrectOption1, incorrectOption2,
                 incorrectOption3, correctOption1, correctOption2, correctOption3, questionType, theme);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("{Question: ")
+                .append("questionId = ").append(questionId)
+                .append(", question = ").append(question)
+                .append(",  percentOfRightAnswers = ").append(percentOfRightAnswers)
+                .append(", incorrectOption1 = ").append(incorrectOption1)
+                .append(", incorrectOption2 = ").append(incorrectOption2)
+                .append(", incorrectOption3 = ").append(incorrectOption3)
+                .append(", correctOption1 = ").append(correctOption1)
+                .append(", correctOption2 = ").append(correctOption2)
+                .append(", correctOption3 = ").append(correctOption3)
+                .append(", questionType = ").append(questionType)
+                .append(", theme = ").append(theme)
+                .append("}")
+                .toString();
     }
 
 }

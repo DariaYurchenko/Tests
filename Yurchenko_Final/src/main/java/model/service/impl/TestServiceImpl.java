@@ -1,15 +1,12 @@
 package model.service.impl;
 
-import exception.ServiceException;
 import model.dao.TestDao;
-import model.dao.connector.Connector;
 import model.dao.factory.DaoFactory;
 import model.dao.factory.DbNames;
-import model.dao.impl.TestDaoImpl;
 import model.entity.Test;
 import model.service.TestService;
-
 import java.util.List;
+import java.util.Optional;
 
 public class TestServiceImpl implements TestService {
     private TestDao testDao;
@@ -19,7 +16,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void addTestToDatabase(Test test) {
+    public void addTest(Test test) {
         testDao.add(test);
     }
 
@@ -29,8 +26,8 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Test findTestById(Long testId) {
-        return testDao.findById(testId).orElseThrow(ServiceException::new);
+    public Optional<Test> findTestById(Long testId) {
+        return testDao.findById(testId);
     }
 
     @Override

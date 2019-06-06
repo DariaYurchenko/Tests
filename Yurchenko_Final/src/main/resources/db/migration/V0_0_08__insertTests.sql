@@ -1,0 +1,10 @@
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (1, 1, 4, 10, '2019-06-01', 2);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (1, 4, 7, 12, '2019-06-04', 1);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (2, 1, 7, 10, '2019-06-02', 1);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (2, 2, 5, 15, '2019-06-01', 2);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (2, 5, 7, 15, '2019-06-04', 2);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (3, 6, 9, 10, '2019-06-01', 1);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (3, 5, 6, 13, '2019-06-07', 2);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (4, 1, 8, 10, '2019-06-02', 1);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (4, 2, 13, 15, '2019-06-01', 1);
+insert into tests (test_user_id, test_theme_id, test_number_of_points, test_max_number_of_points, date, tests_status) values (4, 3, 7, 13, '2019-06-06', 2);

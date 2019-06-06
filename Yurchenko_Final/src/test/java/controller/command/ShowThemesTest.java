@@ -3,9 +3,7 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Theme;
-import model.service.TestInfoService;
 import model.service.ThemeService;
-import model.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -50,7 +48,7 @@ public class ShowThemesTest {
         doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = showThemes.execute(request, response);
-        assertEquals(CommandPages.SHOW_QUESTIONS, commandResult.getPage());
+        assertEquals(CommandPages.ADMIN_QUESTIONS, commandResult.getPage());
     }
 
 }

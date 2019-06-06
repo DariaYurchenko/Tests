@@ -25,7 +25,7 @@ public class QuestionServiceImplTest {
     @Test
     public void shouldFindAllQuestions() {
         when(questionDao.findAll()).thenReturn(Arrays.asList(new Question.Builder().build(), new Question.Builder().build()));
-        List<Question> questions = questionService.findAll();
+        List<Question> questions = questionService.findAllQuestions();
         assertNotNull(questions);
     }
 
@@ -40,14 +40,14 @@ public class QuestionServiceImplTest {
     public void shouldDeleteById() {
         Long questionId = 1L;
         Mockito.doNothing().when(questionDao).deleteById(questionId);
-        questionService.deleteById(questionId);
+        questionService.deleteQuestionById(questionId);
         verify(questionDao).deleteById(questionId);
     }
 
     @Test
     public void shouldDeleteAll() {
         Mockito.doNothing().when(questionDao).deleteAll();
-        questionService.deleteAll();
+        questionService.deleteAllQuestions();
         verify(questionDao).deleteAll();
     }
 
@@ -56,7 +56,7 @@ public class QuestionServiceImplTest {
         String column = "question";
         String question = "question";
         when(questionDao.findByParameter(column, question)).thenReturn(Arrays.asList(new Question.Builder().build(), new Question.Builder().build()));
-        List<Question> questions = questionService.findByParameter(column, question);
+        List<Question> questions = questionService.findByQuestionParameter(column, question);
         assertNotNull(questions);
     }
 
@@ -66,17 +66,17 @@ public class QuestionServiceImplTest {
         String question = "question";
         Long questionId = 1L;
         Mockito.doNothing().when(questionDao).update(column, question, questionId);
-        questionService.update(column, question, questionId);
+        questionService.updateQuestion(column, question, questionId);
         verify(questionDao).update(column, question, questionId);
     }
 
-    @Test
+   /* @Test
     public void shouldFindQuestionById() {
         Long questionId = 1L;
         when(questionDao.findById(questionId)).thenReturn(Optional.ofNullable(new Question.Builder().build()));
-        Question actual = questionService.findById(questionId);
+        Question actual = questionService.findQuestionById(questionId);
         assertNotNull(actual);
-    }
+    }*/
 
     @Test
     public void shouldFindQuestionsByTheme() {
@@ -98,27 +98,27 @@ public class QuestionServiceImplTest {
         Integer newRightAnswers = 2;
         Integer newAllAnswers = 4;
 
-        when(questionDao.getCurrentAnswersOfQuestionFromDb(questionId)).thenReturn(startAnswers);
+        when(questionDao.getCurrentAnswersForQuestionFromDb(questionId)).thenReturn(startAnswers);
         Mockito.doNothing().when(questionDao).changeAmountOfAnswersInDb(questionId, newRightAnswers, newAllAnswers);
 
         questionService.setAnswers(questionId, plusRightAnswers, plusAllAnswers);
-        verify(questionDao).getCurrentAnswersOfQuestionFromDb(questionId);
+        verify(questionDao).getCurrentAnswersForQuestionFromDb(questionId);
         verify(questionDao).changeAmountOfAnswersInDb(questionId, newRightAnswers, newAllAnswers);
     }
 
-    @Test
+   /* @Test
     public void shouldFindCurrentAnswers() {
         Map<String, Integer> startAnswers = new HashMap<>();
         startAnswers.put("rightAnswers", 1);
         startAnswers.put("AllAnswers", 2);
         Long questionId = 1L;
 
-        when(questionDao.getCurrentAnswersOfQuestionFromDb(questionId)).thenReturn(startAnswers);
+        when(questionDao.getCurrentAnswersForQuestionFromDb(questionId)).thenReturn(startAnswers);
         Double expected = 50.0;
-        Double actual = questionService.findCurrentAnswers(questionId);
+        Double actual = questionService.findRightAnswersPercent(questionId);
 
         assertEquals(expected, actual);
-    }
+    }*/
 
     @Test
     public void shouldSetQuestionPoints() {
@@ -152,7 +152,7 @@ public class QuestionServiceImplTest {
         Long themeId = 1L;
 
         when(questionDao.findQuestionsOfThemeForPagination(startRecords, recordsPerPage, themeId)).thenReturn(Arrays.asList(new Question.Builder().build(), new Question.Builder().build()));
-        List<Question> questions = questionService.findQuestionsForPagination(startRecords, recordsPerPage, themeId);
+        List<Question> questions = questionService.findThemeQuestionsForPagination(startRecords, recordsPerPage, themeId);
         assertNotNull(questions);
     }
 

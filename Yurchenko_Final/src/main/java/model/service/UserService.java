@@ -6,11 +6,11 @@ import java.util.Optional;
 
 public interface UserService {
 
-    List<User> findAll();
+    List<User> findAllUsers();
 
-    User findUserById(Long id);
+    User findById(Long id);
 
-    List<User> findUsersByParameter(String column, Object value);
+    List<User> findByParameter(String column, Object value);
 
     void registerUser(User user);
 
@@ -24,13 +24,13 @@ public interface UserService {
 
     void changeUsersPassword(String hash, byte[] salt, String login);
 
-    void setRank(String login, Integer plusPoints, Integer plusMaxPoints);
+    void setRank(String login, int plusPoints, int plusMaxPoints);
 
     List<User> findUsersForPagination(int currentPage, int recordsPerPage);
 
     void addMagicKey(String magicKey, String login );
 
-    String findMagicKey(String login);
+    Optional<String> findMagicKey(String login);
 
     Optional<Integer> findIfSubmit(String login);
 

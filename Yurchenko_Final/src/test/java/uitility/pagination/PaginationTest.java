@@ -1,6 +1,6 @@
 package uitility.pagination;
 
-import exception.PaginationException;
+import exception.PaginationRuntimeException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,8 +47,8 @@ public class PaginationTest {
         assertEquals(expected, actual);
     }
 
-    @Test (expected = PaginationException.class)
-    public void shouldCalculateNumberOfPagesAndThrowException() throws PaginationException {
+    @Test (expected = PaginationRuntimeException.class)
+    public void shouldCalculateNumberOfPagesAndThrowException() throws PaginationRuntimeException {
         int rows = 11;
         int recordsPerPage = 0;
 

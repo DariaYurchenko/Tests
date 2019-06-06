@@ -16,48 +16,7 @@
 <div class="row">
     <header class="header col-lg-12">
         <nav class="navbar navbar-dark bg-dark navbar-expand-md col-lg-12">
-            <a class="navbar-brand" href="<c:url value="/tests?page=start_page"/>">JavaFox</a>
-            <div class="signUp">
-                <ul class="navbar-nav mr-4 d-inline-block">
-                    <c:if test="${sessionScope.user != null && sessionScope.userStatus == 'Student'}">
-                        <li class="nav-item d-inline-block">
-                            <a class="nav-link"><fmt:message key="hello"/><c:out value="${sessionScope.user.name}"/></a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.user != null && sessionScope.userStatus == 'Admin'}">
-                        <li class="nav-item d-inline-block">
-                            <a class="nav-link" href="<c:url value="/tests?page=admin_page"/>"><fmt:message key="admin_page"/></a>
-                        </li>
-                    </c:if>
-                </ul>
-                <a href="<c:url value="/tests?page=register_page"/>" class="btn btn-primary"><fmt:message key="sign_up"/></a>
-            </div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse " id="navbarSupportedContent">
-                <ul class="navbar-nav mr-4">
-                    <c:if test="${sessionScope.user == null}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="<c:url value="/tests?page=login_page"/>"><fmt:message key="log_in"/></a>
-                        </li>
-                    </c:if>
-                    <c:if test="${sessionScope.user != null}">
-                        <li>
-                            <form method="get" action="tests" name="logout-form">
-                                <input type="hidden" name="command" value="LOGOUT">
-                                <div>
-                                    <button type="submit"><fmt:message key="log_out"/></button>
-                                </div>
-                            </form>
-                        </li>
-                    </c:if>
-                    <li class="nav-item">
-                        <a class="nav-link " href="<c:url value="/tests?page=tests_to_pass"/>"><fmt:message key="tests"/></a>
-                    </li>
-                </ul>
-
-            </div>
+            <%@include file="header.jsp" %>
             <div class="languages">
                 <form action="tests" method="GET">
                     <input type="hidden" value="CHANGE_LANGUAGE" name="command">
@@ -69,69 +28,18 @@
         </nav>
     </header>
     <div class="d-flex col-lg-12">
-        <aside class="col-lg-3">
-            <div class="bg-white text-center">
-                <h2><fmt:message key="admin_users"/></h2>
-                <form method="get" action="tests">
-                    <input type="hidden" name="command" value="SHOW_ALL_USERS">
-                    <input type="hidden" name="act" value="JUST_SHOW">
-                    <input type="hidden" name="currentPage" value="1">
-                    <button class="btn" type="submit"><fmt:message key="admin_show_u"/></button>
-                </form>
-                <form method="get" action="tests">
-                    <input type="hidden" name="command" value="SHOW_ALL_USERS">
-                    <input type="hidden" name="act" value="DELETE_USER_BY_ID">
-                    <input type="hidden" name="currentPage" value="1">
-                    <button class="btn" type="submit"><fmt:message key="admin_delete_u_id"/></button>
-                </form>
-                <form method="get" action="tests">
-                    <input type="hidden" name="command" value="SHOW_ALL_USERS">
-                    <input type="hidden" name="act" value="DELETE_ALL_USERS">
-                    <input type="hidden" name="currentPage" value="1">
-                    <button class="btn" type="submit"><fmt:message key="admin_delete_u_all"/></button>
-                </form>
-                <form method="get" action="tests">
-                    <input type="hidden" name="command" value="SHOW_ALL_USERS">
-                    <input type="hidden" name="act" value="SHOW_USER_RESULTS">
-                    <input type="hidden" name="currentPage" value="1">
-                    <button class="btn" type="submit"><fmt:message key="admin_show_results"/></button>
-                </form>
-            </div>
-            <div class="bg-white text-center">
-                <h2><fmt:message key="admin_questions"/></h2>
-                <form method="get" action="tests">
-                    <input type="hidden" name="currentPage" value="1">
-                    <input type="hidden" name="act" value="JUST_SHOW">
-                    <input type="hidden" name="command" value="SHOW_ALL_QUESTIONS">
-                    <button class="btn" type="submit"><fmt:message key="admin_show_questions"/></button>
-                </form>
-                <form method="get" action="tests">
-                    <input type="hidden" name="currentPage" value="1">
-                    <input type="hidden" name="act" value="SHOW_BY_THEME">
-                    <input type="hidden" name="command" value="SHOW_THEMES">
-                    <button class="btn" type="submit"><fmt:message key="admin_show_theme_questions"/></button>
-                </form>
-            </div>
-            <div class="bg-white text-center">
-                <h2><fmt:message key="admin_others"/></h2>
-                <form method="get" action="tests">
-                    <input type="hidden" name="currentPage" value="1">
-                    <input type="hidden" name="command" value="SHOW_ALL_USERS">
-                    <input type="hidden" name="act" value="REGISTER_ADMIN">
-                    <button class="btn" type="submit"><fmt:message key="admin_register"/></button>
-                </form>
-            </div>
-        </aside>
+        <%@include file="admin_aside.jsp" %>
         <section class="col-lg-9">
             <div class="text-center"><fmt:message key="records_per_page"/></div>
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=5"/>">5</a>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=5&radio=${userId}"/>">5</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=10"/>">10</a>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=10&radio=${userId}"/>">10</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=50"/>">50</a>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_USER_RESULTS&recordsPerPage=50&radio=${userId}"/>">50</a>
                 </li>
             </ul>
+            <c:if test="${testInfoList != null}">
                 <h1 class="text-center"><fmt:message key="admin_u_tests"/></h1>
                 <div class="table-div">
                 <table class="text-center table table-striped">
@@ -159,7 +67,7 @@
                                 <td><c:out value="${tests.userRank}"/></td>
                                 <td><c:out value="${tests.theme}"/></td>
                                 <td><c:out value="${tests.userPoints}"/></td>
-                                <td><c:out value="${tests.maxPoints}"/></td>
+                                <td><c:out value="${tests.maxPossiblePoints}"/></td>
                                 <td><c:out value="${tests.rightAnswersPercent}"/></td>
                                 <td><c:out value="${tests.date}"/></td>
                                 <td><c:out value="${tests.testStatus}"/></td>
@@ -172,6 +80,7 @@
                     </table>
                     <c:if test="${testsSize == 0}">
                         <p class="text-center"><fmt:message key="didnot_pass_tests"/></p>
+                    </c:if>
                     </c:if>
                 </div>
                     <ul class="pagination justify-content-center">
@@ -200,6 +109,7 @@
                         </c:if>
                     </ul>
         </section>
+        <
     </div>
 </div>
 

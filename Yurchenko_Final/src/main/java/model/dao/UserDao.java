@@ -2,7 +2,6 @@ package model.dao;
 
 import model.entity.User;
 import java.sql.ResultSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

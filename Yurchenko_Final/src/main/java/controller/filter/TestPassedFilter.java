@@ -1,17 +1,26 @@
 package controller.filter;
 
-import model.entity.User;
-
-import javax.servlet.*;
+import javax.servlet.FilterConfig;
+import javax.servlet.Filter;
+import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.FilterChain;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-@WebFilter(filterName = "testsPassed")
+/**
+ * Filter blocks tests which have been already passed by user
+ */
+@WebFilter(filterName = "testPassedFilter")
 public class TestPassedFilter implements Filter {
+    private static final String START_TEST = "START_TEST";
+    private static final String TESTS = "tests_to_pass";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -24,19 +33,16 @@ public class TestPassedFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
-        User user = (User) req.getSession().getAttribute("user");
-        List<Long> themesId = (List<Long>) req.getSession().getAttribute("userThemes");
+        if (START_TEST.equals(req.getParameter("command"))) {
+            List<Long> themesId = (ArrayList) session.getAttribute("userThemes");
 
-        if(user != null && !themesId.isEmpty() && "START_TEST".equals(req.getParameter("command"))) {
-            for(Long themeId : themesId) {
-                if(themeId.toString().equals(req.getParameter("theme_id"))) {
-                    req.getRequestDispatcher("jsp/tests_to_pass.jsp").forward(req, resp);
-                }
+            if(themesId.contains(Long.parseLong(req.getParameter("theme_id")))) {
+                req.getRequestDispatcher(TESTS).forward(req, resp);
             }
         }
-        else {
-            filterChain.doFilter(req, resp);
-        }
+        filterChain.doFilter(req, resp);
+
+
     }
 
     @Override

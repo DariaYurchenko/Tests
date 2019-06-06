@@ -2,14 +2,15 @@ package model.service;
 
 import model.entity.Test;
 import java.util.List;
+import java.util.Optional;
 
 public interface TestService {
 
-    void addTestToDatabase(Test test);
+    void addTest(Test test);
 
     List<Test> findAllTests();
 
-    Test findTestById(Long testId);
+    Optional<Test> findTestById(Long testId);
 
     void deleteTestById(Long testId);
 

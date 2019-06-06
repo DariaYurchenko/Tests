@@ -27,7 +27,7 @@ public class TestInfoServiceImplTest {
         String column = "name";
         String name = "Alex";
         when(testInfoDao.findByParameter(column, name)).thenReturn(Arrays.asList(new TestInfo.Builder().build(), new TestInfo.Builder().build()));
-        List<TestInfo> tests = testInfoService.findTestsByParameter(column, name);
+        List<TestInfo> tests = testInfoService.findTestsInfoByParameter(column, name);
         assertNotNull(tests);
     }
 
@@ -37,7 +37,7 @@ public class TestInfoServiceImplTest {
         int startRecords = 1;
 
         when(testInfoDao.findForPagination(startRecords, recordsPerPage)).thenReturn(Arrays.asList(new TestInfo.Builder().build(), new TestInfo.Builder().build()));
-        List<TestInfo> questions = testInfoService.findTestsForPagination(startRecords, recordsPerPage);
+        List<TestInfo> questions = testInfoService.findTestInfoForPagination(startRecords, recordsPerPage);
         assertNotNull(questions);
     }
 
@@ -47,8 +47,8 @@ public class TestInfoServiceImplTest {
         int startRecords = 1;
         Long userId = 1L;
 
-        when(testInfoService.findUserTestsForPagination( userId, startRecords, recordsPerPage)).thenReturn(Arrays.asList(new TestInfo.Builder().build(), new TestInfo.Builder().build()));
-        List<TestInfo> questions = testInfoService.findUserTestsForPagination(userId, startRecords, recordsPerPage);
+        when(testInfoService.findUserTestInfoForPagination( userId, startRecords, recordsPerPage)).thenReturn(Arrays.asList(new TestInfo.Builder().build(), new TestInfo.Builder().build()));
+        List<TestInfo> questions = testInfoService.findUserTestInfoForPagination(userId, startRecords, recordsPerPage);
         assertNotNull(questions);
     }
 

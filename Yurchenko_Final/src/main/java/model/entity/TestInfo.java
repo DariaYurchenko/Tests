@@ -1,17 +1,23 @@
 package model.entity;
 
 import model.entity.status.TestStatus;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class TestInfo {
+public class TestInfo implements Serializable {
     private String userName;
     private String userLastName;
     private String userLogin;
+    /**
+     * userRank - relation of user's
+     * right answers to all his answers
+     * in all tests
+     */
     private Double userRank;
     private String theme;
     private Integer userPoints;
-    private Integer maxPoints;
+    private Integer maxPossiblePoints;
     private Double rightAnswersPercent;
     private LocalDate date;
     private TestStatus testStatus;
@@ -23,7 +29,7 @@ public class TestInfo {
         this.userRank = builder.userRank;
         this.theme = builder.theme;
         this.userPoints = builder.userPoints;
-        this.maxPoints = builder.maxPoints;
+        this.maxPossiblePoints = builder.maxPossiblePoints;
         this.date = builder.date;
         this.rightAnswersPercent = builder.rightAnswersPercent;
         this.testStatus = builder.testStatus;
@@ -49,8 +55,8 @@ public class TestInfo {
         return userPoints;
     }
 
-    public Integer getMaxPoints() {
-        return maxPoints;
+    public Integer getMaxPossiblePoints() {
+        return maxPossiblePoints;
     }
 
     public Double getRightAnswersPercent() {
@@ -76,7 +82,7 @@ public class TestInfo {
         private Double userRank;
         private String theme;
         private Integer userPoints;
-        private Integer maxPoints;
+        private Integer maxPossiblePoints;
         private Double rightAnswersPercent;
         private LocalDate date;
         private TestStatus testStatus;
@@ -112,7 +118,7 @@ public class TestInfo {
         }
 
         public Builder withMaxPoints(Integer maxPoints) {
-            this.maxPoints = maxPoints;
+            this.maxPossiblePoints = maxPoints;
             return this;
         }
 
@@ -145,23 +151,40 @@ public class TestInfo {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        TestInfo testInfo = (TestInfo) o;
-        return Objects.equals(userName, testInfo.userName) &&
-                Objects.equals(userLastName, testInfo.userLastName) &&
-                Objects.equals(userLogin, testInfo.userLogin) &&
-                Objects.equals(userRank, testInfo.userRank) &&
-                Objects.equals(theme, testInfo.theme) &&
-                Objects.equals(userPoints, testInfo.userPoints) &&
-                Objects.equals(maxPoints, testInfo.maxPoints) &&
-                Objects.equals(rightAnswersPercent, testInfo.rightAnswersPercent) &&
-                Objects.equals(date, testInfo.date) &&
-                testStatus == testInfo.testStatus;
+        TestInfo testInfoToCompare = (TestInfo) o;
+        return Objects.equals(userName, testInfoToCompare.userName) &&
+                Objects.equals(userLastName, testInfoToCompare.userLastName) &&
+                Objects.equals(userLogin, testInfoToCompare.userLogin) &&
+                Objects.equals(userRank, testInfoToCompare.userRank) &&
+                Objects.equals(theme, testInfoToCompare.theme) &&
+                Objects.equals(userPoints, testInfoToCompare.userPoints) &&
+                Objects.equals(maxPossiblePoints, testInfoToCompare.maxPossiblePoints) &&
+                Objects.equals(rightAnswersPercent, testInfoToCompare.rightAnswersPercent) &&
+                Objects.equals(date, testInfoToCompare.date) &&
+                testStatus == testInfoToCompare.testStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, userLastName, userLogin, userRank, theme, userPoints, maxPoints,
+        return Objects.hash(userName, userLastName, userLogin, userRank, theme, userPoints, maxPossiblePoints,
                 rightAnswersPercent, date, testStatus);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("{TestInfo: ")
+                .append("userName = ").append(userName)
+                .append(", userLastName = ").append(userLastName)
+                .append(",  userLogin = ").append(userLogin)
+                .append(", userRank = ").append(userRank)
+                .append(", theme = ").append(theme)
+                .append(", userPoints = ").append(userPoints)
+                .append(", maxPossiblePoints = ").append(maxPossiblePoints)
+                .append(", rightAnswersPercent = ").append(rightAnswersPercent)
+                .append(", date = ").append(date)
+                .append(", testStatus = ").append(testStatus)
+                .append("}")
+                .toString();
     }
 
 }

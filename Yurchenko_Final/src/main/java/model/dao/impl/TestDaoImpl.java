@@ -1,27 +1,25 @@
 package model.dao.impl;
 
-import exception.DaoException;
+import exception.DaoRuntimeException;
 import model.dao.TestDao;
-import model.dao.connector.Connector;
 import model.entity.Test;
 import model.entity.status.TestStatus;
 import org.apache.log4j.Logger;
-
-import java.sql.Date;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     private static final Logger LOGGER = Logger.getLogger(TestDaoImpl.class);
 
     private static final String INSERT_TEST = "INSERT INTO tests(test_user_Id, test_theme_Id, test_number_of_points, test_max_number_of_points, " +
-            "date, test_status) VALUES(?, ?, ?, ?, ?, ?);";
+            "date, tests_status) VALUES(?, ?, ?, ?, ?, ?);";
     private static final String FIND_TEST_BY_ID = "SELECT * FROM tests WHERE test_id = ?;";
     private static final String SELECT_ALL_TESTS = "SELECT * FROM tests;";
     private static final String DELETE_TEST = "DELETE FROM users WHERE test_user_id = ?;";
@@ -34,7 +32,11 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     private static final String MAX_POINTS = "test_max_number_of_points";
     private static final String USER_POINTS = "test_number_of_points";
     private static final String DATE = "date";
-    private static final String TEST_STATUS = "test_status";
+    private static final String TEST_STATUS = "tests_status";
+
+    public TestDaoImpl(Connection connection) {
+        super(connection);
+    }
 
     @Override
     public String createQueryToSave() {
@@ -82,12 +84,12 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
             ps.setLong(1, test.getUserId());
             ps.setLong(2, test.getThemeId());
             ps.setInt(3, test.getUserPoints());
-            ps.setInt(4, test.getMaxPoints());
+            ps.setInt(4, test.getMaxPossiblePoints());
             ps.setDate(5, Date.valueOf(test.getDate()));
             ps.setInt(6, mapStatusToTable(test));
         } catch (SQLException e) {
             LOGGER.error("SQLException with preparing statement for adding test: " + e.getMessage());
-            throw new DaoException();
+            throw new DaoRuntimeException();
         }
     }
 
@@ -104,7 +106,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
             }
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of tests: " + e.getMessage());
-            throw new DaoException(e);
+            throw new DaoRuntimeException(e);
         }
         return tests;
     }
@@ -120,7 +122,7 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
             return countPercentOfUserPoints(rightAnswers, allAnswers);
         } catch (SQLException e) {
             LOGGER.error("SQLException with counting of percent of user's points: " + e.getMessage());
-            throw new DaoException(e);
+            throw new DaoRuntimeException(e);
         }
     }
 
@@ -133,12 +135,12 @@ public class TestDaoImpl extends GenericDaoImpl<Test> implements TestDao {
     }
 
     @Override
-    public Optional<Test> parseResultSetToFindById(ResultSet rs) {
+    public Test parseResultSetToFindById(ResultSet rs) {
        try {
-            return Optional.ofNullable(buildTest(rs));
+            return buildTest(rs);
         } catch (SQLException e) {
             LOGGER.error("SQLException with parsing resultset of test: " + e.getMessage());
-            throw new DaoException();
+            throw new DaoRuntimeException();
         }
     }
 

@@ -1,7 +1,11 @@
 package controller.filter;
 
-import controller.pages.CommandPages;
-import javax.servlet.*;
+import javax.servlet.FilterConfig;
+import javax.servlet.Filter;
+import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.FilterChain;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,9 +15,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@WebFilter(filterName = "security")
+/**
+ * Filter tracks user's status and let admin
+ * have additional activity
+ */
+@WebFilter(filterName = "securityFilter")
 public class SecurityFilter implements Filter {
+    private static final List<String> PAGES_TO_SKIP = new ArrayList<>();
+    private static final List<String> COMMANDS_TO_SKIP = new ArrayList<>();
+
     private static final String LOGIN_PAGE_REDIRECT = "jsp/login_page.jsp";
+
+    private static final String ADMIN = "Admin";
 
     private static final String SHOW_ALL_USERS = "SHOW_ALL_USERS";
     private static final String DELETE_USER_BY_ID = "DELETE_USER_BY_ID";
@@ -42,8 +55,7 @@ public class SecurityFilter implements Filter {
         HttpSession session = req.getSession();
         String page = req.getParameter("page");
 
-        if(session.getAttribute("user") != null && session.getAttribute("userStatus") == "Admin" ||
-                isDoFilterForCommand(req) || !isDoFilterForPage(page)) {
+        if(isFilter(req, session, page)) {
             filterChain.doFilter(req, resp);
         }
         else {
@@ -51,18 +63,24 @@ public class SecurityFilter implements Filter {
         }
     }
 
+    private boolean isFilter(HttpServletRequest req, HttpSession session, String page) {
+        return session.getAttribute("user") != null && ADMIN.equals(session.getAttribute("userStatus")) ||
+                isDoFilterForCommand(req) || !isDoFilterForPage(page);
+    }
+
     private boolean isDoFilterForCommand(HttpServletRequest req) {
         String command = req.getParameter("command");
-        List<String> pagesNotToFilter = new ArrayList<>(Arrays.asList(SHOW_ALL_QUESTIONS, SHOW_ALL_USERS,
+        COMMANDS_TO_SKIP.addAll(Arrays.asList(SHOW_ALL_QUESTIONS, SHOW_ALL_USERS,
                 SHOW_QUESTIONS_BY_THEME, SHOW_THEME_QUESTIONS, SHOW_USER_RESULTS, DELETE_ALL_USERS, DELETE_USER_BY_ID,
                 REGISTER_ADMIN));
-        return pagesNotToFilter.contains(command);
+        return COMMANDS_TO_SKIP.contains(command);
     }
 
     private boolean isDoFilterForPage(String page) {
-        List<String> pagesNotToFilter = new ArrayList<>(Arrays.asList(ADMIN_PAGE, SHOW_USERS_PAGE, SHOW_QUESTIONS_PAGE,
+        PAGES_TO_SKIP.addAll(Arrays.asList(ADMIN_PAGE, SHOW_USERS_PAGE, SHOW_QUESTIONS_PAGE,
                 THEMES, USERS_TESTS));
-        return pagesNotToFilter.contains(page);
+
+        return PAGES_TO_SKIP.contains(page);
 
     }
 

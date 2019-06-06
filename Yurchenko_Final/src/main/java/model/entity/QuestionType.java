@@ -1,17 +1,16 @@
 package model.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class QuestionType {
+public class QuestionType implements Serializable {
     private Integer id;
     private String type;
 
-    //in order to put in db
     public QuestionType(String type) {
         this.type = type;
     }
 
-    //in order to take from db
     public QuestionType(Integer id, String type) {
         this.id = id;
         this.type = type;
@@ -33,13 +32,24 @@ public class QuestionType {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuestionType that = (QuestionType) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(type, that.type);
+        QuestionType questionTypeToCompare = (QuestionType) o;
+        return Objects.equals(id, questionTypeToCompare.id) &&
+                Objects.equals(type, questionTypeToCompare.type);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, type);
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("{QuestionType: ")
+                .append("id = ").append(id)
+                .append(", type = ").append(type)
+                .append("}")
+                .toString();
+
+    }
+
 }

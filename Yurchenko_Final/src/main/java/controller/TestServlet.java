@@ -27,32 +27,27 @@ public class TestServlet extends HttpServlet {
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String page = req.getParameter("page");
-        String command = req.getParameter("command");
+
         if(page != null) {
             req.getRequestDispatcher("jsp/" + page+".jsp").forward(req, resp);
         }
-       else {
-
-            CommandsFactory factory = CommandsFactory.getInstance();
-            CommandResult result = factory.makeCommand(command).execute(req, resp);
-
-            if (checkIfLeadsToAnotherCommand(result)) {
-                Command chainCommand = result.getChainCommand();
-                result = chainCommand.execute(req, resp);
-            }
-            chooseRedirectType(req, resp, result);
+        else {
+            makeCommandAndRedirect(req, resp);
         }
     }
 
-    private void chooseRedirectType(HttpServletRequest req, HttpServletResponse resp, CommandResult result) throws IOException, ServletException {
-        String page = result.getPage();
+    private void makeCommandAndRedirect(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String command = req.getParameter("command");
+        CommandsFactory factory = CommandsFactory.getInstance();
+        CommandResult result = factory.makeCommand(command).execute(req, resp);
 
-        //TODO: kill redirect
-        if (result.isRedirect()) {
-            req.getRequestDispatcher(page).forward(req, resp);
-        } else {
-            req.getRequestDispatcher(page).forward(req, resp);
+        if (checkIfLeadsToAnotherCommand(result)) {
+            Command chainCommand = result.getChainCommand();
+            result = chainCommand.execute(req, resp);
         }
+        String page = result.getPage();
+        req.getRequestDispatcher(page).forward(req, resp);
+
     }
 
     private boolean checkIfLeadsToAnotherCommand(CommandResult result) {

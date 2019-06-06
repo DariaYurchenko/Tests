@@ -42,12 +42,12 @@ public class ShowUserResultsTest {
         List<TestInfo> testInfos = new ArrayList<>(Arrays.asList(new TestInfo.Builder().build(), new TestInfo.Builder().build()));
         when(request.getParameter(anyString())).thenReturn(null);
         when(request.getSession()).thenReturn(session);
-        when(testInfoService.findTestsByParameter(anyString(), any())).thenReturn(testInfos);
-        when(testInfoService.findUserTestsForPagination(any(), anyInt(), anyInt())).thenReturn(testInfos);
+        when(testInfoService.findTestsInfoByParameter(anyString(), any())).thenReturn(testInfos);
+        when(testInfoService.findUserTestInfoForPagination(any(), anyInt(), anyInt())).thenReturn(testInfos);
         doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = showUserResultsCommand.execute(request, response);
-        assertEquals(CommandPages.SHOW_USER_TESTS, commandResult.getPage());
+        assertEquals(CommandPages.ADMIN_USER_TESTS, commandResult.getPage());
     }
 
 }

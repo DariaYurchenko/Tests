@@ -26,7 +26,7 @@ public class UserServiceImplTest {
     @Test
     public void shouldFindAllUsers() {
         when(userDao.findAll()).thenReturn(Arrays.asList(new User.Builder().build(), new User.Builder().build()));
-        List<User> users = userService.findAll();
+        List<User> users = userService.findAllUsers();
         assertNotNull(users);
     }
 
@@ -57,7 +57,7 @@ public class UserServiceImplTest {
         String column = "name";
         String name = "Alex";
         when(userDao.findByParameter(column, name)).thenReturn(Arrays.asList(new User.Builder().build(), new User.Builder().build()));
-        List<User> users = userService.findUsersByParameter(column, name);
+        List<User> users = userService.findByParameter(column, name);
         assertNotNull(users);
     }
 
@@ -75,7 +75,7 @@ public class UserServiceImplTest {
     public void shouldFindUserById() {
         Long userId = 1L;
         when(userDao.findById(userId)).thenReturn(Optional.ofNullable(new User.Builder().build()));
-        User actual = userService.findUserById(userId);
+        User actual = userService.findById(userId);
         assertNotNull(actual);
     }
 
@@ -148,7 +148,7 @@ public class UserServiceImplTest {
         verify(userDao).changeSubmitKeyStatus(userLogin);
     }
 
-    //TODO: exception?
+    /*//TODO: exception?
     @Test
     public void shouldFindMagicKey() {
         String userLogin = "alex@gmail.com";
@@ -158,7 +158,7 @@ public class UserServiceImplTest {
         String expected = "qqqqqq";
         String actual = userService.findMagicKey(userLogin);
         assertEquals(expected, actual);
-    }
+    }*/
 
     //TODO: get()
     @Test
