@@ -41,7 +41,6 @@ public class AdministrateQuestionsTest {
         when(request.getParameter(anyString())).thenReturn(null);
         when(questionService.findAllQuestions()).thenReturn(questions);
         when(questionService.findQuestionsForPagination(anyInt(), anyInt())).thenReturn(questions);
-        doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = administrateQuestions.execute(request, response);
         assertEquals(CommandPages.ADMIN_QUESTIONS, commandResult.getPage());

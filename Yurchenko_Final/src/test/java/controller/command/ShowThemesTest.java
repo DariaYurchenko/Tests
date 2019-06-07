@@ -40,12 +40,9 @@ public class ShowThemesTest {
         List<Theme> themes = new ArrayList<>(Arrays.asList(new Theme("Collections"), new Theme("Collections")));
 
         when(request.getSession()).thenReturn(session);
-        when(request.getParameter("radio")).thenReturn("1");
         when(request.getParameter("currentPage")).thenReturn("1");
         when(request.getParameter("recordsPerPage")).thenReturn("5");
         when(themeService.findAll()).thenReturn(themes);
-        when(themeService.findThemesForPagination(1, 5)).thenReturn(themes);
-        doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = showThemes.execute(request, response);
         assertEquals(CommandPages.ADMIN_QUESTIONS, commandResult.getPage());

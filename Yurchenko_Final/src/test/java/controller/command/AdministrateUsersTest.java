@@ -42,7 +42,6 @@ public class AdministrateUsersTest {
         when(request.getParameter(anyString())).thenReturn(null);
         when(userService.findAll()).thenReturn(users);
         when(userService.findUsersForPagination(anyInt(), anyInt())).thenReturn(users);
-        doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = administrateUsers.execute(request, response);
         assertEquals(CommandPages.ADMIN_USERS, commandResult.getPage());

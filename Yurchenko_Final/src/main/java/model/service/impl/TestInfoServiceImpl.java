@@ -11,7 +11,7 @@ public class TestInfoServiceImpl implements TestInfoService {
     private TestInfoDao testInfoDao;
 
     public TestInfoServiceImpl() {
-        this.testInfoDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getTestInfoDao();
+        this.testInfoDao = DaoFactory.getInstance(DbNames.MYSQL).getTestInfoDao();
     }
 
     @Override

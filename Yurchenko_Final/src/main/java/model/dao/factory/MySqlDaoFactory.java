@@ -15,7 +15,7 @@ import java.sql.Connection;
 public class MySqlDaoFactory extends DaoFactory{
     private Connection connection;
 
-    MySqlDaoFactory() {
+    public MySqlDaoFactory() {
         this.connection = Connector.getInstance().getConnection();
     }
 

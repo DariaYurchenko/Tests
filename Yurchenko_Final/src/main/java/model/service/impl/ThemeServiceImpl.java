@@ -12,7 +12,7 @@ public class ThemeServiceImpl implements ThemeService {
     private ThemeDao themeDao;
 
     public ThemeServiceImpl() {
-        this.themeDao =  DaoFactory.getDAOFactory(DbNames.MYSQL).getThemeDao();
+        this.themeDao =  DaoFactory.getInstance(DbNames.MYSQL).getThemeDao();
     }
 
     @Override

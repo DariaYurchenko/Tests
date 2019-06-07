@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public UserServiceImpl() {
-        this.userDao =  DaoFactory.getDAOFactory(DbNames.MYSQL).getUserDao();
+        this.userDao =  DaoFactory.getInstance(DbNames.MYSQL).getUserDao();
     }
 
     @Override

@@ -15,20 +15,23 @@ import model.service.impl.AnswerServiceImpl;
 
 public class ServiceFactory {
 
-    private static volatile ServiceFactory serviceFactory ;
+    private static volatile ServiceFactory instance;
 
     private ServiceFactory() {
     }
 
-    public static ServiceFactory getInstance(){
-        if (serviceFactory == null){
-            synchronized (ServiceFactory.class){
-                if (serviceFactory == null){
-                    serviceFactory = new ServiceFactory();
+    public static ServiceFactory getInstance() {
+        ServiceFactory serviceInstance = instance;
+        if (serviceInstance == null) {
+            synchronized (ServiceFactory.class) {
+                serviceInstance = instance;
+                if (instance == null) {
+                    serviceInstance =  new ServiceFactory();
+                    instance = serviceInstance;
                 }
             }
         }
-        return serviceFactory;
+        return serviceInstance;
     }
 
     public UserService getUserService() {

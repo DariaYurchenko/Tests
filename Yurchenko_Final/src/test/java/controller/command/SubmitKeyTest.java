@@ -34,7 +34,6 @@ public class SubmitKeyTest {
     public void shouldSubmitKey() {
         when(request.getParameter("login")).thenReturn("yurch@gmail.com");
         when(request.getParameter("key")).thenReturn("111111");
-        when(request.getParameter("appLocale")).thenReturn("ru_RU");
         when(userService.findMagicKey(anyString())).thenReturn((Optional.of("111111")));
 
         CommandResult commandResult = submitKey.execute(request, response);

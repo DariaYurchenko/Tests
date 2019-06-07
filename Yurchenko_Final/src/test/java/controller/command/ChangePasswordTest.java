@@ -11,6 +11,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uitility.language.LanguageManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -25,6 +27,8 @@ public class ChangePasswordTest {
     @Mock
     HttpServletResponse response;
     @Mock
+    HttpSession session;
+    @Mock
     LanguageManager languageManager;
     @InjectMocks
     ChangePassword changePasswordCommand;
@@ -33,10 +37,8 @@ public class ChangePasswordTest {
     public void shouldChangePasswordWithCorrectNewPassword() {
         when(request.getParameter("login")).thenReturn("yurch@gmail.com");
         when(request.getParameter("newPassword")).thenReturn("1223456");
-        when(request.getParameter("appLocale")).thenReturn(null);
-        doNothing().when(userService).changeUsersPassword(anyString(), any(), anyString());
-        doNothing().when(languageManager).setLanguage(anyString());
-        doNothing().when(request).setAttribute(anyString(), any());
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("appLocale")).thenReturn("ru_RU");
 
         CommandResult commandResult = changePasswordCommand.execute(request, response);
         assertEquals(CommandPages.LOGIN_PAGE, commandResult.getPage());
@@ -48,13 +50,12 @@ public class ChangePasswordTest {
     public void shouldChangePasswordWithIncorrectNewPassword() {
         when(request.getParameter("login")).thenReturn("yurch@gmail.com");
         when(request.getParameter("newPassword")).thenReturn("1");
-        when(request.getParameter("appLocale")).thenReturn(null);
-        doNothing().when(languageManager).setLanguage(anyString());
-        doNothing().when(request).setAttribute(anyString(), any());
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("appLocale")).thenReturn("ru_RU");
 
         ChangePassword changePasswordCommand = new ChangePassword();
         CommandResult commandResult = changePasswordCommand.execute(request, response);
-        assertEquals(CommandPages.LOGIN_PAGE, commandResult.getPage());
+        assertEquals(CommandPages.CHANGE_PASSWORD_PAGE, commandResult.getPage());
     }
 
 }

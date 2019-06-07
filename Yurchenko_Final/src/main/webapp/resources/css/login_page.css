@@ -1,0 +1,132 @@
+@font-face{
+    font-family: "Cookie Regular";
+    src: url("../fonts/shumi.otf")
+}
+body{
+    background: #F2F2F2;
+    font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"
+}
+div.row{
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0
+}
+header.header{
+    padding-left: 0;
+    padding-right: 0;
+    position: sticky;
+    top: 0;
+    z-index: 11
+}
+.navbar-dark {
+    background: #2F2F64 !important
+}
+.navbar-dark .navbar-brand{
+    font: 30px "Cookie Regular";
+    color: #ffa500;
+}
+#navbarSupportedContent{
+    justify-content: flex-end;
+    flex-grow: 0;
+
+}
+ul.navbar-nav{
+    margin-right: 0 !important;
+}
+.nav-item{
+    margin: 0 5px;
+    font-size: 20px
+}
+.navbar-dark .navbar-nav .nav-link{
+    text-align: right;
+    color: white
+}
+.signUp{
+    flex-grow: 1;
+    text-align: right;
+    font: 22px bold;
+    margin-right: 15px;
+}
+.signUp ul{
+    vertical-align: middle
+}
+.signUp li > a, .signUp a.btn-primary{
+    font-size: 20px;
+    font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+.signUp > button{
+    border: none;
+    vertical-align: top
+}
+div.languages{
+    margin-left: 15px
+}
+div.languages > form img{
+    width: 30px;
+    height: 15px
+}
+div.languages > form{
+    margin-bottom: 0
+}
+div.languages > form > button{
+    padding: 0;
+    border: none;
+    display: inline-block;
+    width: auto
+}
+form[name="logout-form"]{
+    margin-bottom: 0;
+    padding: 8px
+}
+form[name="logout-form"] button[type="submit"]{
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    color: white
+}
+form[name="logout-form"] button[type="submit"]:hover{
+    color: #CBCBCE;
+    cursor: pointer
+}
+section{
+    width: 100%
+}
+form[name="login-form"]{
+    margin: 20px auto 0 auto;
+    padding: 10px
+}
+label{
+    font-weight: 600;
+    font-size: 20px
+}
+form[name="forgot-pass-form"]{
+    margin: 5px auto
+}
+form[name="forgot-pass-form"] > p.forgot-message{
+    font-size: 20px
+}
+section.img-section{
+    width: 100%
+}
+section.img-section > div.img-div{
+    width: 22%;
+    margin-left: 10%
+}
+section.img-section > div.img-div > img{
+    width: 75%;
+    min-width: 130px
+}
+
+div.button-div button.btn, div.button-div input.btn{
+    width: 170px;
+    height: 40px;
+    transition: transform 1s;
+    background: #2F2F64;
+    font-family: "Cookie Regular";
+    color: #ffa500
+}
+div.button-div button.btn:hover, div.button-div input.btn:hover{
+    transform: scale(1.1);
+    transition: transform 1s
+}

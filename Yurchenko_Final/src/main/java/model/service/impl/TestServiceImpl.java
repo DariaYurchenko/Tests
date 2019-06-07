@@ -12,7 +12,7 @@ public class TestServiceImpl implements TestService {
     private TestDao testDao;
 
     public TestServiceImpl() {
-        this.testDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getTestDao();
+        this.testDao = DaoFactory.getInstance(DbNames.MYSQL).getTestDao();
     }
 
     @Override

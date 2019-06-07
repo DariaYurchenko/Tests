@@ -19,7 +19,7 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionDao questionDao;
 
     public QuestionServiceImpl() {
-        this.questionDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getQuestionDao();
+        this.questionDao = DaoFactory.getInstance(DbNames.MYSQL).getQuestionDao();
     }
 
     @Override

@@ -40,7 +40,6 @@ public class StartTestTest {
         when(request.getParameter(anyString())).thenReturn("1");
         when(request.getSession()).thenReturn(session);
         when(questionService.findQuestionsByTheme(anyInt())).thenReturn(questions);
-        doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = startTestCommand.execute(request, response);
         assertEquals(ShowQuestion.class, commandResult.getChainCommand().getClass());

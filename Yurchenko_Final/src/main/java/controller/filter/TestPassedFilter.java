@@ -20,7 +20,7 @@ import java.util.List;
 @WebFilter(filterName = "testPassedFilter")
 public class TestPassedFilter implements Filter {
     private static final String START_TEST = "START_TEST";
-    private static final String TESTS = "tests_to_pass";
+    private static final String TESTS = "jsp/tests_to_pass.jsp";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -34,15 +34,13 @@ public class TestPassedFilter implements Filter {
         HttpSession session = req.getSession();
 
         if (START_TEST.equals(req.getParameter("command"))) {
-            List<Long> themesId = (ArrayList) session.getAttribute("userThemes");
+            List<Integer> themesId = (ArrayList) session.getAttribute("userThemes");
 
-            if(themesId.contains(Long.parseLong(req.getParameter("theme_id")))) {
+            if(themesId.contains(Integer.parseInt(req.getParameter("theme_id")))) {
                 req.getRequestDispatcher(TESTS).forward(req, resp);
             }
         }
         filterChain.doFilter(req, resp);
-
-
     }
 
     @Override

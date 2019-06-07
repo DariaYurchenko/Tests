@@ -43,7 +43,6 @@ public class SendEmailAgainTest {
         when(session.getAttribute("user")).thenReturn(user);
         when(session.getAttribute("appLocale")).thenReturn("ru_RU");
         when(userService.findMagicKey(user.getLogin())).thenReturn(Optional.of("1111111"));
-        doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = sendEmailAgainCommand.execute(request, response);
         assertEquals(NOT_SUBMIT_EMAIL, commandResult.getPage());

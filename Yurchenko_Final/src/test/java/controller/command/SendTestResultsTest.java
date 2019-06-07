@@ -61,7 +61,6 @@ public class SendTestResultsTest {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("user")).thenReturn(user);
         when(session.getAttribute("appLocale")).thenReturn("ru_RU");
-        doNothing().when(request).setAttribute(any(), anyString());
         when(testInfoService.findTestsInfoByParameter("login", user.getLogin())).thenReturn(testInfoList);
 
         CommandResult commandResult = sendTestResults.execute(request, response);
