@@ -33,14 +33,19 @@ public class TestPassedFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
-        if (START_TEST.equals(req.getParameter("command"))) {
-            List<Integer> themesId = (ArrayList) session.getAttribute("userThemes");
+        List<Integer> themesId = (ArrayList) session.getAttribute("userThemes");
 
-            if(themesId.contains(Integer.parseInt(req.getParameter("theme_id")))) {
-                req.getRequestDispatcher(TESTS).forward(req, resp);
-            }
+        if (isFilter(req, themesId)) {
+            req.getRequestDispatcher(TESTS).forward(req, resp);
         }
-        filterChain.doFilter(req, resp);
+        else {
+            filterChain.doFilter(req, resp);
+        }
+    }
+
+    private boolean isFilter(HttpServletRequest req, List<Integer> themesId) {
+        return START_TEST.equals(req.getParameter("command")) &&
+                themesId.contains(Integer.parseInt(req.getParameter("theme_id")));
     }
 
     @Override
