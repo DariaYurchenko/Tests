@@ -199,3 +199,4 @@ insert into questions (question_type, question_theme_id, right_answers, answers,
 }', '"bytebyte" without the quotes', 'ClassCastException', 'Runtime error', 'Сompilation error', null , null);
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 6, 25, 48, 'Which of the following options are correct?', 'boolean b1 = 0;', 'boolean b2 = ‘false’;', null , 'boolean b6 = Boolean.FALSE;', 'boolean b3 = false;', null);
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 6, 49, 52, 'Which of the following lines will compile without errors and warnings?', 'char c = "a";', 'boolean b = null;', 'float f = 1.3;', 'int i = 10;', null , null);
+

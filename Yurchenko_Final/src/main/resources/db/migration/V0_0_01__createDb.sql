@@ -111,11 +111,3 @@ create table themes
         primary key,
     theme_name                varchar(100)not null
 )ENGINE MyISAM;;
-
-
-
-
-
-
-
-

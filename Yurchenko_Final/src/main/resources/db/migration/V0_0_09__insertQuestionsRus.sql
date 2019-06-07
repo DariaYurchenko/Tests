@@ -199,3 +199,4 @@ insert into questions_rus (question_type, question_theme_id, right_answers, answ
 }', '"bytebyte" without the quotes', 'ClassCastException', 'Runtime error', 'Сompilation error', null , null);
 insert into questions_rus (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 6, 25, 48, 'Какие из указанных записей правильные?', 'boolean b1 = 0;', 'boolean b2 = ‘false’;', null , 'boolean b6 = Boolean.FALSE;', 'boolean b3 = false;', null);
 insert into questions_rus (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 6, 49, 52, 'Какие из указанных строчек кода скомпиллируются без ошибок и предупреждений?', 'char c = "a";', 'boolean b = null;', 'float f = 1.3;', 'int i = 10;', null , null);
+
