@@ -7,9 +7,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="<c:url value="../resources/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="../resources/css/error_page.css"/>">
+    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/error_page.css"/>">
     <title>Error</title>
     <style>
     </style>
@@ -23,14 +23,14 @@
                 <form action="tests" method="GET">
                     <input type="hidden" value="CHANGE_LANGUAGE" name="command">
                     <input type="hidden" value="jsp/error_page.jsp" name="address">
-                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="../resources/images/uk_flag.jpg"></button>
-                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="../resources/images/rus_flag.jpg"></button>
+                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="<c:url value="/resources/images/uk_flag.jpg"/>"></button>
+                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="<c:url value="/resources/images/rus_flag.jpg"/>"></button>
                 </form>
             </div>
         </nav>
     </header>
     <section>
-        <div class="error-container"><div class="error-text text-center"><fmt:message key="error"/></div><img src="../resources/images/error_fox.jpg"></div>
+        <div class="error-container"><div class="error-text text-center"><fmt:message key="error"/></div><img src="<c:url value="/resources/images/error_fox.jpg"/>"></div>
     </section>
 </div>
 </body>

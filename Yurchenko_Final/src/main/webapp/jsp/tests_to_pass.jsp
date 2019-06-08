@@ -9,9 +9,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Themes</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="<c:url value="../resources/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="../resources/css/tests_to_pass.css"/>">
+    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/tests_to_pass.css"/>">
 </head>
 <body>
 <div class="row">
@@ -22,8 +22,8 @@
                 <form action="tests" method="GET">
                     <input type="hidden" value="CHANGE_LANGUAGE" name="command">
                     <input type="hidden" value="jsp/tests_to_pass.jsp" name="address">
-                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="../resources/images/uk_flag.jpg"></button>
-                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="../resources/images/rus_flag.jpg"></button>
+                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="<c:url value="/resources/images/uk_flag.jpg"/>"></button>
+                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="<c:url value="/resources/images/rus_flag.jpg"/>"></button>
                 </form>
             </div>
         </nav>
@@ -31,7 +31,7 @@
     <section class="courses col-lg-8 col-md-9 col-sm-12">
         <div class="select-div"><fmt:message key="select_module"/></div>
         <div class="course-container d-flex align-items-center">
-            <div class="course-img-container"><img src="../resources/images/arrays.svg"></div>
+            <div class="course-img-container"><img src="<c:url value="/resources/images/arrays.svg"/>"></div>
             <div class="course">
                 <form method="get" action="tests">
                     <input type="hidden" value="1" name="theme_id">
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="course-container d-flex align-items-center">
-            <div class="course-img-container"><img src="../resources/images/if-else.svg"></div>
+            <div class="course-img-container"><img src="<c:url value="/resources/images/if-else.svg"/>"></div>
             <div class="course">
                 <form method="get" action="tests">
                     <input type="hidden" value="2" name="theme_id">
@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="course-container d-flex align-items-center">
-            <div class="course-img-container"><img src="../resources/images/inheritance.svg"></div>
+            <div class="course-img-container"><img src="<c:url value="/resources/images/inheritance.svg"/>"></div>
             <div class="course">
                 <form method="get" action="tests">
                     <input type="hidden" value="3" name="theme_id">
@@ -79,7 +79,7 @@
             </div>
         </div>
         <div class="course-container d-flex align-items-center">
-            <div class="course-img-container"><img src="../resources/images/threads.svg"></div>
+            <div class="course-img-container"><img src="<c:url value="/resources/images/threads.svg"/>"></div>
             <div class="course">
                 <form method="get" action="tests">
                     <input type="hidden" value="4" name="theme_id">
@@ -95,7 +95,7 @@
             </div>
         </div>
         <div class="course-container d-flex align-items-center">
-            <div class="course-img-container"><img src="../resources/images/primitive.svg"></div>
+            <div class="course-img-container"><img src="<c:url value="/resources/images/primitive.svg"/>"></div>
             <div class="course">
                 <form method="get" action="tests">
                     <input type="hidden" value="5" name="theme_id">
@@ -111,7 +111,7 @@
             </div>
         </div>
         <div class="course-container d-flex align-items-center">
-            <div class="course-img-container"><img src="../resources/images/operators.svg"></div>
+            <div class="course-img-container"><img src="<c:url value="/resources/images/operators.svg"/>"></div>
             <div class="course">
                 <form method="get" action="tests">
                     <input type="hidden" value="6" name="theme_id">
@@ -126,7 +126,7 @@
                 </form>
             </div>
         </div>
-        <div class="decorative-img col-lg-3 col-md-3 col-sm-5"><img src="../resources/images/fox.jpg"></div>
+        <div class="decorative-img col-lg-3 col-md-3 col-sm-5"><img src="<c:url value="/resources/images/fox.jpg"/>"></div>
     </section>
     <c:if test="${submitWindow == 'TRUE'}">
     <div class="alert-window">

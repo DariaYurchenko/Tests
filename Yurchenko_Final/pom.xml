@@ -15,6 +15,7 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -26,6 +27,11 @@
                     <user>root</user>
                     <password>1111</password>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

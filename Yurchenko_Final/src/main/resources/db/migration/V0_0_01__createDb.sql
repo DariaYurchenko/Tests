@@ -4,8 +4,8 @@ create table users
         primary key,
     role                      int         null,
     login                     varchar(30) not null,
-    name                      varchar(50) null,
-    lastname                  varchar(50) null,
+    name                      varchar(30) null,
+    lastname                  varchar(30) null,
     hash                      char(40)    not null,
     salt                      binary(16)  not null,
     user_number_of_points     int         null,
@@ -22,7 +22,7 @@ create table roles
 (
     role_id                   int unique auto_increment
         primary key,
-    name                      varchar(30) not null
+    name                      varchar(15) not null
 )ENGINE MyISAM;;
 
 create table questions

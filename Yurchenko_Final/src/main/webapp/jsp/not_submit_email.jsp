@@ -6,10 +6,10 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../resources/css/not_submit_email.css" rel="stylesheet">
+    <link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/css/not_submit_email.css"/>" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
+    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
     <title>Not confirm email</title>
 </head>
 <body>
@@ -21,8 +21,8 @@
                 <form action="tests" method="GET">
                     <input type="hidden" value="CHANGE_LANGUAGE" name="command">
                     <input type="hidden" value="jsp/not_submit_email.jsp" name="address">
-                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="../resources/images/uk_flag.jpg"></button>
-                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="../resources/images/rus_flag.jpg"></button>
+                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="<c:url value="/resources/images/uk_flag.jpg"/>"></button>
+                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="<c:url value="/resources/images/rus_flag.jpg"/>"></button>
                 </form>
             </div>
         </nav>
@@ -30,7 +30,7 @@
 
     <section>
         <div class="message-container d-flex align-items-center justify-content-center flex-wrap">
-            <div class="decorative-img col-lg-3 col-md-4 col-sm-12 text-left"><img src="../resources/images/fox.jpg"></div>
+            <div class="decorative-img col-lg-3 col-md-4 col-sm-12 text-left"><img src="<c:url value="/resources/images/fox.jpg"/>"></div>
             <div class="message col-lg-6 col-md-7 col-sm-12">
                 <c:if test="${sessionScope.sent == null}">
                 <p class="text-center"><fmt:message key="did_not_conf_email"/>(<br><fmt:message key="send_again"/></p>

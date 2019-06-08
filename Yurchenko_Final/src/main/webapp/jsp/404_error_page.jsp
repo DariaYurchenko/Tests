@@ -7,9 +7,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="<c:url value="../resources/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="../resources/css/error_page.css"/>">
+    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/error_page.css"/>">
     <title>Error</title>
     <style>
     </style>
@@ -30,7 +30,7 @@
         </nav>
     </header>
     <section>
-        <div class="error-container"><img src="../resources/images/404-error.jpg"></div>
+        <div class="error-container"><img src="<c:url value="/resources/images/404-error.jpg"/>"></div>
     </section>
 </div>
 </body>

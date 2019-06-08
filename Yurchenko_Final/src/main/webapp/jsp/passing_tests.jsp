@@ -9,9 +9,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Tests</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="<c:url value="../resources/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="../resources/css/tests.css"/>">
+    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/tests.css"/>">
 </head>
 <body>
 <script>
@@ -25,8 +25,8 @@
                 <form action="tests" method="GET">
                     <input type="hidden" value="CHANGE_LANGUAGE" name="command">
                     <input type="hidden" value="jsp/passing_tests.jsp" name="address">
-                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="../resources/images/uk_flag.jpg"></button>
-                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="../resources/images/rus_flag.jpg"></button>
+                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="<c:url value="/resources/images/uk_flag.jpg"/>"></button>
+                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="<c:url value="/resources/images/rus_flag.jpg"/>"></button>
                 </form>
             </div>
         </nav>
@@ -183,26 +183,26 @@
             <section>
                 <h2 class="text-center"><c:out value="${question.theme.themeName}"/></h2>
                 <c:if test="${question.theme.themeId == 1}">
-                    <div class="course-img-container"><img src="../resources/images/arrays.svg"></div>
+                    <div class="course-img-container"><img src="<c:url value="/resources/images/arrays.svg"/>"></div>
                 </c:if>
                 <c:if test="${question.theme.themeId == 2}">
-                    <div class="course-img-container"><img src="../resources/images/if-else.svg"></div>
+                    <div class="course-img-container"><img src="<c:url value="/resources/images/if-else.svg"/>"></div>
                 </c:if>
                 <c:if test="${question.theme.themeId == 3}">
-                    <div class="course-img-container"><img src="../resources/images/inheritance.svg"></div>
+                    <div class="course-img-container"><img src="<c:url value="/resources/images/inheritance.svg"/>"></div>
                 </c:if>
                 <c:if test="${question.theme.themeId == 4}">
-                    <div class="course-img-container"><img src="../resources/images/threads.svg"></div>
+                    <div class="course-img-container"><img src="<c:url value="/resources/images/threads.svg"/>"></div>
                 </c:if>
                 <c:if test="${question.theme.themeId == 5}">
-                    <div class="course-img-container"><img src="../resources/images/primitive.svg"></div>
+                    <div class="course-img-container"><img src="<c:url value="/resources/images/primitive.svg"/>"></div>
                 </c:if>
                 <c:if test="${question.theme.themeId == 6}">
-                    <div class="course-img-container"><img src="../resources/images/operators.svg"></div>
+                    <div class="course-img-container"><img src="<c:url value="/resources/images/operators.svg"/>"></div>
                 </c:if>
             </section>
             <section class="stats text-center">
-                <img src="../resources/images/white_fox.jpg">
+                <img src="<c:url value="/resources/images/white_fox.jpg"/>">
             </section>
         </aside>
     </div>

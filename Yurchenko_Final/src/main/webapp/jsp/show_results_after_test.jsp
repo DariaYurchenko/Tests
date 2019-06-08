@@ -7,11 +7,11 @@
 <head>
     <title>Results</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="<c:url value="../resources/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="../resources/css/show_results.css"/>">
+    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/show_results.css"/>">
 </head>
 <body>
 <header class="header col-lg-12">
@@ -21,15 +21,15 @@
             <form action="tests" method="GET">
                 <input type="hidden" value="CHANGE_LANGUAGE" name="command">
                 <input type="hidden" value="jsp/show_results_after_test.jsp" name="address">
-                <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="../resources/images/uk_flag.jpg"></button>
-                <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="../resources/images/rus_flag.jpg"></button>
+    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="<c:url value="/resources/images/uk_flag.jpg"/>"></button>
+    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="<c:url value="/resources/images/rus_flag.jpg"/>"></button>
             </form>
         </div>
     </nav>
 </header>
 <section class="text-center">
     <div class="d-flex align-items-center justify-content-center flex-wrap">
-        <div class="decorative-img"><img src="../resources/images/reg_fox.jpg"></div>
+        <div class="decorative-img"><img src="<c:url value="/resources/images/reg_fox.jpg"/>"></div>
         <div class="results-container">
             <h1><fmt:message key="results"/></h1>
             <p><fmt:message key="you_got"/><c:out value="${sessionScope.userPoints}"/> <fmt:message key="points_from"/><c:out value="${sessionScope.maxPoints}"/>.</p>

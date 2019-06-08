@@ -8,9 +8,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Login</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="<c:url value="../resources/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="../resources/css/login_page.css"/>">
+    <script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/resources/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/css/login_page.css"/>">
 </head>
 <body>
 <div class="row">
@@ -21,8 +21,8 @@
                 <form action="tests" method="GET">
                     <input type="hidden" value="CHANGE_LANGUAGE" name="command">
                     <input type="hidden" value="jsp/new_password.jsp" name="address">
-                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="../resources/images/uk_flag.jpg"></button>
-                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="../resources/images/rus_flag.jpg"></button>
+                    <button type="submit" id="lang1" class="form-control" name="lang" value="eng"><img src="<c:url value="/resources/images/uk_flag.jpg"/>"></button>
+                    <button type="submit" id="lang2" class="form-control" name="lang" value="rus"><img src="<c:url value="/resources/images/rus_flag.jpg"/>"></button>
                 </form>
             </div>
         </nav>
@@ -115,7 +115,7 @@
         </script>
     </section>
     <section class="img-section">
-        <div class="img-div text-center"><img src="../resources/images/reg_fox.jpg"></div>
+        <div class="img-div text-center"><img src="<c:url value="/resources/images/reg_fox.jpg"/>"></div>
     </section>
 </div>
 </body>

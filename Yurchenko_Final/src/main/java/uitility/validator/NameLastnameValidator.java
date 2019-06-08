@@ -1,7 +1,7 @@
 package uitility.validator;
 
 public final class NameLastnameValidator {
-    private static final String NAME_OR_LASTNAME = "^[a-zA-Zа-яА-ЯёЁ\\s\\'\\-]+$";
+    private static final String NAME_OR_LASTNAME = "^[-a-zA-Zа-яА-ЯёЁ\\s\']+$";
 
     private NameLastnameValidator() {
     }
