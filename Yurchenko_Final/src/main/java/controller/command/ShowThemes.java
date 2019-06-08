@@ -4,7 +4,7 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Theme;
 import model.service.ThemeService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.ThemeServiceImpl;
 import uitility.pagination.Pagination;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ public class ShowThemes extends Command implements CommandPages {
     private ThemeService themeService;
 
     public ShowThemes() {
-        this.themeService = ServiceFactory.getInstance().getThemeService();
+        this.themeService = new ThemeServiceImpl();
     }
 
     @Override

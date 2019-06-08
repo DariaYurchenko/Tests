@@ -4,7 +4,7 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.TestInfo;
 import model.service.TestInfoService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.TestInfoServiceImpl;
 import uitility.pagination.Pagination;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ public class ShowUserResults extends Command implements CommandPages {
     private TestInfoService testInfoService;
 
     public ShowUserResults() {
-        this.testInfoService = ServiceFactory.getInstance().getTestInfoService();
+        this.testInfoService = new TestInfoServiceImpl();
     }
 
     @Override

@@ -2,7 +2,7 @@ package controller.filter;
 
 import model.entity.User;
 import model.service.UserService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.UserServiceImpl;
 import javax.servlet.FilterConfig;
 import javax.servlet.Filter;
 import javax.servlet.ServletException;
@@ -53,7 +53,7 @@ public class SubmitFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.userService = ServiceFactory.getInstance().getUserService();
+        this.userService = new UserServiceImpl();
     }
 
     @Override

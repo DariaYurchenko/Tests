@@ -5,7 +5,7 @@ import controller.pages.CommandPages;
 import model.entity.User;
 import model.entity.status.UserStatus;
 import model.service.UserService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.language.LanguageManager;
 import uitility.mail.MailsSender;
@@ -29,7 +29,7 @@ public class UserRegistration extends Command implements CommandPages {
     private LanguageManager languageManager;
 
     public UserRegistration() {
-        this.userService = ServiceFactory.getInstance().getUserService();
+        this.userService = new UserServiceImpl();
         this.languageManager =  LanguageManager.getInstance();
     }
 

@@ -3,7 +3,8 @@ package controller.filter;
 import model.entity.Test;
 import model.entity.User;
 import model.service.TestService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.TestServiceImpl;
+
 import javax.servlet.FilterConfig;
 import javax.servlet.Filter;
 import javax.servlet.ServletException;
@@ -29,7 +30,7 @@ public class ThemesListFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.testService = ServiceFactory.getInstance().getTestService();
+        this.testService = new TestServiceImpl();
     }
 
     @Override

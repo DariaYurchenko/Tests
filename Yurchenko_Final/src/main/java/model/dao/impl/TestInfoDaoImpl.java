@@ -44,8 +44,8 @@ public class TestInfoDaoImpl extends GenericDaoImpl<TestInfo> implements TestInf
 
     public TestInfoDaoImpl(Connection connection) {
         super(connection);
-        this.userDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getUserDao();
-        this.testDao = DaoFactory.getDAOFactory(DbNames.MYSQL).getTestDao();
+        this.userDao = DaoFactory.getInstance(DbNames.MYSQL).getUserDao();
+        this.testDao = DaoFactory.getInstance(DbNames.MYSQL).getTestDao();
     }
 
     @Override

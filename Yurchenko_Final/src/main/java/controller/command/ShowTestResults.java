@@ -9,7 +9,8 @@ import model.entity.status.AnswerStatus;
 import model.entity.status.TestStatus;
 import model.service.TestService;
 import model.service.UserService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.TestServiceImpl;
+import model.service.impl.UserServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
@@ -26,8 +27,8 @@ public class ShowTestResults extends Command implements CommandPages {
     private TestService testService;
 
     public ShowTestResults() {
-        this.userService = ServiceFactory.getInstance().getUserService();
-        this.testService = ServiceFactory.getInstance().getTestService();
+        this.userService = new UserServiceImpl();
+        this.testService = new TestServiceImpl();
     }
 
     @Override

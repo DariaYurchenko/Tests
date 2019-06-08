@@ -5,7 +5,7 @@ import controller.pages.CommandPages;
 import model.entity.TestInfo;
 import model.entity.User;
 import model.service.TestInfoService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.TestInfoServiceImpl;
 import uitility.mail.MailsSender;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ public class SendTestResults extends Command implements CommandPages {
     private TestInfoService testInfoService;
 
     public SendTestResults() {
-        this.testInfoService = ServiceFactory.getInstance().getTestInfoService();
+        this.testInfoService = new TestInfoServiceImpl();
     }
 
     @Override

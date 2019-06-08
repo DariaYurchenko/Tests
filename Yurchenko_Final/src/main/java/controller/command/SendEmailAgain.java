@@ -4,7 +4,7 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.User;
 import model.service.UserService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.UserServiceImpl;
 import uitility.mail.MailsSender;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ public class SendEmailAgain extends Command implements CommandPages {
     private UserService userService;
 
     public SendEmailAgain() {
-        this.userService = ServiceFactory.getInstance().getUserService();
+        this.userService = new UserServiceImpl();
     }
 
     @Override

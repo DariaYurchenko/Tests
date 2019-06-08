@@ -4,7 +4,7 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.Question;
 import model.service.QuestionService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.QuestionServiceImpl;
 import uitility.pagination.Pagination;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ public class ShowThemeQuestions extends Command implements CommandPages {
     private QuestionService questionService;
 
     public ShowThemeQuestions() {
-        this.questionService = ServiceFactory.getInstance().getQuestionService();
+        this.questionService = new QuestionServiceImpl();
     }
 
     @Override

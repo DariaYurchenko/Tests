@@ -6,7 +6,8 @@ import model.entity.Answer;
 import model.entity.Question;
 import model.service.AnswerService;
 import model.service.QuestionService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.AnswerServiceImpl;
+import model.service.impl.QuestionServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ public class ShowRightAnswers extends Command implements CommandPages {
     private AnswerService answerService;
 
     public ShowRightAnswers() {
-        this.questionService = ServiceFactory.getInstance().getQuestionService();
-        this.answerService = ServiceFactory.getInstance().getAnswerService();
+        this.questionService = new QuestionServiceImpl();
+        this.answerService = new AnswerServiceImpl();
     }
 
     @Override

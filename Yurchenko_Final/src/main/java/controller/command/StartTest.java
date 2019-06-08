@@ -5,7 +5,7 @@ import controller.pages.CommandPages;
 import model.entity.Answer;
 import model.entity.Question;
 import model.service.QuestionService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.QuestionServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class StartTest extends Command implements CommandPages {
     private QuestionService questionService;
 
     public StartTest() {
-        this.questionService = ServiceFactory.getInstance().getQuestionService();
+        this.questionService = new QuestionServiceImpl();
     }
 
     @Override

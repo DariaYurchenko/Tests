@@ -2,12 +2,10 @@ package controller.command;
 
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
-import model.entity.Test;
 import model.entity.User;
 import model.entity.status.UserStatus;
-import model.service.TestService;
 import model.service.UserService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.UserServiceImpl;
 import org.apache.log4j.Logger;
 import uitility.encryption.Encryptor;
 import uitility.language.LanguageManager;
@@ -15,10 +13,7 @@ import uitility.validator.LoginValidator;
 import uitility.validator.PasswordValidator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Called when user tries to log in. Check if the login and password
@@ -35,7 +30,7 @@ public class UserLogin extends Command implements CommandPages {
     private LanguageManager languageManager;
 
     public UserLogin() {
-        this.userService = ServiceFactory.getInstance().getUserService();
+        this.userService = new UserServiceImpl();
         this.languageManager =  LanguageManager.getInstance();
     }
 

@@ -3,7 +3,7 @@ package controller.command;
 import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.service.UserService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.UserServiceImpl;
 import uitility.encryption.EncryptorBuilder;
 import uitility.language.LanguageManager;
 import uitility.validator.PasswordValidator;
@@ -18,7 +18,7 @@ public class ChangePassword extends Command implements CommandPages {
     private LanguageManager languageManager;
 
     public ChangePassword() {
-        this.userService = ServiceFactory.getInstance().getUserService();
+        this.userService = new UserServiceImpl();
         this.languageManager =  LanguageManager.getInstance();
     }
 

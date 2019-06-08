@@ -4,7 +4,7 @@ import controller.command.result.CommandResult;
 import controller.pages.CommandPages;
 import model.entity.User;
 import model.service.UserService;
-import model.service.factory.ServiceFactory;
+import model.service.impl.UserServiceImpl;
 import uitility.pagination.Pagination;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ public class AdministrateUsers extends Command implements CommandPages {
     private UserService userService;
 
     public AdministrateUsers() {
-        this.userService = ServiceFactory.getInstance().getUserService();
+        this.userService = new UserServiceImpl();
     }
 
     @Override
