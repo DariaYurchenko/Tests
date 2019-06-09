@@ -1,3 +1,9 @@
+create table roles
+(
+    role_id                   int unique auto_increment
+        primary key,
+    name                      varchar(15) not null
+);
 create table users
 (
     user_id                   int auto_increment unique
@@ -13,17 +19,23 @@ create table users
     magic_key                 char(40)    null,
     submitted                 int         null,
     constraint user_fk
-        foreign key (user_id) references roles (role_id)
+        foreign key (role) references roles (role_id)
             on update cascade
             on delete cascade
-)ENGINE MyISAM;;
+);
 
-create table roles
+create table question_type
 (
-    role_id                   int unique auto_increment
+    question_type_id          int auto_increment unique
         primary key,
-    name                      varchar(15) not null
-)ENGINE MyISAM;;
+    type                      varchar(15) not null
+);
+create table themes
+(
+    theme_id                  int auto_increment unique
+        primary key,
+    theme_name                varchar(100)not null
+);
 
 create table questions
 (
@@ -41,10 +53,14 @@ create table questions
     correct_option2           varchar(70)null,
     correct_option3           varchar(70)null,
     constraint question_fk
-        foreign key (question_id) references question_type (question_type_id)
+        foreign key (question_type) references question_type (question_type_id)
+            on update cascade
+            on delete cascade,
+       constraint question_theme_fk
+        foreign key (question_theme_id) references themes (theme_id)
             on update cascade
             on delete cascade
-)ENGINE MyISAM;;
+);
 
 create table questions_rus
 (
@@ -61,18 +77,21 @@ create table questions_rus
     correct_option1           varchar(70)null,
     correct_option2           varchar(70)null,
     correct_option3           varchar(70)null,
-    constraint question_fk
-        foreign key (question_id) references question_type (question_type_id)
+    constraint question_rus_fk
+        foreign key (question_type) references question_type (question_type_id)
+            on update cascade
+            on delete cascade,
+        constraint question_rus_theme_fk
+        foreign key (question_theme_id) references themes (theme_id)
             on update cascade
             on delete cascade
-)ENGINE MyISAM;;
-
-create table question_type
+);
+create table test_status
 (
-    question_type_id          int auto_increment unique
+    test_status_id           int auto_increment unique
         primary key,
-    type                      varchar(15) not null
-)ENGINE MyISAM;;
+    status                   varchar(15) not null
+);
 
 create table tests
 (
@@ -96,18 +115,5 @@ create table tests
         foreign key (tests_status) references test_status (test_status_id)
             on update cascade
             on delete cascade
-)ENGINE MyISAM;;
+);
 
-create table test_status
-(
-    test_status_id           int auto_increment unique
-        primary key,
-    status                   varchar(15) not null
-)ENGINE MyISAM;;
-
-create table themes
-(
-    theme_id                  int auto_increment unique
-        primary key,
-    theme_name                varchar(100)not null
-)ENGINE MyISAM;;

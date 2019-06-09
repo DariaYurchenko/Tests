@@ -10,19 +10,7 @@ insert into questions (question_type, question_theme_id, right_answers, answers,
         }
     }
 }', '3 4', 'Run-time error', '4 3', 'Compilation error', null , null);
-insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (1, 1, 2, 5, 'import java.util.ArrayList;
-public class Test {
-    public static void main(String[] args) {
-        ArrayList<Integer> array = new ArrayList<Integer>(2);
-        array.add(5);
-        array.add(6);
-        array.add(1, 7);
-        System.out.print(array.indexOf(6));
 
-        array.remove(1);
-        System.out.println(array.indexOf(6));
-    }
-}', '22', '-1-1', 'Runtime-error', '21', null , null );
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (1, 1, 1, 5, 'import java.util.*;
 public class Test {
     public static void main(String[] args) {
@@ -35,6 +23,8 @@ public class Test {
         System.out.print(buf.size());
     }
 }', '022', '222', '223', '013', null , null);
+
+
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 3, 4, 'Which of the following interfaces have Iterator?', 'SortedMap<K,V>', null , null , 'List<E>', 'Queue<E>' , 'Set<E>');
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 2, 6, 'Which data structures that implement a Map interface use an == operator, rather than the equals method for objects comparison?', 'LinkedHashMap', 'WeakHashMap' , 'HashMap' , 'IdentityHashMap', null , null);
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 103, 120, 'Which of the following lines will compile without errors?', 'float[] f = {0.7, 0.4}', null , null , 'int[ ][ ] scores = {{1, 2}, {1, 2, 3, 4}, {1, 2, 3}};', 'String[ ] names[ ];', 'float[ ] f1[ ], f2;');

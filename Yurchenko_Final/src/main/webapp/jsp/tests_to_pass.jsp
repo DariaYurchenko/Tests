@@ -33,7 +33,7 @@
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="<c:url value="/resources/images/arrays.svg"/>"></div>
             <div class="course">
-                <form method="get" action="tests">
+                <form method="post" action="tests">
                     <input type="hidden" value="1" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
@@ -49,7 +49,7 @@
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="<c:url value="/resources/images/if-else.svg"/>"></div>
             <div class="course">
-                <form method="get" action="tests">
+                <form method="post" action="tests">
                     <input type="hidden" value="2" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
@@ -65,7 +65,7 @@
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="<c:url value="/resources/images/inheritance.svg"/>"></div>
             <div class="course">
-                <form method="get" action="tests">
+                <form method="post" action="tests">
                     <input type="hidden" value="3" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
@@ -81,7 +81,7 @@
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="<c:url value="/resources/images/threads.svg"/>"></div>
             <div class="course">
-                <form method="get" action="tests">
+                <form method="post" action="tests">
                     <input type="hidden" value="4" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
@@ -97,7 +97,7 @@
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="<c:url value="/resources/images/primitive.svg"/>"></div>
             <div class="course">
-                <form method="get" action="tests">
+                <form method="post" action="tests">
                     <input type="hidden" value="5" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">
@@ -113,7 +113,7 @@
         <div class="course-container d-flex align-items-center">
             <div class="course-img-container"><img src="<c:url value="/resources/images/operators.svg"/>"></div>
             <div class="course">
-                <form method="get" action="tests">
+                <form method="post" action="tests">
                     <input type="hidden" value="6" name="theme_id">
                     <input type="hidden" name="counter" value="0">
                     <input type="hidden" name="command" value="START_TEST">

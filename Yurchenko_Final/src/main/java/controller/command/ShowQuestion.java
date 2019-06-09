@@ -28,10 +28,6 @@ public class ShowQuestion extends Command implements CommandPages {
 
         int counter = Integer.parseInt(req.getParameter("counter"));
 
-        if(counter < 0 || counter > questions.size()-1) {
-            counter = 0;
-        }
-
         req.getSession().setAttribute("progress", countProgressOfTest(questions, counter));
 
         Question question = questions.get(counter);

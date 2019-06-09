@@ -54,9 +54,9 @@ public final class Connector {
             ds.setUsername(property.getProperty("jdbc.username"));
             ds.setPassword(property.getProperty("jdbc.password"));
 
-            ds.setMinIdle(5);
-            ds.setMaxIdle(10);
-            ds.setMaxOpenPreparedStatements(100);
+            ds.setMinIdle(Integer.parseInt(property.getProperty("min.Idle")));
+            ds.setMaxIdle(Integer.parseInt(property.getProperty("max.Idle")));
+            ds.setMaxOpenPreparedStatements(Integer.parseInt(property.getProperty("max.prep.stat")));
 
             return ds;
         } catch (IOException e) {

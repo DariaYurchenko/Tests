@@ -43,11 +43,9 @@ public class ShowTestResults extends Command implements CommandPages {
         User user = (User) req.getSession().getAttribute("user");
         changeUserRankInDb(user, userPoints, maxPoints);
 
-        saveTestInDb(req, user, userPoints, maxPoints, percent);
+        saveTest(req, user, userPoints, maxPoints, percent);
 
-        if(percent >= 50) {
-            req.setAttribute("passed", "TRUE");
-        }
+        isPassedTest(req, percent);
 
         req.getSession().setAttribute("userPoints", userPoints);
         req.getSession().setAttribute("maxPoints", maxPoints);
@@ -79,7 +77,7 @@ public class ShowTestResults extends Command implements CommandPages {
         userService.setRank(user.getLogin(), userPoints, maxPoints);
     }
 
-    private void saveTestInDb(HttpServletRequest req, User user, int userPoints, int maxPoints, double percentOfRightAnswers) {
+    private void saveTest(HttpServletRequest req, User user, int userPoints, int maxPoints, double percentOfRightAnswers) {
         Integer themeId = Integer.parseInt(String.valueOf(req.getSession().getAttribute("theme_id")));
 
         Test test = new Test.Builder()
@@ -92,6 +90,15 @@ public class ShowTestResults extends Command implements CommandPages {
                 .withDate(LocalDate.now())
                 .build();
         testService.addTest(test);
+    }
+
+    private void isPassedTest(HttpServletRequest req, double percent) {
+        if(percent >= 50) {
+            req.getSession().setAttribute("passed", "TRUE");
+        }
+        else {
+            req.getSession().setAttribute("passed", null);
+        }
     }
 
     private TestStatus setStatus(double percent) {

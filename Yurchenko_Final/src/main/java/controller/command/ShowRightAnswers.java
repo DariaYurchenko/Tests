@@ -38,6 +38,9 @@ public class ShowRightAnswers extends Command implements CommandPages {
 
         if (ifSingleChoiceQuestion(question)) {
             String userAnswer = req.getParameter("singleChoice");
+            if(userAnswer == "4") {
+                return CommandResult.forward(LOGIN_PAGE);
+            }
 
             createSingleAnswerAndAddItToList(req, question, userAnswer, questionPoints);
 

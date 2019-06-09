@@ -34,7 +34,7 @@
             <h1><fmt:message key="results"/></h1>
             <p><fmt:message key="you_got"/><c:out value="${sessionScope.userPoints}"/> <fmt:message key="points_from"/><c:out value="${sessionScope.maxPoints}"/>.</p>
             <p><fmt:message key="percentage"/><span class="correct-percentage"><c:out value="${sessionScope.percent}"/>%</span>.</p>
-            <c:if test="${sessionScope.passed != null}">
+            <c:if test="${passed != null}">
                 <p><strong class="text-success"><fmt:message key="you_passed"/></strong></p>
             </c:if>
             <p><fmt:message key="email_tests"/></p>

@@ -31,6 +31,9 @@
             </div>
         </nav>
     </header>
+
+
+
     <div class="container d-flex justify-content-center">
         <div class="col-lg-8 col-md-8">
             <section class="work-section">
@@ -46,7 +49,8 @@
                     </c:if>
                     <div class="answers">
                         <c:if test="${question.questionType.type eq 'RADIO'}">
-                        <form action="tests" method="get">
+                        <form action="tests" method="post">
+
                                 <c:set var="id_counter" value="1"/>
                             <div><fmt:message key="question_what"/></div>
                             <c:if test="${sessionScope.forward == 'SHOW_QUESTION'}">
@@ -83,7 +87,7 @@
                             </c:if>
                             </c:if>
                             <c:if test="${question.questionType.type eq 'CHECKBOX'}">
-                            <form action="tests" method="get">
+                            <form action="tests" method="post">
                                 <div><fmt:message key="question_checkbox"/></div>
                                     <c:set var="id_counter" value="1"/>
                                 <c:if test="${sessionScope.forward == 'SHOW_QUESTION'}">
@@ -124,7 +128,7 @@
                                 </c:if>
                                 </c:if>
                                 <c:if test="${question.questionType.type eq 'TEXT'}">
-                                <form action="tests" method="get">
+                                <form action="tests" method="post">
                                     <div><fmt:message key="question_text"/></div>
                                     <c:set var="id_counter" value="1"/>
                                     <c:if test="${sessionScope.forward == 'SHOW_QUESTION'}">
@@ -158,6 +162,7 @@
                                     <c:set var="id_counter" value="${id_counter + 1}"/>
 
                                     </c:if>
+
                                     <c:if test="${(counter < length) && (sessionScope.forward == 'SHOW_ANSWERS')}">
                                         <input type="hidden" name="command" value="SHOW_QUESTION">
                                         <input type="hidden" name="counter" value="${counter}">

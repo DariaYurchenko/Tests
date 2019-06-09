@@ -32,7 +32,7 @@ public class SendTestResults extends Command implements CommandPages {
 
         TestInfo testInfo = userTests.get(userTests.size() - 1);
 
-        req.getSession().setAttribute("sent", "TRUE");
+        req.setAttribute("sent", "TRUE");
 
         MailsSender.sendTestResults(testInfo, language);
 

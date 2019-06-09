@@ -23,18 +23,6 @@ public class Test {
         System.out.println(array.indexOf(6));
     }
 }', '22', '-1-1', 'Runtime-error', '21', null , null);
-insert into questions_rus (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (1, 1, 1, 5, 'import java.util.*;
-public class Test {
-    public static void main(String[] args) {
-        List buf = new ArrayList(2);
-        System.out.print(buf.size());
-        buf.add(10);
-        System.out.print(buf.size());
-        buf.add(20);
-        buf.add(30);
-        System.out.print(buf.size());
-    }
-}', '022', '222', '223', '013', null , null);
 insert into questions_rus (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 3, 4, 'Какие из следующих интерфейсов содержат Iterator?', 'SortedMap<K,V>', null , null , 'List<E>', 'Queue<E>' , 'Set<E>');
 insert into questions_rus (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 2, 6, 'Какие из следующих структур данных, которые наследуют интерфейс Map, используют оператор ==, вместо equals, для сравнения объектов?', 'LinkedHashMap', 'WeakHashMap' , 'HashMap' , 'IdentityHashMap', null , null);
 insert into questions_rus (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 103, 120, 'Какие из следующих строчек кода скомпиллируются без ошибок?', 'float[] f = {0.7, 0.4}', null , null , 'int[ ][ ] scores = {{1, 2}, {1, 2, 3, 4}, {1, 2, 3}};', 'String[ ] names[ ];', 'float[ ] f1[ ], f2;');
