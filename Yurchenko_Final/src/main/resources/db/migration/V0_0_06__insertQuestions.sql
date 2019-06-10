@@ -56,7 +56,7 @@ insert into questions (question_type, question_theme_id, right_answers, answers,
                 System.out.println("default");
         }
     }
-}', 'Runtime error', '"default"', 'Compilation error', '"4"', null , null);
+}', 'Runtime error', 'default', 'Compilation error', '4', null , null);
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 2, 20, 52, 'Which types of loops are in Java?', 'break', ' vicious', null , 'do...while', 'for', null);
 
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (1, 3, 9, 14, 'public class Parent {

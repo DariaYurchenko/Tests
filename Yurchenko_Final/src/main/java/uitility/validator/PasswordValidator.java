@@ -1,7 +1,7 @@
 package uitility.validator;
 
 public final class PasswordValidator {
-    private static final String PASSWORD = ".{5,}$";
+    private static final String PASSWORD = ".{5,10}$";
 
     private PasswordValidator() {
     }

@@ -1,4 +1,3 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -166,13 +165,11 @@
                                     <c:if test="${(counter < length) && (sessionScope.forward == 'SHOW_ANSWERS')}">
                                         <input type="hidden" name="command" value="SHOW_QUESTION">
                                         <input type="hidden" name="counter" value="${counter}">
-                                        <input type="hidden" name="theme_id" value="1">
                                         <div class="button-div text-center"><button class="btn" type="submit"><fmt:message key="continue"/></button></div>
                                     </c:if>
                                     <c:if test="${(counter < length) && (sessionScope.forward == 'SHOW_QUESTION')}">
                                         <input type="hidden" name="command" value="SHOW_ANSWERS">
                                         <input type="hidden" name="counter" value="${counter}">
-                                        <input type="hidden" name="theme_id" value="1">
                                         <div class="button-div text-center"><button class="btn" type="submit"><fmt:message key="next"/></button></div>
                                     </c:if>
                                     <c:if test="${counter >= length}">
