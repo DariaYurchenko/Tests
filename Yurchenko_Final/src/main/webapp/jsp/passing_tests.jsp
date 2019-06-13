@@ -31,8 +31,6 @@
         </nav>
     </header>
 
-
-
     <div class="container d-flex justify-content-center">
         <div class="col-lg-8 col-md-8">
             <section class="work-section">
@@ -41,13 +39,17 @@
                 </div>
                 <div>
                     <c:if test="${appLocale == 'en_UK'}">
-                        <pre><c:out value="${question.question}"/></pre>
+                        <c:set var="q" value="${question}"/>
+                        <pre><c:out value="${q.question}"/></pre>
+                        <c:set var="options" value="${options}"/>
                     </c:if>
                     <c:if test="${appLocale != 'en_UK'}">
-                        <pre><c:out value="${rusQuestion.question}"/></pre>
+                        <c:set var="q" value="${rusQuestion}"/>
+                        <pre><c:out value="${q.question}"/></pre>
+                        <c:set var="options" value="${optionsTranslated}"/>
                     </c:if>
                     <div class="answers">
-                        <c:if test="${question.questionType.type eq 'RADIO'}">
+                        <c:if test="${q.questionType.type eq 'RADIO'}">
                         <form action="tests" method="post">
 
                                 <c:set var="id_counter" value="1"/>
@@ -64,28 +66,44 @@
                             </c:if>
                             <c:if test="${sessionScope.forward == 'SHOW_ANSWERS'}">
                             <c:forEach items="${options}" var="options">
-                            <c:if test="${options == question.correctOption1}">
+                            <c:if test="${options == q.correctOption1}">
                             <div class="custom-control custom-radio success result">
                                 <c:out value="${options}"/>
-                                <c:if test="${options == userAnswer}">
+                                <c:if test="${options == userAnswer || question.correctOption1 == userAnswer || rusQuestion.correctOption1 == userAnswer}">
                                     <p><fmt:message key="your_answer"/></p>
                                 </c:if>
                             </div>
                             </c:if>
-                            <c:if test="${options != question.correctOption1}">
+                            <c:if test="${options == q.incorrectOption1 }">
                             <div class="custom-control custom-radio danger result">
                                 <c:out value="${options}"/>
-                                <c:if test="${options == userAnswer}">
+                                <c:if test="${options == userAnswer || question.incorrectOption1 == userAnswer || rusQuestion.incorrectOption1 == userAnswer }">
                                     <p><fmt:message key="your_answer"/></p>
                                 </c:if>
                             </div>
                             </c:if>
+                                    <c:if test="${options == q.incorrectOption2 }">
+                                    <div class="custom-control custom-radio danger result">
+                                        <c:out value="${options}"/>
+                                        <c:if test="${options == userAnswer || question.incorrectOption2 == userAnswer || rusQuestion.incorrectOption2 == userAnswer }">
+                                            <p><fmt:message key="your_answer"/></p>
+                                        </c:if>
+                                    </div>
+                                    </c:if>
+                                    <c:if test="${options == q.incorrectOption3 }">
+                                    <div class="custom-control custom-radio danger result">
+                                        <c:out value="${options}"/>
+                                        <c:if test="${options == userAnswer || question.incorrectOption3 == userAnswer || rusQuestion.incorrectOption3 == userAnswer }">
+                                            <p><fmt:message key="your_answer"/></p>
+                                        </c:if>
+                                    </div>
+                                    </c:if>
                                 <c:set var="id_counter" value="${id_counter + 1}"/>
                             </c:forEach>
                             <p><fmt:message key="percent_answers"/><c:out value="${sessionScope.answerPercent}"/>%</p>
                             </c:if>
                             </c:if>
-                            <c:if test="${question.questionType.type eq 'CHECKBOX'}">
+                            <c:if test="${q.questionType.type eq 'CHECKBOX'}">
                             <form action="tests" method="post">
                                 <div><fmt:message key="question_checkbox"/></div>
                                     <c:set var="id_counter" value="1"/>
@@ -102,19 +120,44 @@
                                 </c:if>
                                 <c:if test="${sessionScope.forward == 'SHOW_ANSWERS'}">
                                 <c:forEach items="${options}" var="options">
-                                <c:if test="${options == question.correctOption1 || options == question.correctOption2 || options == question.correctOption3}">
+                                <c:if test="${options == question.correctOption1 || options == question.correctOption2 || options == question.correctOption3
+                                || options == rusQuestion.correctOption1 || options == rusQuestion.correctOption2 || options == rusQuestion.correctOption3}">
                                 <div class="custom-control success result">
                                     <c:out value="${options}"/>
-                                    <c:if test="${options == userAnswer1 || options == userAnswer2 || options == userAnswer3|| options == userAnswer4}">
+                                    <c:if test="${(options == question.correctOption1 || options == rusQuestion.correctOption1) && (options == userAnswer1 || rusQuestion.correctOption1 == userAnswer1|| question.correctOption1 == userAnswer1 ||
+                                    options == userAnswer2 || rusQuestion.correctOption1 == userAnswer2|| question.correctOption1 == userAnswer2 || options == userAnswer3 || rusQuestion.correctOption1 == userAnswer3
+                                    || question.correctOption1 == userAnswer3 || options == userAnswer4 || rusQuestion.correctOption1 == userAnswer4|| question.correctOption1 == userAnswer4)}">
                                         <p><fmt:message key="your_answer"/></p>
                                     </c:if>
-
+                                    <c:if test="${(options == question.correctOption2 || options == rusQuestion.correctOption2) && (options == userAnswer1 || rusQuestion.correctOption2 == userAnswer1|| question.correctOption2 == userAnswer1 ||
+                                    options == userAnswer2 || rusQuestion.correctOption2 == userAnswer2|| question.correctOption2 == userAnswer2 || options == userAnswer3 || rusQuestion.correctOption2 == userAnswer3
+                                    || question.correctOption2 == userAnswer3 || options == userAnswer4 || rusQuestion.correctOption2 == userAnswer4|| question.correctOption2 == userAnswer4)}">
+                                        <p><fmt:message key="your_answer"/></p>
+                                    </c:if>
+                                    <c:if test="${(options == question.correctOption3 || options == rusQuestion.correctOption3) && (options == userAnswer1 || rusQuestion.correctOption3 == userAnswer1|| question.correctOption3 == userAnswer1 ||
+                                    options == userAnswer2 || rusQuestion.correctOption3 == userAnswer2|| question.correctOption3 == userAnswer2 || options == userAnswer3 || rusQuestion.correctOption3 == userAnswer3
+                                    || question.correctOption3 == userAnswer3 || options == userAnswer4 || rusQuestion.correctOption3 == userAnswer4|| question.correctOption3 == userAnswer4)}">
+                                        <p><fmt:message key="your_answer"/></p>
+                                    </c:if>
                                 </div>
                                 </c:if>
-                                <c:if test="${options != question.correctOption1 && options != question.correctOption2 && options != question.correctOption3}">
+                                <c:if test="${options != question.correctOption1 && options != question.correctOption2 && options != question.correctOption3 ||
+                                options != rusQuestion.correctOption1 && options != rusQuestion.correctOption2 && options != rusQuestion.correctOption3}">
                                 <div class="custom-control danger result">
                                     <c:out value="${options}"/>
-                                    <c:if test="${options == userAnswer1 || options == userAnswer2 || options == userAnswer3|| options == userAnswer4}">
+                                    <c:if test="${(options == question.incorrectOption1 || options == rusQuestion.incorrectOption1) && (options == userAnswer1 || rusQuestion.incorrectOption1 == userAnswer1|| question.incorrectOption1 == userAnswer1 ||
+                                    options == userAnswer2 || rusQuestion.incorrectOption1 == userAnswer2|| question.incorrectOption1 == userAnswer2 || options == userAnswer3 || rusQuestion.incorrectOption1 == userAnswer3
+                                    || question.incorrectOption1 == userAnswer3 || options == userAnswer4 || rusQuestion.incorrectOption1 == userAnswer4|| question.incorrectOption1 == userAnswer4)}">
+                                        <p><fmt:message key="your_answer"/></p>
+                                    </c:if>
+                                    <c:if test="${(options == question.incorrectOption2 || options == rusQuestion.incorrectOption2) && (options == userAnswer1 || rusQuestion.incorrectOption2 == userAnswer1|| question.incorrectOption2 == userAnswer1 ||
+                                    options == userAnswer2 || rusQuestion.incorrectOption2 == userAnswer2|| question.incorrectOption2 == userAnswer2 || options == userAnswer3 || rusQuestion.incorrectOption2 == userAnswer3
+                                    || question.incorrectOption2 == userAnswer3 || options == userAnswer4 || rusQuestion.incorrectOption2 == userAnswer4|| question.incorrectOption2 == userAnswer4)}">
+                                        <p><fmt:message key="your_answer"/></p>
+                                    </c:if>
+                                    <c:if test="${(options == question.incorrectOption3 || options == rusQuestion.incorrectOption3) && (options == userAnswer1 || rusQuestion.incorrectOption3 == userAnswer1|| question.incorrectOption3 == userAnswer1 ||
+                                    options == userAnswer2 || rusQuestion.incorrectOption3 == userAnswer2|| question.incorrectOption3 == userAnswer2 || options == userAnswer3 || rusQuestion.incorrectOption3 == userAnswer3
+                                    || question.incorrectOption3 == userAnswer3 || options == userAnswer4 || rusQuestion.incorrectOption3 == userAnswer4|| question.incorrectOption3 == userAnswer4)}">
                                         <p><fmt:message key="your_answer"/></p>
                                     </c:if>
 
@@ -126,7 +169,7 @@
                                 <p><fmt:message key="percent_answers"/><c:out value="${sessionScope.answerPercent}"/>%</p>
                                 </c:if>
                                 </c:if>
-                                <c:if test="${question.questionType.type eq 'TEXT'}">
+                                <c:if test="${q.questionType.type eq 'TEXT'}">
                                 <form action="tests" method="post">
                                     <div><fmt:message key="question_text"/></div>
                                     <c:set var="id_counter" value="1"/>
@@ -139,15 +182,15 @@
                                         </div>
                                     </c:if>
                                     <c:if test="${sessionScope.forward == 'SHOW_ANSWERS'}">
-                                        <c:if test="${userAnswer == question.correctOption1}">
+                                        <c:if test="${userAnswer == q.correctOption1}">
                                             <div class="custom-control success result">
                                                 <p><fmt:message key="your_answer"/></p>
                                                 <c:out value="${userAnswer}"/>
                                             </div>
                                         </c:if>
-                                        <c:if test="${userAnswer != question.correctOption1}">
+                                        <c:if test="${userAnswer != q.correctOption1}">
                                             <div class="custom-control success">
-                                                <c:out value="${question.correctOption1}"/>
+                                                <c:out value="${q.correctOption1}"/>
                                             </div>
                                             <c:if test="${userAnswer != ''}">
                                                 <div class="custom-control danger result">
@@ -183,23 +226,23 @@
         </div>
         <aside class="col-lg-4 col-md-4">
             <section>
-                <h2 class="text-center"><c:out value="${question.theme.themeName}"/></h2>
-                <c:if test="${question.theme.themeId == 1}">
+                <h2 class="text-center"><c:out value="${q.theme.themeName}"/></h2>
+                <c:if test="${q.theme.themeId == 1}">
                     <div class="course-img-container"><img src="<c:url value="/resources/images/arrays.svg"/>"></div>
                 </c:if>
-                <c:if test="${question.theme.themeId == 2}">
+                <c:if test="${q.theme.themeId == 2}">
                     <div class="course-img-container"><img src="<c:url value="/resources/images/if-else.svg"/>"></div>
                 </c:if>
-                <c:if test="${question.theme.themeId == 3}">
+                <c:if test="${q.theme.themeId == 3}">
                     <div class="course-img-container"><img src="<c:url value="/resources/images/inheritance.svg"/>"></div>
                 </c:if>
-                <c:if test="${question.theme.themeId == 4}">
+                <c:if test="${q.theme.themeId == 4}">
                     <div class="course-img-container"><img src="<c:url value="/resources/images/threads.svg"/>"></div>
                 </c:if>
-                <c:if test="${question.theme.themeId == 5}">
+                <c:if test="${q.theme.themeId == 5}">
                     <div class="course-img-container"><img src="<c:url value="/resources/images/primitive.svg"/>"></div>
                 </c:if>
-                <c:if test="${question.theme.themeId == 6}">
+                <c:if test="${q.theme.themeId == 6}">
                     <div class="course-img-container"><img src="<c:url value="/resources/images/operators.svg"/>"></div>
                 </c:if>
             </section>

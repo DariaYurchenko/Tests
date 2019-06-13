@@ -110,6 +110,7 @@ public class ShowRightAnswersTest {
         when(request.getParameter("singleChoice")).thenReturn(USER_ANSWER);
         when(request.getParameterValues("multipleChoice")).thenReturn(USER_ANSWERS);
         when(session.getAttribute("question")).thenReturn(question);
+        when(session.getAttribute("appLocale")).thenReturn("en_UK");
         when(session.getAttribute("userAnswers")).thenReturn(ANSWERS);
         when(questionService.setQuestionPoints(question)).thenReturn(2);
         when(answerService.makeMultipleChoiceAnswer(2, USER_ANSWERS, correctAnswers)).thenReturn(ANSWER);

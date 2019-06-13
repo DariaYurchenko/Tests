@@ -26,7 +26,6 @@ public class ShowThemeQuestions extends Command implements CommandPages {
 
         int currentPage = setCurrentPage(req);
         int recordsPerPage = setRecordsPerPage(req);
-        int rows = setRows();
 
         Pagination pagination = new Pagination(recordsPerPage, currentPage);
 
@@ -34,6 +33,7 @@ public class ShowThemeQuestions extends Command implements CommandPages {
 
         if(optId.isPresent()) {
             Integer themeId = Integer.parseInt(req.getParameter("radio"));
+            int rows = setRows(themeId);
 
             List<Question> questionList = findThemeQuestions(pagination, recordsPerPage, rows, themeId);
             int questionsSize = questionList.size();
@@ -44,6 +44,7 @@ public class ShowThemeQuestions extends Command implements CommandPages {
             req.getSession().setAttribute("questions", questionList);
             req.getSession().setAttribute("questionsSize", questionsSize);
             req.getSession().setAttribute("act", "SHOW_BY_THEME_ID");
+            req.setAttribute("radio", themeId);
         }
         return CommandResult.forward(ADMIN_QUESTIONS);
     }
@@ -58,8 +59,8 @@ public class ShowThemeQuestions extends Command implements CommandPages {
         return requestRecordsPerPage == null ? 5 : Integer.parseInt(requestRecordsPerPage);
     }
 
-    private int setRows() {
-        return questionService.findAllQuestions().size();
+    private int setRows(Integer themeId) {
+        return questionService.findQuestionsByTheme(themeId).size();
     }
 
     private List<Question> findThemeQuestions(Pagination pagination, int recordsPerPage, int rows, Integer themeId) {

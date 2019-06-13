@@ -9,7 +9,9 @@ public interface QuestionDao extends GenericDao<Question> {
 
     Map<String, Integer> getCurrentAnswersForQuestionFromDb(Integer questionId);
 
-    void changeAmountOfAnswersInDb(Integer questionId, int plusPoints, int plusMaxPoints);
+    void changeAmountOfAnswersInDb(Integer questionId,int plusRightAnswers, int plusAnswers);
+
+    void changeAmountOfAnswersTranslatedInDb(Integer questionId, int plusRightAnswers, int plusAnswers);
 
     List<Question> findThemeQuestions(Integer themeId);
 

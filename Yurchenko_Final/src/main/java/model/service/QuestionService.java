@@ -20,7 +20,7 @@ public interface QuestionService {
 
     Optional<Question> findQuestionById(Integer questionId);
 
-    List<Question> findQuestionsByTheme(Integer questionId);
+    List<Question> findQuestionsByTheme(Integer themeId);
 
     void setAnswers(Integer questionId, int plusRightAnswers, int plusAllAnswers);
 

@@ -70,6 +70,7 @@ public class QuestionServiceImpl implements QuestionService {
         int newAllAnswers = changeQuestionAnswers(startAnswers.get("AllAnswers"), plusAllAnswers);
 
         questionDao.changeAmountOfAnswersInDb(questionId, newRightAnswers, newAllAnswers);
+        questionDao.changeAmountOfAnswersTranslatedInDb(questionId, newRightAnswers, newAllAnswers);
     }
 
     private int changeQuestionAnswers(Integer startAnswersAmount, Integer plusAnswersAmount) {

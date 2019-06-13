@@ -22,6 +22,7 @@ public class ShowRightAnswers extends Command implements CommandPages {
     private static final String RADIO = "Radio";
     private static final String CHECKBOX = "Checkbox";
     private static final String TEXT = "Text";
+    private static final String UK_LANG = "en_UK";
 
     private QuestionService questionService;
     private AnswerService answerService;
@@ -33,7 +34,8 @@ public class ShowRightAnswers extends Command implements CommandPages {
 
     @Override
     public CommandResult execute(HttpServletRequest req, HttpServletResponse resp) {
-        Question question = (Question) req.getSession().getAttribute("question");
+        Question question = makeQuestion(req);
+
         int questionPoints = questionService.setQuestionPoints(question);
 
         if (ifSingleChoiceQuestion(question)) {
@@ -73,6 +75,12 @@ public class ShowRightAnswers extends Command implements CommandPages {
         req.getSession().setAttribute("counter", counter + 1);
 
         return CommandResult.forward(PASS_TESTS);
+    }
+
+    private Question makeQuestion(HttpServletRequest req) {
+        String language = (String) req.getSession().getAttribute("appLocale");
+        return UK_LANG.equals(language) ? (Question) req.getSession().getAttribute("question") :
+                (Question) req.getSession().getAttribute("rusQuestion");
     }
 
     private String getQuestionType(Question question) {

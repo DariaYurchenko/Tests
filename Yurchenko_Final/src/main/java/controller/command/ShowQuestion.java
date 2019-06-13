@@ -34,9 +34,12 @@ public class ShowQuestion extends Command implements CommandPages {
         Question rusQuestion = rusQuestions.get(counter);
 
         List<String> options = makeListOfOptions(question);
+        List<String> optionsTranslated = makeListOfOptions(rusQuestion);
         Collections.shuffle(options);
+        Collections.shuffle(optionsTranslated);
 
         req.getSession().setAttribute("options", options);
+        req.getSession().setAttribute("optionsTranslated", optionsTranslated);
         req.getSession().setAttribute("question", question);
         req.getSession().setAttribute("rusQuestion", rusQuestion);
         req.getSession().setAttribute("length", questions.size());

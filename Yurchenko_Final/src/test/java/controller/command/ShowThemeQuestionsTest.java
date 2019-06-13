@@ -45,7 +45,7 @@ public class ShowThemeQuestionsTest {
         when(request.getParameter("radio")).thenReturn("1");
         when(request.getParameter("currentPage")).thenReturn("1");
         when(request.getParameter("recordsPerPage")).thenReturn("5");
-        when(questionService.findAllQuestions()).thenReturn(questions);
+        when(questionService.findQuestionsByTheme(anyInt())).thenReturn(questions);
 
         CommandResult commandResult = showThemeQuestionsCommand.execute(request, response);
         assertEquals(CommandPages.ADMIN_QUESTIONS, commandResult.getPage());

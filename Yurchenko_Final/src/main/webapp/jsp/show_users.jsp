@@ -59,7 +59,7 @@
                         </tr>
                         <c:forEach items="${users}" var="students">
                             <tr>
-                                <th scope="row"><c:out value="${counter}"/>1</th>
+                                <th scope="row"><c:out value="${counter}"/></th>
                                 <td><c:out value="${students.userId}"/></td>
                                 <td><c:out value="${students.login}"/></td>
                                 <td><c:out value="${students.name}"/></td>

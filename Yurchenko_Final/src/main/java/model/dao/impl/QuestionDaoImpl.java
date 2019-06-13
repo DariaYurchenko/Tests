@@ -31,7 +31,12 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     private static final String FIND_QUESTION_BY_ID = SELECT_ALL_QUESTIONS_JOIN_QUESTION_TYPE +
             " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id " +
             "WHERE question_id = ?;";
+    private static final String FIND_QUESTION_BY_ID_TRANSLATED = "SELECT * FROM questions_rus q JOIN question_type qt" +
+            " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id " +
+            "WHERE question_id = ?;";
     private static final String UPDATE_QUESTION_ANSWERS = "UPDATE questions SET right_answers = ?, " +
+            "answers = ? WHERE question_id = ?;";
+    private static final String UPDATE_QUESTION_ANSWERS_TRANSLATED = "UPDATE questions_rus SET right_answers = ?, " +
             "answers = ? WHERE question_id = ?;";
     private static final String FIND_TRANSLATED_QUESTION_OF_THEME = "SELECT * FROM questions_rus q JOIN question_type qt" +
             " ON q.question_type=qt.question_type_id JOIN themes t ON q.question_theme_id=t.theme_id WHERE t.theme_id = ? AND question_id = ?";
@@ -200,17 +205,8 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
     @Override
     public Map<String, Integer> getCurrentAnswersForQuestionFromDb(Integer questionId) {
         Map<String, Integer> answers = new HashMap<>();
-        int rightAnswers = 0;
-        int allAnswers = 0;
         try (PreparedStatement ps = connection.prepareStatement(FIND_QUESTION_BY_ID)) {
-            ps.setInt(1, questionId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                rightAnswers = rs.getInt(RIGHT_ANSWERS);
-                allAnswers = rs.getInt(ANSWERS);
-            }
-            answers.put("rightAnswers", rightAnswers);
-            answers.put("AllAnswers", allAnswers);
+            getQuestionAnswers(ps, questionId, answers);
             return answers;
         } catch (SQLException e) {
             LOGGER.warn("SQLException with getting answers: " + e.getMessage());
@@ -218,17 +214,44 @@ public class QuestionDaoImpl extends GenericDaoImpl<Question> implements Questio
         }
     }
 
+    private void getQuestionAnswers(PreparedStatement ps, Integer questionId, Map<String, Integer> answers ) throws SQLException {
+        int rightAnswers = 0;
+        int allAnswers = 0;
+        ps.setInt(1, questionId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            rightAnswers = rs.getInt(RIGHT_ANSWERS);
+            allAnswers = rs.getInt(ANSWERS);
+        }
+        answers.put("rightAnswers", rightAnswers);
+        answers.put("AllAnswers", allAnswers);
+    }
+
     @Override
     public void changeAmountOfAnswersInDb(Integer questionId, int plusRightAnswers, int plusAnswers) {
         try (PreparedStatement ps = connection.prepareStatement(UPDATE_QUESTION_ANSWERS)) {
-            ps.setInt(1, plusRightAnswers);
-            ps.setInt(2, plusAnswers);
-            ps.setInt(3, questionId);
-            ps.executeUpdate();
+            changeAnswersRatio(ps, plusRightAnswers, plusAnswers, questionId);
         } catch (SQLException e) {
             LOGGER.warn("SQLException with updating question's answers: " + e.getMessage());
             throw new DaoRuntimeException(e);
         }
+    }
+
+    @Override
+    public void changeAmountOfAnswersTranslatedInDb(Integer questionId, int plusRightAnswers, int plusAnswers) {
+        try (PreparedStatement ps = connection.prepareStatement(UPDATE_QUESTION_ANSWERS_TRANSLATED)) {
+            changeAnswersRatio(ps, plusRightAnswers, plusAnswers, questionId);
+        } catch (SQLException e) {
+            LOGGER.warn("SQLException with updating question's answers: " + e.getMessage());
+            throw new DaoRuntimeException(e);
+        }
+    }
+
+    private void changeAnswersRatio(PreparedStatement ps, int plusRightAnswers, int plusAnswers, Integer questionId) throws SQLException {
+        ps.setInt(1, plusRightAnswers);
+        ps.setInt(2, plusAnswers);
+        ps.setInt(3, questionId);
+        ps.executeUpdate();
     }
 
     @Override

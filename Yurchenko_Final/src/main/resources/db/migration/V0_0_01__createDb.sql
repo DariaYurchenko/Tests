@@ -116,4 +116,3 @@ create table tests
             on update cascade
             on delete cascade
 );
-

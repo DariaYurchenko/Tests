@@ -61,7 +61,7 @@
                     </tr>
                     <c:forEach items="${questions}" var="questions">
                         <tr>
-                            <th scope="row"><c:out value="${counter}"/>1</th>
+                            <th scope="row"><c:out value="${counter}"/></th>
                             <td><c:out value="${questions.question}"/></td>
                             <td><c:out value="${questions.percentOfRightAnswers}"/></td>
                             <td><c:out value="${questions.incorrectOption1}"/></td>
@@ -179,11 +179,11 @@
         <c:if test="${act == 'SHOW_BY_THEME_ID'}">
             <div class="text-center"><fmt:message key="records_per_page"/></div>
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=5"/>">5</a>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&radio=${radio}&recordsPerPage=5"/>">5</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=10"/>">10</a>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&radio=${radio}&recordsPerPage=10"/>">10</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=50"/>">50</a>
+                <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&radio=${radio}&recordsPerPage=50"/>">50</a>
                 </li>
             </ul>
             <div class="table-div">
@@ -226,7 +226,7 @@
             </c:if>
             <ul class="pagination justify-content-center">
                 <c:if test="${currentPage != 1}">
-                    <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage-1}"/>">Previous</a>
+                    <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&radio=${radio}&recordsPerPage=${recordsPerPage}&currentPage=${currentPage-1}"/>">Previous</a>
                     </li>
                 </c:if>
                 <c:forEach begin="1" end="${noOfPages}" var="i">
@@ -237,13 +237,13 @@
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=${recordsPerPage}&currentPage=${i}"/>">${i}</a>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&radio=${radio}&recordsPerPage=${recordsPerPage}&currentPage=${i}"/>">${i}</a>
                             </li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
                 <c:if test="${currentPage lt noOfPages}">
-                    <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&recordsPerPage=${recordsPerPage}&currentPage=${currentPage+1}"/>">Next</a>
+                    <li class="page-item"><a class="page-link" href="<c:url value="/tests?command=SHOW_THEME_QUESTIONS&radio=${radio}&recordsPerPage=${recordsPerPage}&currentPage=${currentPage+1}"/>">Next</a>
                     </li>
                 </c:if>
             </ul>

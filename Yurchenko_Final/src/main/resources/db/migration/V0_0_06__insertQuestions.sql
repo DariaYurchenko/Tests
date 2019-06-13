@@ -11,19 +11,18 @@ insert into questions (question_type, question_theme_id, right_answers, answers,
     }
 }', '3 4', 'Run-time error', '4 3', 'Compilation error', null , null);
 
-insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (1, 1, 1, 5, 'import java.util.*;
+insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (1, 1, 2, 5, 'import java.util.ArrayList;
 public class Test {
     public static void main(String[] args) {
-        List buf = new ArrayList(2);
-        System.out.print(buf.size());
-        buf.add(10);
-        System.out.print(buf.size());
-        buf.add(20);
-        buf.add(30);
-        System.out.print(buf.size());
+        ArrayList<Integer> array = new ArrayList<Integer>(2);
+        array.add(5);
+        array.add(6);
+        array.add(1, 7);
+        System.out.print(array.indexOf(6));
+        array.remove(1);
+        System.out.println(array.indexOf(6));
     }
-}', '022', '222', '223', '013', null , null);
-
+}', '22', '-1-1', 'Runtime-error', '21', null , null);
 
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 3, 4, 'Which of the following interfaces have Iterator?', 'SortedMap<K,V>', null , null , 'List<E>', 'Queue<E>' , 'Set<E>');
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 1, 2, 6, 'Which data structures that implement a Map interface use an == operator, rather than the equals method for objects comparison?', 'LinkedHashMap', 'WeakHashMap' , 'HashMap' , 'IdentityHashMap', null , null);
@@ -61,7 +60,6 @@ insert into questions (question_type, question_theme_id, right_answers, answers,
 
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (1, 3, 9, 14, 'public class Parent {
     protected String value = "parent";
-
     public static void main(String[] args) {
         Parent parent = new Child();
         Child child = new Child();
@@ -69,7 +67,6 @@ insert into questions (question_type, question_theme_id, right_answers, answers,
         System.out.println(child.value);
     }
 }
-
 class Child extends Parent {
     protected String value = "child";
 }', 'child child', 'parent parent', 'Runtime error', 'parent child', null , null);
@@ -189,4 +186,5 @@ insert into questions (question_type, question_theme_id, right_answers, answers,
 }', '"bytebyte" without the quotes', 'ClassCastException', 'Runtime error', 'Сompilation error', null , null);
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 6, 25, 48, 'Which of the following options are correct?', 'boolean b1 = 0;', 'boolean b2 = ‘false’;', null , 'boolean b6 = Boolean.FALSE;', 'boolean b3 = false;', null);
 insert into questions (question_type, question_theme_id, right_answers, answers, question, incorrect_option1, incorrect_option2, incorrect_option3, correct_option1, correct_option2, correct_option3) values (2, 6, 49, 52, 'Which of the following lines will compile without errors and warnings?', 'char c = "a";', 'boolean b = null;', 'float f = 1.3;', 'int i = 10;', null , null);
+
 

@@ -53,7 +53,6 @@ public class ShowTestResultsTest {
         when(session.getAttribute("theme_id")).thenReturn("1");
         doNothing().when(userService).setRank(anyString(), anyInt(), anyInt());
         doNothing().when(testService).addTest(any());
-        doNothing().when(request).setAttribute(any(), anyString());
 
         CommandResult commandResult = showTestResultsCommand.execute(request, response);
         assertEquals(CommandPages.SHOW_RESULTS, commandResult.getPage());
