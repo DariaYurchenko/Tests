@@ -50,7 +50,6 @@
                     </c:if>
                 </div>
             </c:if>
-            <c:if test="${requestScope.forgot == null}">
                 <input value="LOGIN" name="command" type="hidden">
                 <div class="form-group">
                     <label for="password"><fmt:message key="register_password"/></label>
@@ -58,8 +57,11 @@
                     <c:if test="${requestScope.errPassword != null}">
                         <small class="text-danger"><fmt:message key="incorrect_password"/></small>
                     </c:if>
+                    <c:if test="${requestScope.forgotPassword != null}">
+                        <small class="text-danger"><fmt:message key="not_your_login"/></small>
+                    </c:if>
+
                 </div>
-            </c:if>
 
             <div class="button-div form-group col-md-12 text-center">
                 <input type="submit" class="btn" value="Log In">
@@ -126,22 +128,7 @@
                 }});
         </script>
     </section>
-    <section class="text-center">
-        <c:if test="${requestScope.forgotPassword != null}">
-            <form class="col-lg-6" action="tests" name="forgot-pass-form" method="get">
-                <input value="LOGIN" name="command" type="hidden">
-                <input type="hidden" name="ifForgotPassword" value="TRUE">
-                <p class="forgot-message"><fmt:message key="forgot_password"/></p>
-                <div class="button-div form-group col-md-12 text-center">
-                    <button class="btn" type="submit"><fmt:message key="yes"/></button>
-                </div>
-            </form>
-        </c:if>
 
-        <c:if test="${requestScope.passwordChanged != null}">
-            <fmt:message key="password_changed"/>
-        </c:if>
-    </section>
     <section class="img-section">
         <div class="img-div text-center"><img src="<c:url value="/resources/images/reg_fox.jpg"/>"></div>
     </section>

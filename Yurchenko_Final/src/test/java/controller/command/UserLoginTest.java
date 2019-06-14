@@ -79,7 +79,7 @@ public class UserLoginTest {
                 {CommandPages.LOGIN_PAGE,STUDENT, CORRECT_EMAIL, INCORRECT_PASSWORD, "FALSE"},
                 {CommandPages.LOGIN_PAGE, STUDENT, CORRECT_EMAIL, INVALID_PASSWORD, "FALSE"},
                 {CommandPages.LOGIN_PAGE, null, CORRECT_EMAIL, INVALID_PASSWORD, "FALSE"},
-                {CommandPages.CHANGE_PASSWORD_PAGE, STUDENT, CORRECT_EMAIL, INCORRECT_PASSWORD, "TRUE"},
+                {CommandPages.LOGIN_PAGE, STUDENT, CORRECT_EMAIL, INCORRECT_PASSWORD, "TRUE"},
         });
     }
 
@@ -89,7 +89,6 @@ public class UserLoginTest {
         when(request.getParameter("password")).thenReturn(passwordFromForm);
         when(request.getParameter("appLocale")).thenReturn("ru_RU");
         when(request.getSession()).thenReturn(session);
-        when(request.getParameter("ifForgotPassword")).thenReturn(isForgotPassword);
         when(userService.findUserByLogin(CORRECT_EMAIL)).thenReturn(Optional.ofNullable(user));
         doNothing().when(request).setAttribute(any(), anyString());
         doNothing().when(session).setAttribute(any(), anyString());

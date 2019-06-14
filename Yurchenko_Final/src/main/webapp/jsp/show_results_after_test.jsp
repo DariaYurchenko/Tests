@@ -38,14 +38,14 @@
                 <p><strong class="text-success"><fmt:message key="you_passed"/></strong></p>
             </c:if>
             <p><fmt:message key="email_tests"/></p>
-            <c:if test="${sent == null}">
+            <c:if test="${sent != 'TRUE'}">
                 <form action="tests" method="get">
                     <input type="hidden" name="command" value="SEND_RESULTS">
                     <button class="pretty-button" type="submit"><fmt:message key="send"/></button>
                     <a class="pretty-button" href="<c:url value="/tests?page=start_page"/>"><fmt:message key="no"/></a>
                 </form>
             </c:if>
-            <c:if test="${sent != null}">
+            <c:if test="${sent == 'TRUE'}">
                 <p><fmt:message key="was_sent"/></p>
                 <a class="pretty-button" href="<c:url value="/tests?page=start_page"/>"><fmt:message key="back"/></a>
             </c:if>

@@ -17,8 +17,7 @@ import java.util.Optional;
 
 /**
  * Called when user tries to log in. Check if the login and password
- * are valid. If Password is valid but incorrect, proposes user
- * to change it by putting in new one.
+ * are valid.
  */
 public class UserLogin extends Command implements CommandPages {
     private static final Logger LOGGER = Logger.getLogger(UserLogin.class);
@@ -42,16 +41,6 @@ public class UserLogin extends Command implements CommandPages {
 
         languageManager.setLanguage(language);
 
-        /**
-         * if user forgot password (put in incorrect but valid one),
-         * proposes him to change it putting in in additional field
-         */
-        if (TRUE.equals(req.getParameter("ifForgotPassword"))) {
-            req.setAttribute("forgot", TRUE);
-            req.getSession().setAttribute("login", login);
-            return CommandResult.forward(CHANGE_PASSWORD_PAGE);
-        }
-
         if (!validatePasswordLogin(req, login, password)) {
             return CommandResult.forward(LOGIN_PAGE);
         }
@@ -66,6 +55,7 @@ public class UserLogin extends Command implements CommandPages {
 
         User user = userLogging.get();
         setUserStatus(req, user);
+        req.getSession().setAttribute("login", login);
 
         return redirectToPage(req, user, password);
     }

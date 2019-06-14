@@ -16,7 +16,6 @@ import controller.command.ShowQuestion;
 import controller.command.DeleteAllUsers;
 import controller.command.DeleteUserById;
 import controller.command.ChangeLanguage;
-import controller.command.ChangePassword;
 import controller.command.SendEmailAgain;
 import controller.command.UserLogOut;
 import controller.command.AdministrateQuestions;
@@ -52,7 +51,6 @@ public final class CommandsFactory {
         commands.put("SHOW_RESULTS", new ShowTestResults());
         commands.put("START_TEST", new StartTest());
         commands.put("SEND_RESULTS", new SendTestResults());
-        commands.put("CHANGE_PASSWORD", new ChangePassword());
         commands.put("SUBMIT_KEY", new SubmitKey());
         commands.put("SEND_EMAIL_AGAIN", new SendEmailAgain());
         commands.put("LOGOUT", new UserLogOut());
